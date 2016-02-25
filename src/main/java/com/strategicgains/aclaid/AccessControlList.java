@@ -115,19 +115,25 @@ public class AccessControlList
 	public AccessControlList allow(String role, String resource, String... permissions)
 	throws RoleNotRegisteredException, ResourceNotRegisteredException
 	{
-		assertRoleRegistered(role);
-		assertResourceRegistered(resource);
+		return allow(new Grant(role).resourceId(resource).allow(permissions));
+	}
 
-		GrantKey grantKey = new GrantKey(role, resource);
+	public AccessControlList allow(Grant grant)
+	throws RoleNotRegisteredException, ResourceNotRegisteredException
+	{
+		assertRoleRegistered(grant.roleId());
+		assertResourceRegistered(grant.resourceId());
+
+		GrantKey grantKey = new GrantKey(grant.roleId(), grant.resourceId());
 		Grant g = grants.get(grantKey);
 
 		if (g != null)
 		{
-			g.allow(permissions);
+			g.mergePermissions(grant);
 		}
 		else
 		{
-			grants.put(grantKey, new Grant(role).allow(permissions));		
+			grants.put(grantKey, grant);		
 		}
 
 		return this;

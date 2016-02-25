@@ -26,19 +26,26 @@ import java.util.Set;
  */
 public class Grant
 {
-	private String role;
+	private String roleId;
+	private String resourceId;
 	private Set<String> allowedPermissions = new HashSet<>();
 	private Assertion assertion;
 
-	public Grant(Role role)
-	{
-		this(role.getRoleId());
-	}
-
-	public Grant(String role)
+	public Grant(String roleId)
 	{
 		super();
-		this.role = role;
+		this.roleId = roleId;
+	}
+
+	public String resourceId()
+	{
+		return resourceId;
+	}
+
+	public Grant resourceId(String resourceId)
+	{
+		this.resourceId = resourceId;
+		return this;
 	}
 
 	public Grant allow(String... permissions)
@@ -54,16 +61,6 @@ public class Grant
 	public Grant allow(Collection<String> permissions)
 	{
 		this.allowedPermissions.addAll(permissions);
-		return this;
-	}
-
-	public Grant allow(String permission)
-	{
-		if (permission != null)
-		{
-			this.allowedPermissions.add(permission);
-		}
-
 		return this;
 	}
 
@@ -85,9 +82,9 @@ public class Grant
 		return allowedPermissions.contains(permission);
 	}
 
-	public String role()
+	public String roleId()
 	{
-		return role;
+		return roleId;
 	}
 
 	public boolean isAllowed(Resource resource, String permission)
@@ -96,7 +93,7 @@ public class Grant
 
 		if (isAllowed && hasAssertion())
 		{
-			return assertion.isAllowed(role, resource, permission);
+			return assertion.isAllowed(roleId, resource, permission);
 		}
 
 		return isAllowed;
