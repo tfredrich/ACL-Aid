@@ -1,5 +1,5 @@
 # ACL-Aid
-Access Control List (ACL) authorization helper library (aid). Pronounced 'accolade'.
+Access Control List (ACL) authorization helper (aid) library. Pronounced 'accolade'.
 
 After a user has been identified as being authentic (via authentication), an application usually provides resources to that user. However, applications usually have different access rules for various resource types. This process of determining who has access to which resources is called authorization. Authorization in its simplest form is the composition of these elements:
 
@@ -9,7 +9,7 @@ After a user has been identified as being authentic (via authentication), an app
 
 In other words, authorization answers the question: "Does this principal have this permission on this resource?"
 
-One way to implement authorization rules is via an Access Control List (ACL) which specifies all the permissions each principal has on each resource. This can be very detailed, repetitive and tedious to specify all the rules for each user. One variation is called Role-Based Access Control (RBAC), which specifies resource permissions for a 'role'--then assign each user to one or more roles. This approach assigns permissions to principals then, based on the role (or roles) they play. This is the way ACL-Aid works--with roles, resources, and permissions.
+One way to implement authorization rules is via an Access Control List (ACL) which specifies all the permissions each principal has on each resource. This can be very detailed, repetitive and tedious to specify all the rules for each user. One variation is called Role-Based Access Control (RBAC), which specifies resource permissions for a 'role'--then assign each user to one or more roles. This approach assigns permissions to principals based on the role (or roles) they play instead of specifying individual permissions for each principle. This is the way ACL-Aid works--with roles, resources, and permissions.
 
 There are 3 corresponding interfaces: Role, Resource, Permission
 
