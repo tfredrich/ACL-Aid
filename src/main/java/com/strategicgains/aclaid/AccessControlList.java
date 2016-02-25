@@ -15,13 +15,14 @@
 */
 package com.strategicgains.aclaid;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.strategicgains.aclaid.exception.ResourceNotRegisteredException;
 import com.strategicgains.aclaid.exception.RoleNotRegisteredException;
 
 /**
@@ -35,12 +36,12 @@ public class AccessControlList
 	private Map<String, List<String>> parents = new HashMap<>();
 	private Map<GrantKey, Grant> grants = new HashMap<>();
 
-	public AccessControlList role(Role role)
+	public AccessControlList addRole(Role role)
 	{
-		return role(role.getRoleId());
+		return addRole(role.getRoleId());
 	}
 
-	public AccessControlList role(String name)
+	public AccessControlList addRole(String name)
 	{
 		roles.add(name);
 		return this;
@@ -54,28 +55,69 @@ public class AccessControlList
 	 * @return
 	 * @throws RoleNotRegisteredException if one or more of the parent roles are not registered already.
 	 */
-	public AccessControlList role(String name, String... parents)
+	public AccessControlList addRole(String name, String... parents)
 	throws RoleNotRegisteredException
 	{
-		assertRolesRegistered(parents);
-		this.parents.put(name, Arrays.asList(parents));
-		role(name);
+		if (parents != null)
+		{
+			assertRolesRegistered(parents);
+			this.parents.put(name, computeInheritance(parents));
+		}
+
+		addRole(name);
 		return this;
 	}
 
-	public AccessControlList resource(Resource resource)
+	private List<String> computeInheritance(String[] parents)
 	{
-		return resource(resource.getResourceId());
+		List<String> inheritance = new ArrayList<>(parents.length);
+
+		for (String parent : parents)
+		{
+			if (!inheritance.contains(parent))
+			{
+				inheritance.add(parent);
+				List<String> grandParents = this.parents.get(parent);
+
+				if (grandParents != null)
+				{
+					List<String> gps = computeInheritance(grandParents.toArray(new String[0]));
+					addGrandParents(inheritance, gps);
+				}
+			}
+		}
+
+		return inheritance;
 	}
 
-	public AccessControlList resource(String name)
+	private void addGrandParents(List<String> inheritance, List<String> grandParents)
+	{
+		for (String gp : grandParents)
+		{
+			if (!inheritance.contains(gp))
+			{
+				inheritance.add(gp);
+			}
+		}
+	}
+
+	public AccessControlList addResource(Resource resource)
+	{
+		return addResource(resource.getResourceId());
+	}
+
+	public AccessControlList addResource(String name)
 	{
 		resources.add(name);
 		return this;
 	}
 
 	public AccessControlList allow(String role, String resource, String... permissions)
+	throws RoleNotRegisteredException, ResourceNotRegisteredException
 	{
+		assertRoleRegistered(role);
+		assertResourceRegistered(resource);
+
 		GrantKey grantKey = new GrantKey(role, resource);
 		Grant g = grants.get(grantKey);
 
@@ -93,10 +135,31 @@ public class AccessControlList
 
 	public boolean isAllowed(Role role, Resource resource, String permission)
 	{
-		return false;
+		return isAllowed(role.getRoleId(), resource.getResourceId(), permission);
 	}
 
 	public boolean isAllowed(String role, String resource, String permission)
+	{
+		boolean isAllowed = _isAllowed(role, resource, permission);
+
+		if (isAllowed) return true;
+
+		List<String> p = parents.get(role);
+
+		if (p != null)
+		{
+			for (String parent : p)
+			{
+				isAllowed = _isAllowed(parent, resource, permission);
+
+				if (isAllowed) return true;
+			}
+		}
+
+		return false;
+	}
+
+	private boolean _isAllowed(String role, String resource, String permission)
 	{
 		Grant g = grants.get(new GrantKey(role, resource));
 
@@ -123,6 +186,15 @@ public class AccessControlList
 		}
 	}
 
+	private void assertResourceRegistered(String resource)
+	throws ResourceNotRegisteredException
+	{
+		if (!resources.contains(resource))
+		{
+			throw new ResourceNotRegisteredException(resource);
+		}
+	}
+
 	private class GrantKey
 	{
 		private String role;
@@ -135,29 +207,12 @@ public class AccessControlList
 			this.resource = resource;
 		}
 
-		private String getGrantKey(String role, String resource)
-		{
-			return String.format("%s||%s", role, resource);
-		}
-
+		@Override
 		public String toString()
 		{
-			if (role != null && resource != null)
-			{
-				return getGrantKey(role, resource);
-			}
-
-			if (role != null && resource == null)
-			{
-				return getGrantKey(role, "*");
-			}
-
-			if (role == null && resource != null)
-			{
-				return getGrantKey("*", resource);
-			}
-
-			return getGrantKey("*", "*");
+			String oRole = (role == null ? "*" : role);
+			String oRes = (resource == null ? "*" : resource);
+			return oRole + "||" + oRes;
 		}
 
 		@Override
