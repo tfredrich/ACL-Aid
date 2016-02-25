@@ -61,4 +61,14 @@ public class AccessControlListTest
 		acl.addRole("owner");
 		acl.allow("owner", "unregistered", "does not matter");
 	}
+
+	public class OwnerAssertion
+	implements Assertion
+	{
+		@Override
+		public boolean isAllowed(String role, Resource resource, String permission)
+		{
+			return false;
+		}
+	}
 }
