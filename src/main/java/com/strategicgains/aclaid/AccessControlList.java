@@ -139,24 +139,24 @@ public class AccessControlList
 		return this;
 	}
 
-	public boolean isAllowed(Role role, Resource resource, String permission)
+	public boolean isAllowed(Role role, Resource resource, String permissionId)
 	{
-		return isAllowed(role.getRoleId(), resource.getResourceId(), permission);
+		return isAllowed(role.getRoleId(), resource.getResourceId(), permissionId);
 	}
 
-	public boolean isAllowed(String role, String resource, String permission)
+	public boolean isAllowed(String roleId, String resourceId, String permissionId)
 	{
-		boolean isAllowed = _isAllowed(role, resource, permission);
+		boolean isAllowed = _isAllowed(roleId, resourceId, permissionId);
 
 		if (isAllowed) return true;
 
-		List<String> p = parents.get(role);
+		List<String> p = parents.get(roleId);
 
 		if (p != null)
 		{
 			for (String parent : p)
 			{
-				isAllowed = _isAllowed(parent, resource, permission);
+				isAllowed = _isAllowed(parent, resourceId, permissionId);
 
 				if (isAllowed) return true;
 			}
@@ -165,39 +165,39 @@ public class AccessControlList
 		return false;
 	}
 
-	private boolean _isAllowed(String role, String resource, String permission)
+	private boolean _isAllowed(String roleId, String resourceId, String permissionId)
 	{
-		Grant g = grants.get(new GrantKey(role, resource));
+		Grant g = grants.get(new GrantKey(roleId, resourceId));
 
 		if (g == null) return false;
 
-		return g.isAllowed(permission);
+		return g.isAllowed(permissionId);
 	}
 
-	private void assertRolesRegistered(String... roles)
+	private void assertRolesRegistered(String... roleIds)
 	throws RoleNotRegisteredException
 	{
-		for(String role : roles)
+		for(String role : roleIds)
 		{
 			assertRoleRegistered(role);
 		}
 	}
 
-	private void assertRoleRegistered(String role)
+	private void assertRoleRegistered(String roleId)
 	throws RoleNotRegisteredException
 	{
-		if (!roles.contains(role))
+		if (!roles.contains(roleId))
 		{
-			throw new RoleNotRegisteredException(role);
+			throw new RoleNotRegisteredException(roleId);
 		}
 	}
 
-	private void assertResourceRegistered(String resource)
+	private void assertResourceRegistered(String resourceId)
 	throws ResourceNotRegisteredException
 	{
-		if (!resources.contains(resource))
+		if (!resources.contains(resourceId))
 		{
-			throw new ResourceNotRegisteredException(resource);
+			throw new ResourceNotRegisteredException(resourceId);
 		}
 	}
 

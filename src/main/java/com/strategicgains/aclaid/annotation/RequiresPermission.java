@@ -28,5 +28,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface RequiresPermission
 {
-	Class<String> value();
+	String value();
+	String resourceType() default "*";
 }
