@@ -47,6 +47,17 @@ public class AccessControlList
 		return this;
 	}
 
+	public AccessControlList addRole(Role role, Role... parents)
+	throws RoleNotRegisteredException
+	{
+		if (parents != null)
+		{
+			return addRole(role.getRoleId(), asStrings(parents));
+		}
+
+		return addRole(role);
+	}
+
 	/**
 	 * Register a role with inheritance from the parent roles.
 	 * 
@@ -211,6 +222,18 @@ public class AccessControlList
 		{
 			throw new ResourceNotRegisteredException(resourceId);
 		}
+	}
+
+	private String[] asStrings(Role[] parents)
+	{
+		List<String> s = new ArrayList<String>(parents.length);
+
+		for(Role parent : parents)
+		{
+			s.add(parent.getRoleId());
+		}
+
+		return s.toArray(new String[0]);
 	}
 
 	private class GrantKey
