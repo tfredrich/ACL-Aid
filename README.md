@@ -3,15 +3,15 @@ Access Control List (ACL) authorization helper (aid) library. Pronounced 'accola
 
 After a user has been identified as being authentic (via authentication), an application usually provides resources to that user. However, applications usually have different access rules for various resource types. This process of determining who has access to which resources is called authorization. Authorization in its simplest form is the composition of these elements:
 
-1. the user, system, etc. desiring access (this is often called the 'principal')
+1. the user, system, etc. desiring access (herein after called 'role')
 2. the resource the principal is wanting access to (this is the 'resource')
 3. and usually, the operation that is being performed on the resource (often called a 'permission' or a 'privilege')
 
-In other words, authorization answers the question: "Does this principal have this permission on this resource?"
+In other words, authorization answers the question: "Does this role have this permission on this resource?"
 
 One way to implement authorization rules is via an Access Control List (ACL) which specifies all the permissions each principal has on each resource. This can be very detailed, repetitive and tedious to specify all the rules for each user. One variation is called Role-Based Access Control (RBAC), which specifies resource permissions for a 'role'--then assign each user to one or more roles. This approach assigns permissions to principals based on the role (or roles) they play instead of specifying individual permissions for each principle. This is the way ACL-Aid works--with roles, resources, and permissions.
 
-There are 3 corresponding interfaces: Role, Resource, Permission
+For our purposes, role, resource and permission are simply strings. However, ACL-Aid also provides 3 corresponding interfaces: Role, Resource, Permission. This enables us to use both string constants and dynamic values in objects to perform authorization.
 
 ## Role
 
@@ -114,11 +114,29 @@ acl.allow("owner", "blogPost", "delete");
 
 The above rules are quite simple: a guest role and an owner role exist; as does a blogPost type resource. A guests is allowed to view blog posts, and owners are allowed to view and post blog posts.
 
+## Wildcard Access Rules
+
+ACL-Aid supports the notion of "wildcard" access rules, where you can, if desired use a wildcard for the resource ID or the permission ID when defining access rules. Suppose your system has few enough permissions and resources in it that you don't need the complexity of specifying the resources separately. In this case, your permissions could have the resource name in them. And then you can specify the access rules without the resource ID as follows:
+
+```java
+AccessControlList acl = new AccessControlList();
+
+// setup the various roles in our system
+acl.addRole("guest");
+
+// owner inherits all of the rules of guest
+acl.addRole("owner", "guest");
+ 
+// add privileges to roles and resource combinations
+acl.allow("guest", "view_post");
+acl.allow("owner", "delete_post");
+```
+
 ## Assertions
 
 What if we want to ensure a specific owner actually owns a specific blog post before allowing it do be deleted? In other words, we want to ensure that only post owners have the ability to delete their own posts.
 
-This is where assertions come in. Assertions are methods that will be called out to when the static rule checking is simply not enough. When registering an assertion object this object will be consulted to dynamically determine if the role has the required permission on the resource. This is a way to get dynamic logic into an ACL.
+This is where assertions come in. Assertions are methods that will be called when the static rule checking is simply not enough. An assertion object is consulted to dynamically determine if the role has the required permission on the resource. This is a way to get dynamic logic into an ACL.
 
 For this example, we'll use the following assertion:
 
@@ -126,7 +144,7 @@ For this example, we'll use the following assertion:
 public class BlogPostAssertion
 implements Assertion
 {
-	public boolean isAllowed(Role role, Resource resource, Permission permission)
+	public boolean isAllowed(String roleId, Resource resource, String permissionId)
 	{
 	}
 }

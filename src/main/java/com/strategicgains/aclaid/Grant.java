@@ -21,6 +21,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Defines access for a given role and resource. Specifies the permissions allowed for that role/resource combination.
+ * If either roleId or resourceId is null, then it is assumed to be a wildcard. If the permission set is empty, then
+ * it is assumed to be a wildcard--allowing any permission.
+ * 
  * @author toddf
  * @since Feb 22, 2016
  */
@@ -48,19 +52,19 @@ public class Grant
 		return this;
 	}
 
-	public Grant allow(String... permissions)
+	public Grant allow(String... permissionIds)
 	{
-		if (permissions != null)
+		if (permissionIds != null)
 		{
-			allow(Arrays.asList(permissions));
+			allow(Arrays.asList(permissionIds));
 		}
 
 		return this;
 	}
 
-	public Grant allow(Collection<String> permissions)
+	public Grant allow(Collection<String> permissionIds)
 	{
-		this.allowedPermissions.addAll(permissions);
+		this.allowedPermissions.addAll(permissionIds);
 		return this;
 	}
 
@@ -75,11 +79,11 @@ public class Grant
 		this.allowedPermissions.addAll(grant.allowedPermissions);
 	}
 
-	public boolean isAllowed(String permission)
+	public boolean isAllowed(String permissionId)
 	{
 		if (allowedPermissions.isEmpty()) return true;
 
-		return allowedPermissions.contains(permission);
+		return allowedPermissions.contains(permissionId);
 	}
 
 	public String roleId()
@@ -87,13 +91,13 @@ public class Grant
 		return roleId;
 	}
 
-	public boolean isAllowed(Resource resource, String permission)
+	public boolean isAllowed(Resource resource, String permissionId)
 	{
-		boolean isAllowed = isAllowed(permission);
+		boolean isAllowed = isAllowed(permissionId);
 
 		if (isAllowed && hasAssertion())
 		{
-			return assertion.isAllowed(roleId, resource, permission);
+			return assertion.isAllowed(roleId, resource, permissionId);
 		}
 
 		return isAllowed;

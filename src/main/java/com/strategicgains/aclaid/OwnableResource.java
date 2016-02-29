@@ -16,6 +16,8 @@
 package com.strategicgains.aclaid;
 
 /**
+ * Defines the interface to retrieve the owner of a resource object.
+ * 
  * @author toddf
  * @since Feb 24, 2016
  */

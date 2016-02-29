@@ -21,5 +21,5 @@ package com.strategicgains.aclaid;
  */
 public interface Assertion
 {
-	boolean isAllowed(String role, Resource resource, String permission);
+	boolean isAllowed(String roleId, Resource resource, String permissionId);
 }

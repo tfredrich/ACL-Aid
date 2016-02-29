@@ -16,6 +16,8 @@
 package com.strategicgains.aclaid;
 
 /**
+ * Defines the interface to retrieve a string resource ID from an object.
+ * 
  * @author toddf
  * @since Feb 24, 2016
  */
