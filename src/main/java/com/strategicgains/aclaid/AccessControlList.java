@@ -144,6 +144,11 @@ public class AccessControlList
 		return isAllowed(role.getRoleId(), resource.getResourceId(), permissionId);
 	}
 
+	public boolean isAllowed(String roleId, String permissionId)
+	{
+		return isAllowed(roleId, null, permissionId);
+	}
+
 	public boolean isAllowed(String roleId, String resourceId, String permissionId)
 	{
 		boolean isAllowed = _isAllowed(roleId, resourceId, permissionId);
