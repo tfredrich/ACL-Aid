@@ -169,7 +169,12 @@ public class AccessControlList
 	{
 		Grant g = grants.get(new GrantKey(roleId, resourceId));
 
-		if (g == null) return false;
+		if (g == null)
+		{
+			g = grants.get(new GrantKey(roleId, null));
+
+			if (g == null) return false;
+		}
 
 		return g.isAllowed(permissionId);
 	}
@@ -195,6 +200,8 @@ public class AccessControlList
 	private void assertResourceRegistered(String resourceId)
 	throws ResourceNotRegisteredException
 	{
+		if (resourceId == null) return;
+
 		if (!resources.contains(resourceId))
 		{
 			throw new ResourceNotRegisteredException(resourceId);
