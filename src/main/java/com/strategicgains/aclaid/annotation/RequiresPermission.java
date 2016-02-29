@@ -29,5 +29,5 @@ import java.lang.annotation.Target;
 public @interface RequiresPermission
 {
 	String value();
-	String resourceType() default "*";
+	String resource() default "*";
 }
