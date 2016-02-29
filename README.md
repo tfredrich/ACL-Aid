@@ -34,21 +34,6 @@ implements Role
 }
 ```
 
-In its simplest form, you could use role-checking guard clauses in your application like this:
-
-```java
-if ("guest".equals(user.getRoleId))
-{
-	// do guest logic here
-}
-else
-{
-	// do other role logic here.
-}
-```
-
-However, that is not very dynamic and is subject to change over time, especially in the case of a complex multi-tenant application. So instead, we want to assign permissions to roles to provide fine-grained access rules while separating out authorization logic from our domain model.
-
 ## Permission
 
 Any Java object can become a permission by simply implementing the *Permission* interface and implementing the getPermissionId() method, which simply returns a String.
@@ -148,4 +133,32 @@ implements Assertion
 	{
 	}
 }
+```
+
+# Querying Access Rules
+
+In its simplest form, you could use role-checking guard clauses in your application like this:
+
+```java
+if ("guest".equals(user.getRoleId))
+{
+	// do guest logic here
+}
+else
+{
+	// do other role logic here.
+}
+```
+
+However, that is not very dynamic and is subject to change over time, especially in the case of a complex multi-tenant application. So instead, we want to assign permissions to roles to provide fine-grained access rules while separating out authorization logic from our domain model.
+
+## Using the Annotations
+
+```java
+@RequiresPermission(value = "view", resource = "blogPost")
+```
+Or, if using wildcard resources:
+
+```java
+@RequiresPermission("view_post")
 ```
