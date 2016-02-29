@@ -108,11 +108,13 @@ AccessControlList acl = new AccessControlList();
 
 // setup the various roles in our system
 acl.addRole("guest");
+ 
+// NOTE: no resource registrations needed
 
 // owner inherits all of the rules of guest
 acl.addRole("owner", "guest");
  
-// add privileges to roles and resource combinations
+// add privileges to roles (without resources)
 acl.allow("guest", "view_post");
 acl.allow("owner", "delete_post");
 ```
