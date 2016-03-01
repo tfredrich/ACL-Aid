@@ -91,16 +91,30 @@ public class Grant
 		return roleId;
 	}
 
-	public boolean isAllowed(Resource resource, String permissionId)
+	public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)
 	{
-		boolean isAllowed = isAllowed(permissionId);
-
-		if (isAllowed && hasAssertion())
+		if (hasAssertion())
 		{
-			return assertion.isAllowed(roleId, resource, permissionId);
+			return assertion.isAllowed(acl, role, resource, permissionId);
 		}
+		else
+		{
+			return isAllowed(permissionId);
+		}
+	}
 
-		return isAllowed;
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("{resource: ");
+		sb.append(resourceId);
+		sb.append(", permissions: ");
+		sb.append(allowedPermissions.toString());
+		sb.append(", hasAssertion: ");
+		sb.append(hasAssertion());
+		sb.append("}");
+		return sb.toString();
 	}
 
 	private boolean hasAssertion()

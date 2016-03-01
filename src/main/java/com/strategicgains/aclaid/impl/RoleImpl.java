@@ -18,12 +18,15 @@ package com.strategicgains.aclaid.impl;
 import com.strategicgains.aclaid.Role;
 
 /**
+ * Parameter type T indicates the type of the ID for this role (e.g. the user identifier).
+ * 
  * @author toddf
  * @since Feb 24, 2016
  */
-public class RoleImpl
+public class RoleImpl<T>
 implements Role
 {
+	private T id;
 	private String roleId;
 
 	public RoleImpl()
@@ -31,10 +34,21 @@ implements Role
 		super();
 	}
 
-	public RoleImpl(String roleId)
+	public RoleImpl(T id, String roleId)
 	{
 		this();
+		setId(id);
 		setRoleId(roleId);
+	}
+
+	public T getId()
+	{
+		return id;
+	}
+
+	private void setId(T id)
+	{
+		this.id = id;
 	}
 
 	@Override

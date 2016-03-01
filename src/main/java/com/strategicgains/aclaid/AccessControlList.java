@@ -150,9 +150,36 @@ public class AccessControlList
 		return this;
 	}
 
+	@Override
+	public String toString()
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("[roles: ");
+		sb.append(roles.toString());
+		sb.append(", resources: {");
+		sb.append(resources.toString());
+		sb.append("}, grants: {");
+		grants.values().toString();
+		sb.append("}]");
+		return sb.toString();
+	}
+
 	public boolean isAllowed(Role role, Resource resource, String permissionId)
 	{
-		return isAllowed(role.getRoleId(), resource.getResourceId(), permissionId);
+		String roleId = (role == null ? null : role.getRoleId());
+		String resourceId = (resource == null ? null : resource.getResourceId());
+		Grant g = getGrant(roleId, resourceId);
+		
+		if (g == null) return false;
+
+		if (g.isAllowed(this, role, resource, permissionId))
+		{
+			return true;
+		}
+		else
+		{
+			return isAllowed(roleId, resourceId, permissionId);
+		}
 	}
 
 	public boolean isAllowed(String roleId, String permissionId)
@@ -183,16 +210,23 @@ public class AccessControlList
 
 	private boolean _isAllowed(String roleId, String resourceId, String permissionId)
 	{
-		Grant g = grants.get(new GrantKey(roleId, resourceId));
+		Grant g = getGrant(roleId, resourceId);
 
-		if (g == null)
+		if (g != null)
 		{
-			g = grants.get(new GrantKey(roleId, null));
-
-			if (g == null) return false;
+			return g.isAllowed(permissionId);
 		}
 
-		return g.isAllowed(permissionId);
+		return false;
+	}
+
+	private Grant getGrant(String roleId, String resourceId)
+	{
+		Grant g = grants.get(new GrantKey(roleId, resourceId));
+
+		if (g != null) return g;
+
+		return grants.get(new GrantKey(roleId, null));
 	}
 
 	private void assertRolesRegistered(String... roleIds)

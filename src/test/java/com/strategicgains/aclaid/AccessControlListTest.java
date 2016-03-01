@@ -157,6 +157,53 @@ public class AccessControlListTest
 	}
 
 	@Test
+	public void shouldBuildAccessRulesWithAssertion()
+	throws Exception
+	{
+		AccessControlList acl = new AccessControlList();
+
+		// setup the various roles in our system
+		acl.addRole("guest");
+		acl.addRole("owner", "guest");
+
+		// add the resources
+		acl.addResource("blogPost");
+
+		GrantBuilder gb = new GrantBuilder();
+
+		// add privileges to roles and resource combinations
+		acl.allow(gb
+			.role("guest")
+			.resource("blogPost")
+			.permissions("view")
+			.withAssertion(new OwnerAssertion())
+			.build()
+		);
+
+		acl.allow(gb
+			.role("owner")
+			.resource("blogPost")
+			.permissions("edit", "revise", "delete")
+			.build()
+		);
+
+		assertTrue(acl.isAllowed("guest", "blogPost", "view"));
+
+		User bill = new User("bill");
+		User bob = new User("bob");
+		BlogPost post = new BlogPost();
+		post.setOwner(bill.getId());
+		assertTrue(acl.isAllowed(bill, post, "view"));
+		assertTrue(acl.isAllowed(bill, post, "edit"));
+		assertTrue(acl.isAllowed(bill, post, "revise"));
+		assertTrue(acl.isAllowed(bill, post, "delete"));
+		assertTrue(acl.isAllowed(bob, post, "view"));
+		assertFalse(acl.isAllowed(bob, post, "edit"));
+		assertFalse(acl.isAllowed(bob, post, "revise"));
+		assertFalse(acl.isAllowed(bob, post, "delete"));
+	}
+
+	@Test
 	public void shouldBuildWildcardAccessRules()
 	throws Exception
 	{
@@ -226,6 +273,67 @@ public class AccessControlListTest
 		assertTrue(acl.isAllowed("admin", "blogPost", "delete"));
 	}
 
+	@Test
+	public void shouldBuildWildcardAccessRulesWithAssertion()
+	throws Exception
+	{
+		AccessControlList acl = new AccessControlList();
+
+		// setup the various roles in our system
+		acl.addRole("guest");
+		acl.addRole("owner", "guest");
+
+		GrantBuilder gb = new GrantBuilder();
+
+		// add privileges to roles and resource combinations
+		acl.allow(gb
+			.role("guest")
+			.permissions("view")
+			.withAssertion(new OwnerAssertion())
+			.build()
+		);
+
+		acl.allow(gb
+			.role("owner")
+			.permissions("edit", "revise", "delete")
+			.build()
+		);
+
+		assertTrue(acl.isAllowed("guest", null, "view"));
+		assertFalse(acl.isAllowed("guest", null, "delete"));
+		assertTrue(acl.isAllowed("owner", null, "view"));
+		assertTrue(acl.isAllowed("owner", null, "edit"));
+		assertTrue(acl.isAllowed("owner", null, "revise"));
+		assertTrue(acl.isAllowed("owner", null, "delete"));
+
+		assertTrue(acl.isAllowed("guest", "*", "view"));
+		assertFalse(acl.isAllowed("guest", "*", "delete"));
+		assertTrue(acl.isAllowed("owner", "*", "view"));
+		assertTrue(acl.isAllowed("owner", "*", "edit"));
+		assertTrue(acl.isAllowed("owner", "*", "revise"));
+		assertTrue(acl.isAllowed("owner", "*", "delete"));
+
+		assertTrue(acl.isAllowed("guest", "blogPost", "view"));
+		assertFalse(acl.isAllowed("guest", "blogPost", "delete"));
+		assertTrue(acl.isAllowed("owner", "blogPost", "view"));
+		assertTrue(acl.isAllowed("owner", "blogPost", "edit"));
+		assertTrue(acl.isAllowed("owner", "blogPost", "revise"));
+		assertTrue(acl.isAllowed("owner", "blogPost", "delete"));
+
+		User bill = new User("bill");
+		User bob = new User("bob");
+		BlogPost post = new BlogPost();
+		post.setOwner(bill.getId());
+		assertTrue(acl.isAllowed(bill, post, "view"));
+		assertTrue(acl.isAllowed(bill, post, "edit"));
+		assertTrue(acl.isAllowed(bill, post, "revise"));
+		assertTrue(acl.isAllowed(bill, post, "delete"));
+		assertTrue(acl.isAllowed(bob, post, "view"));
+		assertFalse(acl.isAllowed(bob, post, "edit"));
+		assertFalse(acl.isAllowed(bob, post, "revise"));
+		assertFalse(acl.isAllowed(bob, post, "delete"));
+	}
+
 	@Test(expected = RoleNotRegisteredException.class)
 	public void shouldThrowRoleNotRegistered()
 	throws RoleNotRegisteredException
@@ -247,9 +355,35 @@ public class AccessControlListTest
 	implements Assertion
 	{
 		@Override
-		public boolean isAllowed(String role, Resource resource, String permission)
+		public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)
 		{
+			User user = null;
+			BlogPost post = null;
+
+			if ("guest".equals(role.getRoleId()))
+			{
+				user = (User) role;
+			}
+
+			if ("blogPost".equals(resource.getResourceId()))
+			{
+				post = (BlogPost) resource;
+			}
+
+			if (user != null && post != null)
+			{
+				if (isOwner(user, post))
+				{
+					return acl.isAllowed("owner", post.getResourceId(), permissionId);
+				}
+			}
+
 			return false;
+		}
+
+		private boolean isOwner(User user, BlogPost post)
+		{
+			return (user.getId().equals(post.getOwner()));
 		}
 	}
 }
