@@ -31,9 +31,21 @@ implements OwnableResource<T>
 	{
 		super();
 	}
+
+	public OwnableResourceImpl(String resourceId)
+	{
+		super(resourceId);
+	}
+
 	public OwnableResourceImpl(T owner)
 	{
 		this();
+		setOwner(owner);
+	}
+
+	public OwnableResourceImpl(String resourceId, T owner)
+	{
+		super(resourceId);
 		setOwner(owner);
 	}
 
