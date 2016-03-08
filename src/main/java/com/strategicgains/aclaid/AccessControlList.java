@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import com.strategicgains.aclaid.exception.ResourceNotRegisteredException;
@@ -140,14 +141,49 @@ public class AccessControlList
 
 		if (g != null)
 		{
-			g.mergePermissions(grant);
+			g.merge(grant);
 		}
 		else
 		{
+			List<String> p = parents.get(grant.roleId());
+
+			if (p != null)
+			{
+				for (String parent : p)
+				{
+					g = _getGrant(parent, grant.resourceId());
+
+					if (g != null) grant.merge(g);
+				}
+			}
+
 			grants.put(grantKey, grant);		
 		}
 
+		recomputeChildGrants(grant);
 		return this;
+	}
+
+	private void recomputeChildGrants(Grant parentGrant)
+	throws RoleNotRegisteredException, ResourceNotRegisteredException
+	{
+
+		for (Entry<String, List<String>> entry : parents.entrySet())
+		{
+			if (entry.getValue().contains(parentGrant.roleId()))
+			{
+				Grant grant = _getGrant(entry.getKey(), parentGrant.resourceId());
+
+				if (grant != null)
+				{
+					grant.merge(parentGrant);
+				}
+				else
+				{
+					allow(entry.getKey(), parentGrant.resourceId(), parentGrant.allowedPermissions().toArray(new String[0]));
+				}
+			}
+		}
 	}
 
 	@Override
@@ -178,7 +214,7 @@ public class AccessControlList
 		}
 		else
 		{
-			return isAllowed(roleId, resourceId, permissionId);
+			return g.isAllowed(permissionId);
 		}
 	}
 
@@ -188,27 +224,6 @@ public class AccessControlList
 	}
 
 	public boolean isAllowed(String roleId, String resourceId, String permissionId)
-	{
-		boolean isAllowed = _isAllowed(roleId, resourceId, permissionId);
-
-		if (isAllowed) return true;
-
-		List<String> p = parents.get(roleId);
-
-		if (p != null)
-		{
-			for (String parent : p)
-			{
-				isAllowed = _isAllowed(parent, resourceId, permissionId);
-
-				if (isAllowed) return true;
-			}
-		}
-
-		return false;
-	}
-
-	private boolean _isAllowed(String roleId, String resourceId, String permissionId)
 	{
 		Grant g = getGrant(roleId, resourceId);
 
@@ -222,11 +237,16 @@ public class AccessControlList
 
 	private Grant getGrant(String roleId, String resourceId)
 	{
-		Grant g = grants.get(new GrantKey(roleId, resourceId));
+		Grant g = _getGrant(roleId, resourceId);
 
 		if (g != null) return g;
 
-		return grants.get(new GrantKey(roleId, null));
+		return _getGrant(roleId, null);
+	}
+
+	private Grant _getGrant(String roleId, String resourceId)
+	{
+		return grants.get(new GrantKey(roleId, resourceId));
 	}
 
 	private void assertRolesRegistered(String... roleIds)

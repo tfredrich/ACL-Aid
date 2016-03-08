@@ -8,9 +8,56 @@ import org.junit.Test;
 import com.strategicgains.aclaid.builder.GrantBuilder;
 import com.strategicgains.aclaid.exception.ResourceNotRegisteredException;
 import com.strategicgains.aclaid.exception.RoleNotRegisteredException;
+import com.strategicgains.aclaid.impl.ResourceImpl;
+import com.strategicgains.aclaid.impl.RoleImpl;
 
 public class AccessControlListTest
 {
+	@Test
+	public void shouldHonorInheritence()
+	throws Exception
+	{
+		AccessControlList acl = new AccessControlList();		
+
+		// setup the various roles in our system
+		acl.addRole("guest");
+		acl.addRole("admin", "guest");
+		acl.addRole("system", "admin");
+
+		// add the resources
+		acl.addResource("blogPost");
+
+		acl.allow("guest", "blogPost", "view");
+		acl.allow("admin", "blogPost", "create", "update", "delete");
+		// purposefully not allowing extra system permissions to ensure inheritance works in that case.
+
+		assertTrue(acl.isAllowed("guest", "blogPost", "view"));
+
+		assertTrue(acl.isAllowed("admin", "blogPost", "create"));
+		assertTrue(acl.isAllowed("admin", "blogPost", "view"));
+		assertTrue(acl.isAllowed("admin", "blogPost", "update"));
+		assertTrue(acl.isAllowed("admin", "blogPost", "delete"));
+
+		assertTrue(acl.isAllowed("system", "blogPost", "create"));
+		assertTrue(acl.isAllowed("system", "blogPost", "view"));
+		assertTrue(acl.isAllowed("system", "blogPost", "update"));
+		assertTrue(acl.isAllowed("system", "blogPost", "delete"));
+
+		RoleImpl<String> admin = new RoleImpl<>("admin", "admin");
+		RoleImpl<String> system = new RoleImpl<>("system", "system");
+		ResourceImpl blogPost = new ResourceImpl("blogPost");
+
+		assertTrue(acl.isAllowed(admin, blogPost, "create"));
+		assertTrue(acl.isAllowed(admin, blogPost, "view"));
+		assertTrue(acl.isAllowed(admin, blogPost, "update"));
+		assertTrue(acl.isAllowed(admin, blogPost, "delete"));
+
+		assertTrue(acl.isAllowed(system, blogPost, "create"));
+		assertTrue(acl.isAllowed(system, blogPost, "view"));
+		assertTrue(acl.isAllowed(system, blogPost, "update"));
+		assertTrue(acl.isAllowed(system, blogPost, "delete"));
+	}
+
 	@Test
 	public void shouldReflectResourceAccessRules()
 	throws Exception

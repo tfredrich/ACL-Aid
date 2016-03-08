@@ -13,10 +13,15 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.strategicgains.aclaid.AccessControlList;
+import com.strategicgains.aclaid.Assertion;
+import com.strategicgains.aclaid.Resource;
+import com.strategicgains.aclaid.Role;
 
 /**
  * An assertion that contains multiple assertions.
@@ -24,7 +29,7 @@ import java.util.List;
  * @author toddf
  * @since Mar 8, 2016
  */
-public class AssertionAggregate
+public class AggregateAssertion
 implements Assertion
 {
 	private List<Assertion> assertions = new ArrayList<>();
@@ -49,7 +54,7 @@ implements Assertion
 	 * @param assertion
 	 * @return this instance for method chaining.
 	 */
-	public AssertionAggregate add(Assertion assertion)
+	public AggregateAssertion add(Assertion assertion)
 	{
 		if (!assertions.contains(assertion))
 		{

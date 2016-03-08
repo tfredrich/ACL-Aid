@@ -17,8 +17,11 @@ package com.strategicgains.aclaid;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+
+import com.strategicgains.aclaid.impl.AggregateAssertion;
 
 /**
  * Defines access for a given role and resource. Specifies the permissions allowed for that role/resource combination.
@@ -52,6 +55,11 @@ public class Grant
 		return this;
 	}
 
+	public Collection<String> allowedPermissions()
+	{
+		return Collections.unmodifiableCollection(allowedPermissions);
+	}
+
 	public Grant allow(String... permissionIds)
 	{
 		if (permissionIds != null)
@@ -68,15 +76,44 @@ public class Grant
 		return this;
 	}
 
+	/**
+	 * If more-than one assertion is added, the assertions are added to an underlying {@link AggregateAssertion}.
+	 * 
+	 * @param assertion
+	 * @return
+	 */
 	public Grant withAssertion(Assertion assertion)
 	{
-		this.assertion = assertion;
+		if (hasAssertion() && this.assertion != assertion)
+		{
+			if (AggregateAssertion.class.isAssignableFrom(this.assertion.getClass()))
+			{
+				((AggregateAssertion) this.assertion).add(assertion);
+			}
+			else
+			{
+				AggregateAssertion aa = new AggregateAssertion()
+					.add(this.assertion)
+					.add(assertion);
+				this.assertion = aa;
+			}
+		}
+		else
+		{
+			this.assertion = assertion;
+		}
+
 		return this;
 	}
 
-	public void mergePermissions(Grant grant)
+	public void merge(Grant grant)
 	{
 		this.allowedPermissions.addAll(grant.allowedPermissions);
+
+		if (grant.hasAssertion())
+		{
+			withAssertion(grant.assertion);
+		}
 	}
 
 	public boolean isAllowed(String permissionId)
@@ -107,8 +144,10 @@ public class Grant
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		sb.append("{resource: ");
-		sb.append(resourceId);
+		sb.append("{role: ");
+		sb.append(roleId != null ? roleId : "*");
+		sb.append(", resource: ");
+		sb.append(resourceId != null ? resourceId : "*");
 		sb.append(", permissions: ");
 		sb.append(allowedPermissions.toString());
 		sb.append(", hasAssertion: ");
