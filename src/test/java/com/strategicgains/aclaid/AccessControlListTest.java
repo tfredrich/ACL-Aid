@@ -399,7 +399,7 @@ public class AccessControlListTest
 	}
 
 	public class OwnerAssertion
-	implements Assertion
+	implements Conditional
 	{
 		@Override
 		public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)

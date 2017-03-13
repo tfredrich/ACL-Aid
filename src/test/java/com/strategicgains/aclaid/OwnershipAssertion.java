@@ -22,7 +22,7 @@ import com.strategicgains.aclaid.impl.RoleImpl;
  * @since Mar 13, 2016
  */
 public class OwnershipAssertion
-implements Assertion
+implements Conditional
 {
 	@SuppressWarnings("unchecked")
 	@Override
