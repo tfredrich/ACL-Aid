@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.strategicgains.aclaid.impl.AggregateConditional;
+import com.strategicgains.aclaid.impl.AggregateCondition;
 
 /**
  * Defines access for a given role and resource. Specifies the permissions allowed for that role/resource combination.
@@ -36,7 +36,7 @@ public class Grant
 	private String roleId;
 	private String resourceId;
 	private Set<String> allowedPermissions = new HashSet<>();
-	private Conditional conditional;
+	private Condition condition;
 
 	public Grant(String roleId)
 	{
@@ -77,30 +77,30 @@ public class Grant
 	}
 
 	/**
-	 * If more-than one assertion is added, the assertions are added to an underlying {@link AggregateConditional}.
+	 * If more-than one assertion is added, the assertions are added to an underlying {@link AggregateCondition}.
 	 * 
-	 * @param conditional
+	 * @param condition
 	 * @return
 	 */
-	public Grant withConditional(Conditional conditional)
+	public Grant withCondition(Condition condition)
 	{
-		if (hasConditional() && this.conditional != conditional)
+		if (hasCondition() && this.condition != condition)
 		{
-			if (AggregateConditional.class.isAssignableFrom(this.conditional.getClass()))
+			if (AggregateCondition.class.isAssignableFrom(this.condition.getClass()))
 			{
-				((AggregateConditional) this.conditional).add(conditional);
+				((AggregateCondition) this.condition).add(condition);
 			}
 			else
 			{
-				AggregateConditional aa = new AggregateConditional()
-					.add(this.conditional)
-					.add(conditional);
-				this.conditional = aa;
+				AggregateCondition aa = new AggregateCondition()
+					.add(this.condition)
+					.add(condition);
+				this.condition = aa;
 			}
 		}
 		else
 		{
-			this.conditional = conditional;
+			this.condition = condition;
 		}
 
 		return this;
@@ -110,9 +110,9 @@ public class Grant
 	{
 		this.allowedPermissions.addAll(grant.allowedPermissions);
 
-		if (grant.hasConditional())
+		if (grant.hasCondition())
 		{
-			withConditional(grant.conditional);
+			withCondition(grant.condition);
 		}
 	}
 
@@ -130,9 +130,9 @@ public class Grant
 
 	public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)
 	{
-		if (hasConditional())
+		if (hasCondition())
 		{
-			return conditional.isAllowed(acl, role, resource, permissionId);
+			return condition.isAllowed(acl, role, resource, permissionId);
 		}
 		else
 		{
@@ -150,14 +150,14 @@ public class Grant
 		sb.append(resourceId != null ? resourceId : "*");
 		sb.append(", permissions: ");
 		sb.append(allowedPermissions.toString());
-		sb.append(", hasConditional: ");
-		sb.append(hasConditional());
+		sb.append(", hasCondition: ");
+		sb.append(hasCondition());
 		sb.append("}");
 		return sb.toString();
 	}
 
-	private boolean hasConditional()
+	private boolean hasCondition()
 	{
-		return (conditional != null);
+		return (condition != null);
 	}
 }

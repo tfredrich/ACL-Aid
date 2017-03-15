@@ -35,7 +35,7 @@ public class AssertionTest
 			.role("guest")
 			.resource("blogPost")
 			.permissions("view")
-			.withAssertion(new OwnershipAssertion())
+			.withCondition(new OwnershipAssertion())
 			.build());
 
 		acl.allow(gb

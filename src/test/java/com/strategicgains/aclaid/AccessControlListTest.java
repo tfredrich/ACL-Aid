@@ -223,7 +223,7 @@ public class AccessControlListTest
 			.role("guest")
 			.resource("blogPost")
 			.permissions("view")
-			.withAssertion(new OwnerAssertion())
+			.withCondition(new OwnerAssertion())
 			.build()
 		);
 
@@ -336,7 +336,7 @@ public class AccessControlListTest
 		acl.allow(gb
 			.role("guest")
 			.permissions("view")
-			.withAssertion(new OwnerAssertion())
+			.withCondition(new OwnerAssertion())
 			.build()
 		);
 
@@ -399,7 +399,7 @@ public class AccessControlListTest
 	}
 
 	public class OwnerAssertion
-	implements Conditional
+	implements Condition
 	{
 		@Override
 		public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)

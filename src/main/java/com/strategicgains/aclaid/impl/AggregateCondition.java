@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.strategicgains.aclaid.AccessControlList;
-import com.strategicgains.aclaid.Conditional;
+import com.strategicgains.aclaid.Condition;
 import com.strategicgains.aclaid.Resource;
 import com.strategicgains.aclaid.Role;
 
@@ -29,10 +29,10 @@ import com.strategicgains.aclaid.Role;
  * @author toddf
  * @since Mar 8, 2016
  */
-public class AggregateConditional
-implements Conditional
+public class AggregateCondition
+implements Condition
 {
-	private List<Conditional> conditionals = new ArrayList<>();
+	private List<Condition> conditions = new ArrayList<>();
 
 	/**
 	 * Makes the assertion, calling the aggregated assertions, returning after the first one that returns true.
@@ -40,9 +40,9 @@ implements Conditional
 	 */
 	public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)
 	{
-		for (Conditional conditional : conditionals)
+		for (Condition condition : conditions)
 		{
-			if (conditional.isAllowed(acl, role, resource, permissionId)) return true;
+			if (condition.isAllowed(acl, role, resource, permissionId)) return true;
 		}
 
 		return false;
@@ -51,14 +51,14 @@ implements Conditional
 	/**
 	 * Add an assertion to this aggregate. Will not add the same assertion (by reference) more-than once.
 	 * 
-	 * @param conditional
+	 * @param condition
 	 * @return this instance for method chaining.
 	 */
-	public AggregateConditional add(Conditional conditional)
+	public AggregateCondition add(Condition condition)
 	{
-		if (!conditionals.contains(conditional))
+		if (!conditions.contains(condition))
 		{
-			conditionals.add(conditional);
+			conditions.add(condition);
 		}
 
 		return this;

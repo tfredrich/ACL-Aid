@@ -19,7 +19,7 @@ package com.strategicgains.aclaid;
  * @author toddf
  * @since Feb 24, 2016
  */
-public interface Conditional
+public interface Condition
 {
 	boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId);
 }
