@@ -119,19 +119,19 @@ acl.allow("guest", "view_post");
 acl.allow("owner", "delete_post");
 ```
 
-## Assertions
+## Conditions
 
 What if we want to ensure a specific owner actually owns a specific blog post before allowing it do be deleted? In other words, we want to ensure that only post owners have the ability to delete their own posts.
 
-This is where assertions come in. Assertions are methods that will be called when the static rule checking is simply not enough. An assertion object is consulted to dynamically determine if the role has the required permission on the resource. This is a way to get dynamic logic into an ACL.
+This is where conditions come in. Conditions are methods that will be called when the static rule checking is simply not enough. A condition object is consulted to dynamically determine if the role has the required permission on the resource. This is a way to get dynamic logic into an ACL.
 
-For this example, we'll use the following assertion:
+For this example, we'll use the following condition:
 
 ```java
-public class BlogPostAssertion
-implements Assertion
+public class BlogPostCondition
+implements Condition
 {
-	public boolean isAllowed(String roleId, Resource resource, String permissionId)
+	public boolean evaluate(String roleId, Resource resource, String permissionId)
 	{
 	}
 }

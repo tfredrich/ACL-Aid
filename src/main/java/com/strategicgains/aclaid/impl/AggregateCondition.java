@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.strategicgains.aclaid.AccessControlList;
-import com.strategicgains.aclaid.Assertion;
+import com.strategicgains.aclaid.Condition;
 import com.strategicgains.aclaid.Resource;
 import com.strategicgains.aclaid.Role;
 
@@ -29,20 +29,20 @@ import com.strategicgains.aclaid.Role;
  * @author toddf
  * @since Mar 8, 2016
  */
-public class AggregateAssertion
-implements Assertion
+public class AggregateCondition
+implements Condition
 {
-	private List<Assertion> assertions = new ArrayList<>();
+	private List<Condition> assertions = new ArrayList<>();
 
 	/**
 	 * Makes the assertion, calling the aggregated assertions, returning after the first one that returns true.
 	 * Otherwise returns false.
 	 */
-	public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)
+	public boolean evaluate(AccessControlList acl, Role role, Resource resource, String permissionId)
 	{
-		for (Assertion assertion : assertions)
+		for (Condition assertion : assertions)
 		{
-			if (assertion.isAllowed(acl, role, resource, permissionId)) return true;
+			if (assertion.evaluate(acl, role, resource, permissionId)) return true;
 		}
 
 		return false;
@@ -54,7 +54,7 @@ implements Assertion
 	 * @param assertion
 	 * @return this instance for method chaining.
 	 */
-	public AggregateAssertion add(Assertion assertion)
+	public AggregateCondition add(Condition assertion)
 	{
 		if (!assertions.contains(assertion))
 		{

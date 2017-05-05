@@ -9,7 +9,7 @@ import com.strategicgains.aclaid.builder.GrantBuilder;
 import com.strategicgains.aclaid.impl.OwnableResourceImpl;
 import com.strategicgains.aclaid.impl.RoleImpl;
 
-public class AssertionTest
+public class ConditionTest
 {
 	private AccessControlList acl;
 	private RoleImpl<String> admin;
@@ -35,7 +35,7 @@ public class AssertionTest
 			.role("guest")
 			.resource("blogPost")
 			.permissions("view")
-			.withAssertion(new OwnershipAssertion())
+			.withAssertion(new OwnershipCondition())
 			.build());
 
 		acl.allow(gb

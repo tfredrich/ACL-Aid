@@ -18,7 +18,7 @@ package com.strategicgains.aclaid.builder;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.strategicgains.aclaid.Assertion;
+import com.strategicgains.aclaid.Condition;
 import com.strategicgains.aclaid.Grant;
 import com.strategicgains.aclaid.Permission;
 import com.strategicgains.aclaid.Resource;
@@ -65,9 +65,9 @@ public class GrantBuilder
 		return this;
 	}
 
-	public GrantBuilder withAssertion(Assertion assertion)
+	public GrantBuilder withAssertion(Condition assertion)
 	{
-		grant.withAssertion(assertion);
+		grant.withCondition(assertion);
 		return this;
 	}
 

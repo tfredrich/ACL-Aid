@@ -21,12 +21,12 @@ import com.strategicgains.aclaid.impl.RoleImpl;
  * @author toddf
  * @since Mar 13, 2016
  */
-public class OwnershipAssertion
-implements Assertion
+public class OwnershipCondition
+implements Condition
 {
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)
+	public boolean evaluate(AccessControlList acl, Role role, Resource resource, String permissionId)
 	{
 		if ("guest".equals(role.getRoleId()) && RoleImpl.class.isAssignableFrom(role.getClass()))
 		{
