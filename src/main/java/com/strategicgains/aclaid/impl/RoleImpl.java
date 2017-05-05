@@ -15,6 +15,10 @@
 */
 package com.strategicgains.aclaid.impl;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import com.strategicgains.aclaid.Grant;
 import com.strategicgains.aclaid.Role;
 
 /**
@@ -28,6 +32,7 @@ implements Role
 {
 	private T id;
 	private String roleId;
+	private Map<String, Grant> grantsByResourceId = new HashMap<>();
 
 	public RoleImpl()
 	{
@@ -60,5 +65,14 @@ implements Role
 	public void setRoleId(String roleId)
 	{
 		this.roleId = roleId;
+	}
+
+	private Grant getGrant(String roleId, String resourceId)
+	{
+		Grant g = grantsByResourceId.get(resourceId);
+
+		if (g != null) return g;
+
+		return grantsByResourceId.get("*");
 	}
 }
