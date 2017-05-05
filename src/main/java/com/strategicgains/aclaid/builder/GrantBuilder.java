@@ -82,7 +82,7 @@ public class GrantBuilder
 
 		for (Permission permission : permissions)
 		{
-			strings.add(permission.getPermissionId());
+			strings.add(permission.format());
 		}
 
 		return strings.toArray(new String[0]);
