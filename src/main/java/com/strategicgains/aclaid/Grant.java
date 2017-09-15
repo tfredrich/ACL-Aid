@@ -26,7 +26,7 @@ import com.strategicgains.aclaid.impl.AggregateCondition;
 /**
  * Defines access for a given role and resource. Specifies the permissions allowed for that role/resource combination.
  * If either roleId or resourceId is null, then it is assumed to be a wildcard. If the permission set is empty, then
- * it is assumed to be a wildcard--allowing any permission.
+ * it is assumed to be a wildcard--allowing any permission (otherwise, no grant would be present).
  * 
  * @author toddf
  * @since Feb 22, 2016
