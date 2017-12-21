@@ -132,7 +132,7 @@ public class Grant
 	{
 		if (hasCondition())
 		{
-			return condition.isAllowed(acl, role, resource, permissionId);
+			return condition.isMet(acl, role, resource, permissionId);
 		}
 		else
 		{

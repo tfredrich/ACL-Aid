@@ -402,7 +402,7 @@ public class AccessControlListTest
 	implements Condition
 	{
 		@Override
-		public boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId)
+		public boolean isMet(AccessControlList acl, Role role, Resource resource, String permissionId)
 		{
 			User user = null;
 			BlogPost post = null;

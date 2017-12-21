@@ -21,5 +21,14 @@ package com.strategicgains.aclaid;
  */
 public interface Condition
 {
-	boolean isAllowed(AccessControlList acl, Role role, Resource resource, String permissionId);
+	/**
+	 * Semantics of "condition is met..."
+	 * 
+	 * @param acl
+	 * @param role
+	 * @param resource
+	 * @param permissionId
+	 * @return
+	 */
+	boolean isMet(AccessControlList acl, Role role, Resource resource, String permissionId);
 }
