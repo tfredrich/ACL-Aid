@@ -13,38 +13,38 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid.impl;
+package com.strategicgains.aclaid;
 
-import com.strategicgains.aclaid.Permission;
+import com.strategicgains.aclaid.Resource;
 
 /**
  * @author toddf
  * @since Feb 24, 2016
  */
-public class PermissionImpl
-implements Permission
+public class ResourceImpl
+implements Resource
 {
-	private String permissionId;
+	private String resourceId;
 
-	public PermissionImpl()
+	public ResourceImpl()
 	{
 		super();
 	}
 
-	public PermissionImpl(String permissionId)
+	public ResourceImpl(String resourceId)
 	{
 		this();
-		setPermissionId(permissionId);
+		setResourceId(resourceId);
 	}
 
 	@Override
-	public String getPermissionId()
+	public String getResourceId()
 	{
-		return permissionId;
+		return resourceId;
 	}
 
-	public void setPermissionId(String permissionId)
+	public void setResourceId(String resourceId)
 	{
-		this.permissionId = permissionId;
+		this.resourceId = resourceId;
 	}
 }

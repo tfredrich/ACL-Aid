@@ -15,8 +15,6 @@
 */
 package com.strategicgains.aclaid;
 
-import com.strategicgains.aclaid.impl.OwnableResourceImpl;
-
 /**
  * @author toddf
  * @since Feb 24, 2016

@@ -13,50 +13,52 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid.impl;
+package com.strategicgains.aclaid;
 
-import com.strategicgains.aclaid.OwnableResource;
+import com.strategicgains.aclaid.Role;
 
 /**
+ * Parameter type T indicates the type of the ID for this role (e.g. the user identifier).
+ * 
  * @author toddf
  * @since Feb 24, 2016
  */
-public class OwnableResourceImpl<T>
-extends ResourceImpl
-implements OwnableResource<T>
+public class RoleImpl<T>
+implements Role
 {
-	private T owner;
+	private T id;
+	private String roleId;
 
-	public OwnableResourceImpl()
+	public RoleImpl()
 	{
 		super();
 	}
 
-	public OwnableResourceImpl(String resourceId)
-	{
-		super(resourceId);
-	}
-
-	public OwnableResourceImpl(T owner)
+	public RoleImpl(T id, String roleId)
 	{
 		this();
-		setOwner(owner);
+		setId(id);
+		setRoleId(roleId);
 	}
 
-	public OwnableResourceImpl(String resourceId, T owner)
+	public T getId()
 	{
-		super(resourceId);
-		setOwner(owner);
+		return id;
+	}
+
+	private void setId(T id)
+	{
+		this.id = id;
 	}
 
 	@Override
-	public T getOwner()
+	public String getRoleId()
 	{
-		return owner;
+		return roleId;
 	}
 
-	public void setOwner(T owner)
+	public void setRoleId(String roleId)
 	{
-		this.owner = owner;
+		this.roleId = roleId;
 	}
 }

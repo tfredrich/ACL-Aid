@@ -13,15 +13,10 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid.impl;
+package com.strategicgains.aclaid;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import com.strategicgains.aclaid.AccessControlList;
-import com.strategicgains.aclaid.Condition;
-import com.strategicgains.aclaid.Resource;
-import com.strategicgains.aclaid.Role;
 
 /**
  * An assertion that contains multiple assertions.

@@ -13,38 +13,50 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid.impl;
+package com.strategicgains.aclaid;
 
-import com.strategicgains.aclaid.Resource;
+import com.strategicgains.aclaid.OwnableResource;
 
 /**
  * @author toddf
  * @since Feb 24, 2016
  */
-public class ResourceImpl
-implements Resource
+public class OwnableResourceImpl<T>
+extends ResourceImpl
+implements OwnableResource<T>
 {
-	private String resourceId;
+	private T owner;
 
-	public ResourceImpl()
+	public OwnableResourceImpl()
 	{
 		super();
 	}
 
-	public ResourceImpl(String resourceId)
+	public OwnableResourceImpl(String resourceId)
+	{
+		super(resourceId);
+	}
+
+	public OwnableResourceImpl(T owner)
 	{
 		this();
-		setResourceId(resourceId);
+		setOwner(owner);
+	}
+
+	public OwnableResourceImpl(String resourceId, T owner)
+	{
+		super(resourceId);
+		setOwner(owner);
 	}
 
 	@Override
-	public String getResourceId()
+	public T getOwner()
 	{
-		return resourceId;
+		return owner;
 	}
 
-	public void setResourceId(String resourceId)
+	public void setOwner(T owner)
 	{
-		this.resourceId = resourceId;
+		this.owner = owner;
 	}
 }

@@ -15,8 +15,6 @@
 */
 package com.strategicgains.aclaid;
 
-import com.strategicgains.aclaid.impl.RoleImpl;
-
 /**
  * @author toddf
  * @since Mar 13, 2016

@@ -8,8 +8,6 @@ import org.junit.Test;
 import com.strategicgains.aclaid.builder.GrantBuilder;
 import com.strategicgains.aclaid.exception.ResourceNotRegisteredException;
 import com.strategicgains.aclaid.exception.RoleNotRegisteredException;
-import com.strategicgains.aclaid.impl.ResourceImpl;
-import com.strategicgains.aclaid.impl.RoleImpl;
 
 public class AccessControlListTest
 {
