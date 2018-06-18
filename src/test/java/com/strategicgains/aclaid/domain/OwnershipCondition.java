@@ -13,7 +13,13 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.domain;
+
+import com.strategicgains.aclaid.AccessControlList;
+import com.strategicgains.aclaid.Condition;
+import com.strategicgains.aclaid.OwnableResource;
+import com.strategicgains.aclaid.Resource;
+import com.strategicgains.aclaid.Role;
 
 /**
  * @author toddf

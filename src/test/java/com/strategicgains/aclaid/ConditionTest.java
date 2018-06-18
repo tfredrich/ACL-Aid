@@ -6,6 +6,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.GrantBuilder;
+import com.strategicgains.aclaid.domain.OwnableResourceImpl;
+import com.strategicgains.aclaid.domain.OwnershipCondition;
+import com.strategicgains.aclaid.domain.RoleImpl;
 
 public class ConditionTest
 {

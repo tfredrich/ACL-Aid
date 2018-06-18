@@ -13,7 +13,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.domain;
 
 import com.strategicgains.aclaid.OwnableResource;
 

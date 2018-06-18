@@ -1,4 +1,6 @@
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.domain;
+
+import com.strategicgains.aclaid.Role;
 
 public class User
 implements Role

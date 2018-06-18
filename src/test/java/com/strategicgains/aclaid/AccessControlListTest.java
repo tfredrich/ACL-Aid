@@ -6,6 +6,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.GrantBuilder;
+import com.strategicgains.aclaid.domain.BlogPost;
+import com.strategicgains.aclaid.domain.ResourceImpl;
+import com.strategicgains.aclaid.domain.RoleImpl;
+import com.strategicgains.aclaid.domain.User;
 import com.strategicgains.aclaid.exception.ResourceNotRegisteredException;
 import com.strategicgains.aclaid.exception.RoleNotRegisteredException;
 

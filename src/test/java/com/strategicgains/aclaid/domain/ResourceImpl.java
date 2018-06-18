@@ -13,52 +13,38 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.domain;
 
-import com.strategicgains.aclaid.Role;
+import com.strategicgains.aclaid.Resource;
 
 /**
- * Parameter type T indicates the type of the ID for this role (e.g. the user identifier).
- * 
  * @author toddf
  * @since Feb 24, 2016
  */
-public class RoleImpl<T>
-implements Role
+public class ResourceImpl
+implements Resource
 {
-	private T id;
-	private String roleId;
+	private String resourceId;
 
-	public RoleImpl()
+	public ResourceImpl()
 	{
 		super();
 	}
 
-	public RoleImpl(T id, String roleId)
+	public ResourceImpl(String resourceId)
 	{
 		this();
-		setId(id);
-		setRoleId(roleId);
-	}
-
-	public T getId()
-	{
-		return id;
-	}
-
-	private void setId(T id)
-	{
-		this.id = id;
+		setResourceId(resourceId);
 	}
 
 	@Override
-	public String getRoleId()
+	public String getResourceId()
 	{
-		return roleId;
+		return resourceId;
 	}
 
-	public void setRoleId(String roleId)
+	public void setResourceId(String resourceId)
 	{
-		this.roleId = roleId;
+		this.resourceId = resourceId;
 	}
 }
