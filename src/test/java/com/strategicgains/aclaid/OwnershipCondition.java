@@ -26,7 +26,7 @@ implements Condition
 {
 	@SuppressWarnings("unchecked")
 	@Override
-	public boolean evaluate(AccessControlList acl, Role role, Resource resource, String permissionId)
+	public boolean isMet(AccessControlList acl, Role role, Resource resource, String permissionId)
 	{
 		if ("guest".equals(role.getRoleId()) && RoleImpl.class.isAssignableFrom(role.getClass()))
 		{

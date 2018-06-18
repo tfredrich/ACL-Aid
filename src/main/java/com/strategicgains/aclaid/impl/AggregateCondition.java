@@ -38,11 +38,11 @@ implements Condition
 	 * Makes the assertion, calling the aggregated assertions, returning after the first one that returns true.
 	 * Otherwise returns false.
 	 */
-	public boolean evaluate(AccessControlList acl, Role role, Resource resource, String permissionId)
+	public boolean isMet(AccessControlList acl, Role role, Resource resource, String permissionId)
 	{
 		for (Condition assertion : assertions)
 		{
-			if (assertion.evaluate(acl, role, resource, permissionId)) return true;
+			if (assertion.isMet(acl, role, resource, permissionId)) return true;
 		}
 
 		return false;

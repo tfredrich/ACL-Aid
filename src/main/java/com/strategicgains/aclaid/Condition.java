@@ -21,5 +21,5 @@ package com.strategicgains.aclaid;
  */
 public interface Condition
 {
-	boolean evaluate(AccessControlList acl, Role role, Resource resource, String permissionId);
+	boolean isMet(AccessControlList acl, Role role, Resource resource, String permissionId);
 }
