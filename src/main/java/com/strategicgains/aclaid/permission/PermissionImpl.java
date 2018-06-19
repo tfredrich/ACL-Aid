@@ -1,4 +1,19 @@
-package com.strategicgains.aclaid;
+/*
+    Copyright 2018, Strategic Gains, Inc.
+
+	Licensed under the Apache License, Version 2.0 (the "License");
+	you may not use this file except in compliance with the License.
+	You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+	Unless required by applicable law or agreed to in writing, software
+	distributed under the License is distributed on an "AS IS" BASIS,
+	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	See the License for the specific language governing permissions and
+	limitations under the License.
+*/
+package com.strategicgains.aclaid.permission;
 
 import java.text.ParseException;
 import java.util.Objects;
@@ -16,7 +31,8 @@ import java.util.Objects;
  * @author tfredrich
  * @since 13 Mar 2017
  */
-public class Permission
+public class PermissionImpl
+implements Permission<PermissionImpl>
 {
 	private static final String DELIMITER = ":";
 	private static final String WILDCARD = "*";
@@ -25,7 +41,7 @@ public class Permission
 	private String action;
 	private String classifier;
 
-	public Permission(String namespace, String action, String classifier)
+	public PermissionImpl(String namespace, String action, String classifier)
 	{
 		super();
 		this.namespace = namespace;
@@ -33,7 +49,7 @@ public class Permission
 		this.classifier = classifier;
 	}
 
-	public static Permission parse(String permission)
+	public static PermissionImpl parse(String permission)
 	throws ParseException
 	{
 		if (permission == null) throw new ParseException("Permission strings cannot be null", 0);
@@ -43,7 +59,13 @@ public class Permission
 		if (parts.length > 3) throw new ParseException("Permission strings have at most three (3) segments", 0);
 		if (parts.length < 2) throw new ParseException("Permission strings have at least two (2) segments", 0);
 
-		return (parts.length == 3 ? new Permission(parts[0], parts[1], parts[2]) : new Permission(parts[0], parts[1], null));
+		return (parts.length == 3 ? new PermissionImpl(parts[0], parts[1], parts[2]) : new PermissionImpl(parts[0], parts[1], null));
+	}
+
+	@Override
+	public String getPermissionId()
+	{
+		return toString();
 	}
 
 	public String getNamespace()
@@ -108,12 +130,12 @@ public class Permission
 	public boolean equals(Object that)
 	{
 		if (that == null) return false;
-		if (Permission.class.isAssignableFrom(that.getClass()));
+		if (PermissionImpl.class.isAssignableFrom(that.getClass()));
 
-		return equals((Permission) that);
+		return equals((PermissionImpl) that);
 	}
 
-	public boolean equals(Permission that)
+	public boolean equals(PermissionImpl that)
 	{
 		if (that == null) return false;
 
@@ -133,7 +155,15 @@ public class Permission
 		return sb.toString();
 	}
 
-	public boolean matches(Permission that)
+	@Override
+	public boolean matches(String permissionString)
+	throws ParseException
+	{
+		return matches(parse(permissionString));
+	}
+
+	@Override
+	public boolean matches(PermissionImpl that)
 	{
 		if (that == null) return false;
 		if (!this.getNamespace().equals(that.getNamespace())) return false;

@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.permission;
 
 import java.text.ParseException;
 
@@ -13,16 +13,16 @@ public abstract class Permissions
 	public static boolean match(String permissionStringA, String permissionStringB)
 	throws ParseException
 	{
-		return match(Permission.parse(permissionStringA), Permission.parse(permissionStringB));
+		return match(PermissionImpl.parse(permissionStringA), PermissionImpl.parse(permissionStringB));
 	}
 
-	public static boolean match(String permissionString, Permission permission)
+	public static boolean match(String permissionString, PermissionImpl permission)
 	throws ParseException
 	{
-		return match(Permission.parse(permissionString), permission);
+		return match(PermissionImpl.parse(permissionString), permission);
 	}
 
-	public static boolean match(Permission permissionA, Permission permissionB)
+	public static boolean match(PermissionImpl permissionA, PermissionImpl permissionB)
 	{
 		if (permissionA == null && permissionB == null) return true;
 

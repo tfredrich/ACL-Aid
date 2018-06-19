@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.permission;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -8,21 +8,24 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
+import com.strategicgains.aclaid.permission.PermissionImpl;
+import com.strategicgains.aclaid.permission.Permissions;
+
 public class PermissionsTest
 {
 	@Test
 	public void shouldParseStrings()
 	throws ParseException
 	{
-		Permission permission = Permission.parse("iam:create:user");
+		PermissionImpl permission = PermissionImpl.parse("iam:create:user");
 		assertPermission(permission, "iam", "create", "user");
-		permission = Permission.parse("iam:*:user");
+		permission = PermissionImpl.parse("iam:*:user");
 		assertPermission(permission, "iam", "*", "user");
-		permission = Permission.parse("iam:create:*");
+		permission = PermissionImpl.parse("iam:create:*");
 		assertPermission(permission, "iam", "create", "*");
-		permission = Permission.parse("iam:*:*");
+		permission = PermissionImpl.parse("iam:*:*");
 		assertPermission(permission, "iam", "*", "*");
-		permission = Permission.parse("iam:send_message");
+		permission = PermissionImpl.parse("iam:send_message");
 		assertPermission(permission, "iam", "send_message", null);
 	}
 
@@ -32,31 +35,31 @@ public class PermissionsTest
 	{
 		Permissions.match("iam:create:user", "iam:create:*");
 		Permissions.match("iam:create:user", "iam:*:user");
-		Permissions.match("iam:create:*", Permission.parse("iam:create:user"));
+		Permissions.match("iam:create:*", PermissionImpl.parse("iam:create:user"));
 	}
 
 	@Test
 	public void shouldMatch()
 	throws ParseException
 	{
-		Permission a = Permission.parse("iam:create:user");
-		Permission b = Permission.parse("iam:create:user");
+		PermissionImpl a = PermissionImpl.parse("iam:create:user");
+		PermissionImpl b = PermissionImpl.parse("iam:create:user");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 
-		b = Permission.parse("iam:*:user");
+		b = PermissionImpl.parse("iam:*:user");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 
-		b = Permission.parse("iam:create:*");
+		b = PermissionImpl.parse("iam:create:*");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 
-		b = Permission.parse("iam:*:*");
+		b = PermissionImpl.parse("iam:*:*");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 
-		b = Permission.parse("iam:*");
+		b = PermissionImpl.parse("iam:*");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 	}
@@ -65,16 +68,16 @@ public class PermissionsTest
 	public void shouldMatchActionOnly()
 	throws ParseException
 	{
-		Permission a = Permission.parse("iam:create_user");
-		Permission b = Permission.parse("iam:create_user");
+		PermissionImpl a = PermissionImpl.parse("iam:create_user");
+		PermissionImpl b = PermissionImpl.parse("iam:create_user");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 
-		b = Permission.parse("iam:*");
+		b = PermissionImpl.parse("iam:*");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 
-		b = Permission.parse("iam:*:*");
+		b = PermissionImpl.parse("iam:*:*");
 		assertTrue(Permissions.match(a, b));
 		assertTrue(Permissions.match(b, a));
 	}
@@ -83,40 +86,40 @@ public class PermissionsTest
 	public void shouldNotMatch()
 	throws ParseException
 	{
-		Permission a = Permission.parse("iam:create:user");
-		Permission b = Permission.parse("iam:create:directory");
+		PermissionImpl a = PermissionImpl.parse("iam:create:user");
+		PermissionImpl b = PermissionImpl.parse("iam:create:directory");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("mfa:create:user");
+		b = PermissionImpl.parse("mfa:create:user");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("mfa:*:*");
+		b = PermissionImpl.parse("mfa:*:*");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("mfa:*");
+		b = PermissionImpl.parse("mfa:*");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("iam:update:user");
+		b = PermissionImpl.parse("iam:update:user");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("iam:create");
+		b = PermissionImpl.parse("iam:create");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("iam:update:*");
+		b = PermissionImpl.parse("iam:update:*");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("iam:*:directory");
+		b = PermissionImpl.parse("iam:*:directory");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 
-		b = Permission.parse("iam:create_user");
+		b = PermissionImpl.parse("iam:create_user");
 		assertFalse(Permissions.match(a, b));
 		assertFalse(Permissions.match(b, a));
 	}
@@ -125,17 +128,17 @@ public class PermissionsTest
 	public void shouldThrowOnEmptyNode()
 	throws ParseException
 	{
-		Permission.parse("iam:");
+		PermissionImpl.parse("iam:");
 	}
 
 	@Test(expected=ParseException.class)
 	public void shouldThrowOnSingleNode()
 	throws ParseException
 	{
-		Permission.parse("iam");
+		PermissionImpl.parse("iam");
 	}
 
-	private void assertPermission(Permission permission, String namepsace, String action, String classifier)
+	private void assertPermission(PermissionImpl permission, String namepsace, String action, String classifier)
 	{
 		assertEquals(namepsace, permission.getNamespace());
 		assertEquals(action, permission.getAction());

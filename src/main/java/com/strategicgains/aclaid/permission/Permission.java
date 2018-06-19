@@ -1,5 +1,5 @@
 /*
-    Copyright 2016, Strategic Gains, Inc.
+    Copyright 2018, Strategic Gains, Inc.
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
@@ -13,15 +13,17 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.permission;
 
-import com.strategicgains.aclaid.resource.Resource;
+import java.text.ParseException;
 
 /**
  * @author toddf
- * @since Feb 24, 2016
+ * @since Jun 18, 2018
  */
-public interface Condition
+public interface Permission<T>
 {
-	boolean isMet(AccessControlList acl, Role role, Resource resource, String permissionId);
+	public String getPermissionId();
+	public boolean matches(String permissionId) throws ParseException;
+	public boolean matches(T that);
 }

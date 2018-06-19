@@ -25,6 +25,7 @@ import java.util.Set;
 
 import com.strategicgains.aclaid.exception.ResourceNotRegisteredException;
 import com.strategicgains.aclaid.exception.RoleNotRegisteredException;
+import com.strategicgains.aclaid.resource.Resource;
 
 /**
  * @author toddf

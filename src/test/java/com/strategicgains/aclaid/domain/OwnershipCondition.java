@@ -17,9 +17,9 @@ package com.strategicgains.aclaid.domain;
 
 import com.strategicgains.aclaid.AccessControlList;
 import com.strategicgains.aclaid.Condition;
-import com.strategicgains.aclaid.OwnableResource;
-import com.strategicgains.aclaid.Resource;
 import com.strategicgains.aclaid.Role;
+import com.strategicgains.aclaid.resource.OwnableResource;
+import com.strategicgains.aclaid.resource.Resource;
 
 /**
  * @author toddf

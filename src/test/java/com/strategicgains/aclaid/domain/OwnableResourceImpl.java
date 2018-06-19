@@ -15,7 +15,7 @@
 */
 package com.strategicgains.aclaid.domain;
 
-import com.strategicgains.aclaid.OwnableResource;
+import com.strategicgains.aclaid.resource.OwnableResource;
 
 /**
  * @author toddf

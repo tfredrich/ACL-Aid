@@ -12,6 +12,7 @@ import com.strategicgains.aclaid.domain.RoleImpl;
 import com.strategicgains.aclaid.domain.User;
 import com.strategicgains.aclaid.exception.ResourceNotRegisteredException;
 import com.strategicgains.aclaid.exception.RoleNotRegisteredException;
+import com.strategicgains.aclaid.resource.Resource;
 
 public class AccessControlListTest
 {

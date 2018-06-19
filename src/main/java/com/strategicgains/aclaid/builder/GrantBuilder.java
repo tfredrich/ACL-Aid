@@ -20,9 +20,9 @@ import java.util.List;
 
 import com.strategicgains.aclaid.Condition;
 import com.strategicgains.aclaid.Grant;
-import com.strategicgains.aclaid.Permission;
-import com.strategicgains.aclaid.Resource;
 import com.strategicgains.aclaid.Role;
+import com.strategicgains.aclaid.permission.PermissionImpl;
+import com.strategicgains.aclaid.resource.Resource;
 
 /**
  * @author toddf
@@ -54,7 +54,7 @@ public class GrantBuilder
 		return this;
 	}
 
-	public GrantBuilder permissions(Permission... permissions)
+	public GrantBuilder permissions(PermissionImpl... permissions)
 	{
 		return permissions(asStrings(permissions));
 	}
@@ -76,11 +76,11 @@ public class GrantBuilder
 		return grant;
 	}
 
-	private String[] asStrings(Permission[] permissions)
+	private String[] asStrings(PermissionImpl[] permissions)
 	{
 		List<String> strings = new ArrayList<>(permissions.length);
 
-		for (Permission permission : permissions)
+		for (PermissionImpl permission : permissions)
 		{
 			strings.add(permission.toString());
 		}

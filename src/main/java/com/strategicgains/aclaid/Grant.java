@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.strategicgains.aclaid.resource.Resource;
+
 /**
  * Defines access for a given role and resource. Specifies the permissions allowed for that role/resource combination.
  * If either roleId or resourceId is null, then it is assumed to be a wildcard. If the permission set is empty, then

@@ -18,6 +18,8 @@ package com.strategicgains.aclaid;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.strategicgains.aclaid.resource.Resource;
+
 /**
  * An assertion that contains multiple assertions.
  * 
