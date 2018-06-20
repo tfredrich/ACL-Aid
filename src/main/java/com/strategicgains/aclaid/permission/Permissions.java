@@ -13,16 +13,19 @@ public abstract class Permissions
 	public static boolean match(String permissionStringA, String permissionStringB)
 	throws ParseException
 	{
-		return match(PermissionImpl.parse(permissionStringA), PermissionImpl.parse(permissionStringB));
+		PermissionImpl a = (permissionStringA != null ? PermissionImpl.parse(permissionStringA) : null);
+		PermissionImpl b = (permissionStringB != null ? PermissionImpl.parse(permissionStringB) : null);
+		return match(a, b);
 	}
 
-	public static boolean match(String permissionString, PermissionImpl permission)
+	public static boolean match(String permissionString, Permission permission)
 	throws ParseException
 	{
-		return match(PermissionImpl.parse(permissionString), permission);
+		PermissionImpl a = (permissionString != null ? PermissionImpl.parse(permissionString) : null);
+		return match(a, permission);
 	}
 
-	public static boolean match(PermissionImpl permissionA, PermissionImpl permissionB)
+	public static boolean match(Permission permissionA, Permission permissionB)
 	{
 		if (permissionA == null && permissionB == null) return true;
 

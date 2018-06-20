@@ -15,15 +15,12 @@
 */
 package com.strategicgains.aclaid.permission;
 
-import java.text.ParseException;
-
 /**
  * @author toddf
  * @since Jun 18, 2018
  */
-public interface Permission<T>
+public interface Permission
 {
 	public String getPermissionId();
-	public boolean matches(String permissionId) throws ParseException;
-	public boolean matches(T that);
+	public boolean matches(Permission that);
 }

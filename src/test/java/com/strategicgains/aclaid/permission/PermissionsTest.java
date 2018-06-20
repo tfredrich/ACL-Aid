@@ -8,9 +8,6 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-import com.strategicgains.aclaid.permission.PermissionImpl;
-import com.strategicgains.aclaid.permission.Permissions;
-
 public class PermissionsTest
 {
 	@Test

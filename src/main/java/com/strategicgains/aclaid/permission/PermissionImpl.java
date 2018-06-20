@@ -32,7 +32,7 @@ import java.util.Objects;
  * @since 13 Mar 2017
  */
 public class PermissionImpl
-implements Permission<PermissionImpl>
+implements Permission
 {
 	private static final String DELIMITER = ":";
 	private static final String WILDCARD = "*";
@@ -155,7 +155,6 @@ implements Permission<PermissionImpl>
 		return sb.toString();
 	}
 
-	@Override
 	public boolean matches(String permissionString)
 	throws ParseException
 	{
@@ -163,6 +162,11 @@ implements Permission<PermissionImpl>
 	}
 
 	@Override
+	public boolean matches(Permission permission)
+	{
+		return matches((PermissionImpl) permission);
+	}
+	
 	public boolean matches(PermissionImpl that)
 	{
 		if (that == null) return false;
