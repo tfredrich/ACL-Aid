@@ -1,5 +1,5 @@
 /*
-    Copyright 2016, Strategic Gains, Inc.
+    Copyright 2021, Strategic Gains, Inc.
 
 	Licensed under the Apache License, Version 2.0 (the "License");
 	you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequiresRole
+public @interface RequiresRelation
 {
 	String value();
 }

@@ -1,90 +1,94 @@
-/*
-    Copyright 2016, Strategic Gains, Inc.
-
-	Licensed under the Apache License, Version 2.0 (the "License");
-	you may not use this file except in compliance with the License.
-	You may obtain a copy of the License at
-
-		http://www.apache.org/licenses/LICENSE-2.0
-
-	Unless required by applicable law or agreed to in writing, software
-	distributed under the License is distributed on an "AS IS" BASIS,
-	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	See the License for the specific language governing permissions and
-	limitations under the License.
-*/
 package com.strategicgains.aclaid.builder;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.strategicgains.aclaid.Condition;
-import com.strategicgains.aclaid.Grant;
-import com.strategicgains.aclaid.Role;
-import com.strategicgains.aclaid.permission.PermissionImpl;
-import com.strategicgains.aclaid.resource.Resource;
+import com.strategicgains.aclaid.AccessControlList;
+import com.strategicgains.aclaid.domain.Grant;
+import com.strategicgains.aclaid.domain.Resource;
+import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.InvalidGrantException;
 
-/**
- * @author toddf
- * @since Feb 25, 2016
- */
 public class GrantBuilder
 {
-	private Grant grant;
+	private List<NamespaceBuilder> namespaces = new ArrayList<>();
+	private List<Grant> grants = new ArrayList<>();
+	private Grant current;
 
-	public GrantBuilder role(Role role)
+	public GrantBuilder forResource(String qrn)
+	throws ParseException, InvalidGrantException
 	{
-		return role(role.getRoleId());
+		current = new Grant();
+		grants.add(current);
+		return withResource(qrn);
 	}
 
-	public GrantBuilder role(String roleId)
+	public GrantBuilder forUserset(String qrn)
+	throws ParseException, InvalidGrantException
 	{
-		grant = new Grant(roleId);
-		return this;
+		current = new Grant();
+		grants.add(current);
+		return withUserset(qrn);
 	}
 
-	public GrantBuilder resource(Resource resource)
+	public GrantBuilder withResource(String qrn)
+	throws ParseException, InvalidGrantException
 	{
-		return resource(resource.getResourceId());
-	}
-
-	public GrantBuilder resource(String resourceId)
-	{
-		grant.resourceId(resourceId);
-		return this;
-	}
-
-	public GrantBuilder permissions(PermissionImpl... permissions)
-	{
-		return permissions(asStrings(permissions));
-	}
-
-	public GrantBuilder permissions(String... permissionIds)
-	{
-		grant.allow(permissionIds);
-		return this;
-	}
-
-	public GrantBuilder withAssertion(Condition assertion)
-	{
-		grant.withCondition(assertion);
-		return this;
-	}
-
-	public Grant build()
-	{
-		return grant;
-	}
-
-	private String[] asStrings(PermissionImpl[] permissions)
-	{
-		List<String> strings = new ArrayList<>(permissions.length);
-
-		for (PermissionImpl permission : permissions)
+		if (current.hasResource())
 		{
-			strings.add(permission.toString());
+			current = cloneCurrent();
 		}
 
-		return strings.toArray(new String[0]);
+		current.setResource(Resource.parse(qrn));
+		return this;
+	}
+
+	public GrantBuilder withRelation(String relation)
+	throws InvalidGrantException
+	{
+		if (current.hasRelation())
+		{
+			current = cloneCurrent();
+		}
+
+		current.setRelation(relation);
+		return this;
+	}
+
+	public GrantBuilder withUserset(String qrn)
+	throws ParseException, InvalidGrantException
+	{
+		if (current.hasUserset())
+		{
+			current = cloneCurrent();
+		}
+
+		current.setUserset(UserSet.parse(qrn));
+		return this;
+	}
+
+	private Grant cloneCurrent()
+	throws InvalidGrantException
+	{
+		if (!current.isValid()) throw new InvalidGrantException(current.toString());
+
+		Grant g = new Grant(current);
+		grants.add(g);
+		return g;
+	}
+
+	public AccessControlList build()
+	{
+		AccessControlList m = new AccessControlList();
+		grants.stream().forEach(g -> m.withGrant(g));
+		return m;
+	}
+
+	public NamespaceBuilder namespace(String name)
+	{
+		NamespaceBuilder b = new NamespaceBuilder(name);
+		namespaces.add(b);
+		return b;
 	}
 }
