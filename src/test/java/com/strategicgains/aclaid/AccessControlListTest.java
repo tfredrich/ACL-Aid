@@ -15,25 +15,25 @@ import com.strategicgains.aclaid.exception.InvalidGrantException;
 
 public class AccessControlListTest
 {
-	private static final String ADMINS_GROUP = "qrn:iam:::group/admins";
-	private static final String EVERYONE_GROUP = "qrn:iam:::group/everyone";
+	private static final String ADMINS_GROUP = "groups:admins";
+	private static final String EVERYONE_GROUP = "groups:everyone";
 
-	private static final String ALL_VIDEOS = "qrn:docs:::video/*";
-	private static final String VIDEO_1234 = "qrn:docs:::video/1234";
+	private static final String ALL_DOCS = "docs:*";
+	private static final String DOC_1234 = "docs:1234";
 
 	private static final String MEMBER_RELATION = "member";
 	private static final String VIEWER_RELATION = "viewer";
 	private static final String ADMIN_RELATION = "administers";
 	private static final String OWNER_RELATION = "owner";
 
-	private static final String ALL_USERS = "qrn:iam:::user/*";
+	private static final String ALL_USERS = "user:*";
 	private static final String ADMINISTRATORS = ADMINS_GROUP + "#" + MEMBER_RELATION;
-	private static final String BETTY = "qrn:iam:::user/betty";
-	private static final String BOB = "qrn:iam:::user/bob";
-	private static final String SALLY = "qrn:iam:::user/sally";
-	private static final String SAM = "qrn:iam:::user/sam";
-	private static final String TODD = "qrn:iam:::user/todd";
-	private static final String JASMINE = "qrn:iam:::user/jami";
+	private static final String BETTY = "user:betty";
+	private static final String BOB = "user:bob";
+	private static final String SALLY = "user:sally";
+	private static final String SAM = "user:sam";
+	private static final String TODD = "user:todd";
+	private static final String JASMINE = "user:jasmine";
 
 	@Test
 	public void test()
@@ -52,19 +52,19 @@ public class AccessControlListTest
 					._this()
 					.computedUserset("editor");
 
-		gb.forResource(VIDEO_1234)
+		gb.forResource(DOC_1234)
 			.withUserset(TODD)
 				.withRelation(OWNER_RELATION);
 
-		gb.forResource(ALL_VIDEOS)
+		gb.forResource(ALL_DOCS)
 			.withRelation(ADMIN_RELATION)
 				.withUserset(ALL_USERS + "#" + OWNER_RELATION);
 
-		gb.forResource(ALL_VIDEOS)
+		gb.forResource(ALL_DOCS)
 			.withRelation(ADMIN_RELATION)
 				.withUserset(ADMINISTRATORS);
 
-		gb.forResource(ALL_VIDEOS)
+		gb.forResource(ALL_DOCS)
 			.withRelation(VIEWER_RELATION)
 				.withUserset(EVERYONE_GROUP + "#" + MEMBER_RELATION);
 
@@ -95,13 +95,13 @@ public class AccessControlListTest
 		assertTrue(gm.isAllowed(UserSet.parse(SALLY), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
 		assertTrue(gm.isAllowed(UserSet.parse(SAM), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
 
-		assertTrue(gm.isAllowed(UserSet.parse(TODD), OWNER_RELATION, Resource.parse(VIDEO_1234)));
-		assertTrue(gm.isAllowed(UserSet.parse(TODD), VIEWER_RELATION, Resource.parse(VIDEO_1234)));
-		assertTrue(gm.isAllowed(UserSet.parse(JASMINE), VIEWER_RELATION, Resource.parse(VIDEO_1234)));
-		assertFalse(gm.isAllowed(UserSet.parse(JASMINE), OWNER_RELATION, Resource.parse(VIDEO_1234)));
+		assertTrue(gm.isAllowed(UserSet.parse(TODD), OWNER_RELATION, Resource.parse(DOC_1234)));
+		assertTrue(gm.isAllowed(UserSet.parse(TODD), VIEWER_RELATION, Resource.parse(DOC_1234)));
+		assertTrue(gm.isAllowed(UserSet.parse(JASMINE), VIEWER_RELATION, Resource.parse(DOC_1234)));
+		assertFalse(gm.isAllowed(UserSet.parse(JASMINE), OWNER_RELATION, Resource.parse(DOC_1234)));
 		assertTrue(gm.isAllowed(UserSet.parse(BOB), ADMIN_RELATION, Resource.parse("qrn:docs:::video/12345")));
 		assertTrue(gm.isAllowed(UserSet.parse(SALLY), ADMIN_RELATION, Resource.parse("qrn:docs:::video/12345")));
-		assertTrue(gm.isAllowed(UserSet.parse(TODD), ADMIN_RELATION, Resource.parse(VIDEO_1234)));
-		assertFalse(gm.isAllowed(UserSet.parse(JASMINE), ADMIN_RELATION, Resource.parse(VIDEO_1234)));
+		assertTrue(gm.isAllowed(UserSet.parse(TODD), ADMIN_RELATION, Resource.parse(DOC_1234)));
+		assertFalse(gm.isAllowed(UserSet.parse(JASMINE), ADMIN_RELATION, Resource.parse(DOC_1234)));
 	}
 }
