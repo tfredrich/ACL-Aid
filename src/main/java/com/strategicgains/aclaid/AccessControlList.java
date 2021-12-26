@@ -1,5 +1,6 @@
 package com.strategicgains.aclaid;
 
+import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +27,13 @@ public class AccessControlList
 		return this;
 	}
 
-	public boolean isAllowed(UserSet userset, String relation, Resource resource)
+	public boolean check(String userset, String relation, String resource)
+	throws ParseException
+	{
+		return check(UserSet.parse(userset), relation, Resource.parse(resource));
+	}
+
+	public boolean check(UserSet userset, String relation, Resource resource)
 	{
 		for (Grant g : grants)
 		{

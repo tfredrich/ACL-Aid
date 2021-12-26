@@ -79,29 +79,29 @@ public class AccessControlListTest
 			.withRelation(MEMBER_RELATION)
 				.withUserset(ALL_USERS);
 
-		AccessControlList gm = gb.build();
-		assertNotNull(gm);
-		assertTrue(gm.isAllowed(UserSet.parse(TODD), MEMBER_RELATION, Resource.parse(EVERYONE_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(JASMINE), MEMBER_RELATION, Resource.parse(EVERYONE_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(BETTY), MEMBER_RELATION, Resource.parse(EVERYONE_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(BOB), MEMBER_RELATION, Resource.parse(EVERYONE_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(SALLY), MEMBER_RELATION, Resource.parse(EVERYONE_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(SAM), MEMBER_RELATION, Resource.parse(EVERYONE_GROUP)));
+		AccessControlList acl = gb.build();
+		assertNotNull(acl);
+		assertTrue(acl.check(TODD, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(JASMINE, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(BETTY, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(BOB, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(SALLY, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(SAM, MEMBER_RELATION, EVERYONE_GROUP));
 	
-		assertFalse(gm.isAllowed(UserSet.parse(TODD), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
-		assertFalse(gm.isAllowed(UserSet.parse(JASMINE), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(BETTY), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(BOB), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(SALLY), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
-		assertTrue(gm.isAllowed(UserSet.parse(SAM), MEMBER_RELATION, Resource.parse(ADMINS_GROUP)));
+		assertFalse(acl.check(TODD, MEMBER_RELATION, ADMINS_GROUP));
+		assertFalse(acl.check(JASMINE, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(BETTY, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(BOB, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(SALLY, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(SAM, MEMBER_RELATION, ADMINS_GROUP));
 
-		assertTrue(gm.isAllowed(UserSet.parse(TODD), OWNER_RELATION, Resource.parse(DOC_1234)));
-		assertTrue(gm.isAllowed(UserSet.parse(TODD), VIEWER_RELATION, Resource.parse(DOC_1234)));
-		assertTrue(gm.isAllowed(UserSet.parse(JASMINE), VIEWER_RELATION, Resource.parse(DOC_1234)));
-		assertFalse(gm.isAllowed(UserSet.parse(JASMINE), OWNER_RELATION, Resource.parse(DOC_1234)));
-		assertTrue(gm.isAllowed(UserSet.parse(BOB), ADMIN_RELATION, Resource.parse("qrn:docs:::video/12345")));
-		assertTrue(gm.isAllowed(UserSet.parse(SALLY), ADMIN_RELATION, Resource.parse("qrn:docs:::video/12345")));
-		assertTrue(gm.isAllowed(UserSet.parse(TODD), ADMIN_RELATION, Resource.parse(DOC_1234)));
-		assertFalse(gm.isAllowed(UserSet.parse(JASMINE), ADMIN_RELATION, Resource.parse(DOC_1234)));
+		assertTrue(acl.check(TODD, OWNER_RELATION, DOC_1234));
+		assertTrue(acl.check(TODD, VIEWER_RELATION, DOC_1234));
+		assertTrue(acl.check(JASMINE, VIEWER_RELATION, DOC_1234));
+		assertFalse(acl.check(JASMINE, OWNER_RELATION, DOC_1234));
+		assertTrue(acl.check(BOB, ADMIN_RELATION, "video:12345"));
+		assertTrue(acl.check(SALLY, ADMIN_RELATION, "video:12345"));
+		assertTrue(acl.check(TODD, ADMIN_RELATION, DOC_1234));
+		assertFalse(acl.check(JASMINE, ADMIN_RELATION, DOC_1234));
 	}
 }
