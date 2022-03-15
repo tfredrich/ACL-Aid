@@ -1,30 +1,57 @@
 package com.strategicgains.aclaid;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
-import com.strategicgains.aclaid.domain.Grant;
+import com.strategicgains.aclaid.builder.Relation;
 import com.strategicgains.aclaid.domain.Resource;
+import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class AccessControlList
 {
-	private Set<Grant> grants = new HashSet<>();
-//	private Map<QualifiedResourceName, PrincipalGrants> grantsByPrincipal = new HashMap<>();
-//	private Map<QualifiedResourceName, Grant> grantsByResource = new HashMap<>();
-	
+	private String namespace;
+	private Map<String, Relation> relations = new HashMap<>();
+	private Set<Tuple> tuples = new HashSet<>();
 
-	public AccessControlList withGrant(Grant grant)
+	public AccessControlList(String namespace)
 	{
-		grants.add(new Grant(grant));
+		super();
+		this.namespace = namespace;
+	}
+
+	public String getNamespace()
+	{
+		return namespace;
+	}
+
+	public boolean containsRelation(String relation)
+	{
+		return relations.containsKey(relation);
+	}
+
+	public void addRelation(Relation relation)
+	{
+		relations.put(relation.getName(), relation);
+	}
+
+	public AccessControlList addTuple(Tuple tuple)
+	throws RelationNotRegisteredException
+	{
+		if (!containsRelation(tuple.getRelation())) throw new RelationNotRegisteredException(tuple.getRelation());
+
+		tuples.add(new Tuple(tuple));
 		return this;
 	}
 
-	public AccessControlList withGrant(Resource resource, String relation, UserSet userset)
+	public AccessControlList addTuple(Resource resource, String relation, UserSet userset)
+	throws RelationNotRegisteredException
 	{
-		grants.add(new Grant(userset, relation, resource));
-		return this;
+		return addTuple(new Tuple(resource, relation, userset));
 	}
 
 	public boolean check(String userset, String relation, String resource)
@@ -35,44 +62,19 @@ public class AccessControlList
 
 	public boolean check(UserSet userset, String relation, Resource resource)
 	{
-		for (Grant g : grants)
+		for (Tuple tuple : tuples)
 		{
-			if (g.matches(userset, relation, resource))
+			if (tuple.matches(userset, relation, resource))
 			{
 				return true;
 			}
 
-			if (g.getUserset().hasRelation() && g.applies(resource, relation))
+			if (tuple.getUserset().hasRelation() && tuple.applies(resource, relation))
 			{
-				if (isInGroup(userset, g.getUserset())) return true;
+				//TODO: beware the recursion stack overflow!
+				if (check(userset, tuple.getUserset().getRelation(), tuple.getUserset())) return true;
 			}
 		}
-
-		return false;
-	}
-
-	private boolean isInGroup(UserSet userset, Resource resource)
-	{
-//		QualifiedResourceName group = new QualifiedResourceName(resource);
-//		ResourcePath rp = group.getResourcePath();
-//		String relation = rp.getFragment();
-//		rp.removeFragment();
-//		group.setResourcePath(rp);
-//
-//		for (Grant g : grants)
-//		{
-//			if (!g.applies(group)) continue;
-//
-//			if (g.matches(userset, relation, group))
-//			{
-//				return true;
-//			}
-//
-//			if (g.getUserset().hasFragment() && g.applies(resource))
-//			{
-//				if (isInGroup(userset, g.getUserset())) return true;
-//			}
-//		}
 
 		return false;
 	}

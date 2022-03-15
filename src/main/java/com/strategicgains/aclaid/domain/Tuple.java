@@ -1,7 +1,14 @@
 package com.strategicgains.aclaid.domain;
 
+import java.text.ParseException;
+
 /**
- * This is a STORAGE model. Not a memory model.
+ * This is the Zanzibar Tuple.
+ * 
+ * ⟨tuple⟩   ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
+ * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨object id⟩
+ * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
+ * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩
  * 
  * Would like to be able to answer as many "resource has relation on userset" questions as possible from memory.
  * With small footprint and high performance.
@@ -9,18 +16,18 @@ package com.strategicgains.aclaid.domain;
  * @author toddfredrich
  *
  */
-public class Grant
+public class Tuple
 {
 	private Resource resource;	// 'video xyz', 'groupB'
-	private String relation;			// 'owner', 'viewer', 'member'
-	private UserSet userset;			// 'todd', 'groupB#member'
+	private String relation;	// 'owner', 'viewer', 'member'
+	private UserSet userset;	// 'todd', 'groupB#member'
 
-	public Grant()
+	public Tuple()
 	{
 		super();
 	}
 
-	public Grant(UserSet userset, String relation, Resource resource)
+	public Tuple(Resource resource, String relation, UserSet userset)
 	{
 		this();
 		setResource(resource);
@@ -28,9 +35,9 @@ public class Grant
 		setUserset(userset);
 	}
 
-	public Grant(Grant grant)
+	public Tuple(Tuple grant)
 	{
-		this(grant.getUserset(), grant.getRelation(), grant.getResource());
+		this(grant.getResource(), grant.getRelation(), grant.getUserset());
 	}
 
 	public boolean hasResource()
@@ -116,7 +123,7 @@ public class Grant
 
 		if (getClass() != obj.getClass()) return false;
 
-		Grant other = (Grant) obj;
+		Tuple other = (Tuple) obj;
 
 		if (resource == null)
 		{
@@ -142,11 +149,25 @@ public class Grant
 	@Override
 	public String toString()
 	{
-		return String.format("(%s, %s, %s)", resource, relation, userset);
+		return String.format("%s#%s@%s)", resource, relation, userset);
 	}
 
 	public boolean isValid()
 	{
 		return hasResource() && hasUserset() && hasRelation();
+	}
+
+	public static Tuple parse(String tuple)
+	throws ParseException
+	{
+		String[] obj = tuple.split("#");
+
+		if (obj.length < 2) throw new ParseException("Invalid tuple resource#relation: " + tuple, 0);
+
+		String[] rel = obj[1].split("@");
+
+		if (rel.length < 2) throw new ParseException("Invalid tuple relation@userset: " + tuple, 0);
+
+		return new Tuple(Resource.parse(obj[0]), rel[0], UserSet.parse(rel[1]));
 	}
 }

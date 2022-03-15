@@ -9,6 +9,7 @@ public class Resource
 {
 	private static final String REGEX = "^(.*?):(.*?)$";
 	private static final Pattern PATTERN = Pattern.compile(REGEX);
+	protected static final String WILDCARD = "*";
 
 	private String namespace;
 	private String identifier;
@@ -28,16 +29,16 @@ public class Resource
 	public static Resource parse(String path)
 	throws ParseException
 	{
-		if (path == null || path.isEmpty()) throw new ParseException("Resource references cannot be null or empty", 0);
+		if (path == null || path.isEmpty()) throw new ParseException("Resource cannot be null or empty", 0);
 
 		Matcher m = PATTERN.matcher(path.trim());
 
-		if (!m.matches()) throw new ParseException("Invalid resource reference: " + path, 0);
+		if (!m.matches()) throw new ParseException("Invalid resource: " + path, 0);
 
 		Resource resource = new Resource();
 		String namespace = m.group(1);
 
-		if (namespace == null || namespace.isBlank()) throw new ParseException("Resource path must contain a namespace", 0);
+		if (namespace == null || namespace.isBlank()) throw new ParseException("Resource must contain a namespace", 0);
 
 		resource.setNamespace(namespace.trim());
 		String identifier = m.group(2);
@@ -57,9 +58,14 @@ public class Resource
 		this.namespace = namespace;
 	}
 
-	public boolean matches(Resource resource)
+	public boolean matches(Resource that)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return ((this.namespace.equals(that.namespace) || this.namespace.equals(WILDCARD))
+			&& (this.identifier.equals(that.identifier) || this.identifier.equals(WILDCARD)));
+	}
+
+	public String toString()
+	{
+		return String.format("%s:%s", namespace, identifier);
 	}
 }

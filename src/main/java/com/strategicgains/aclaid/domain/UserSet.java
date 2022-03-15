@@ -4,6 +4,14 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * This is the Zanzibar User (which is either a user or a user set).
+ * 
+ * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
+ * (user id) ::= 'user:'(object_id)
+ * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩ 
+ * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨object id⟩'
+**/
 public class UserSet
 extends Resource
 {
@@ -23,20 +31,14 @@ extends Resource
 		setRelation(that.relation);
 	}
 
-	public boolean matches(UserSet resource)
-	{
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	public static UserSet parse(String path)
+	public static UserSet parse(String string)
 	throws ParseException
 	{
-		if (path == null || path.isEmpty()) throw new ParseException("Usersets cannot be null or empty", 0);
+		if (string == null || string.isEmpty()) throw new ParseException("Usersets cannot be null or empty", 0);
 
-		Matcher m = PATTERN.matcher(path.trim());
+		Matcher m = PATTERN.matcher(string.trim());
 
-		if (!m.matches()) throw new ParseException("Invalid userset: " + path, 0);
+		if (!m.matches()) throw new ParseException("Invalid userset: " + string, 0);
 
 		UserSet userset = new UserSet();
 		String namespace = m.group(1);
@@ -65,8 +67,26 @@ extends Resource
 		this.relation = relation;
 	}
 
+	public String getRelation()
+	{
+		return relation;
+	}
+
 	public boolean hasRelation()
 	{
 		return relation != null;
+	}
+
+	public String toString()
+	{
+		StringBuilder s = new StringBuilder(super.toString());
+
+		if (hasRelation())
+		{
+			s.append("#");
+			s.append(relation);
+		}
+
+		return s.toString();
 	}
 }
