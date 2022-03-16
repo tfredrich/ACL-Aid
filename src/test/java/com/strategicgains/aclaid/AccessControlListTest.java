@@ -14,85 +14,88 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class AccessControlListTest
 {
-	private static final String NAMESPACE = "documents";
+	private static final String DOCUMENT = "doc";
+	private static final String GROUP = "group";
+	private static final String USER = "user";
 
-	private static final String ADMINS_GROUP = "groups:admins";
-	private static final String EVERYONE_GROUP = "groups:everyone";
+	private static final String ADMINS_GROUP = GROUP + ":admins";
+	private static final String EVERYONE_GROUP = GROUP + ":everyone";
 
-	private static final String ALL_DOCS = "docs:*";
-	private static final String DOC_1234 = "docs:1234";
+	private static final String ALL_DOCS = DOCUMENT + ":*";
+	private static final String DOC_1234 = DOCUMENT + ":1234";
 
-	private static final String ADMIN_RELATION = "administers";
-	private static final String EDITOR_RELATION = "editor";
-	private static final String MEMBER_RELATION = "member";
-	private static final String OWNER_RELATION = "owner";
-	private static final String VIEWER_RELATION = "viewer";
+	private static final String ADMINISTRATOR = "administers";
+	private static final String EDITOR = "editor";
+	private static final String MEMBER = "member";
+	private static final String OWNER = "owner";
+	private static final String VIEWER = "viewer";
 
-	private static final String ALL_USERS = "user:*";
-	private static final String ADMINISTRATORS = ADMINS_GROUP + "#" + MEMBER_RELATION;
-	private static final String EVERYONE = EVERYONE_GROUP + "#" + MEMBER_RELATION;
-	private static final String BETTY = "user:betty";
-	private static final String BOB = "user:bob";
-	private static final String SALLY = "user:sally";
-	private static final String SAM = "user:sam";
-	private static final String TODD = "user:todd";
-	private static final String JASMINE = "user:jasmine";
+	private static final String EVERY_USER = USER + ":*";
+	private static final String ADMINISTRATORS = ADMINS_GROUP + "#" + MEMBER;
+	private static final String EVERYONE = EVERYONE_GROUP + "#" + MEMBER;
+	private static final String BETTY = USER + ":betty";
+	private static final String BOB = USER + ":bob";
+	private static final String SALLY = USER + ":sally";
+	private static final String SAM = USER + ":sam";
+	private static final String TODD = USER + ":todd";
+	private static final String JASMINE = USER + ":jasmine";
 
 	@Test
 	public void test()
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
-		AclBuilder builder = new AclBuilder(NAMESPACE);
-
+		AclBuilder builder = new AclBuilder();
 		builder
-			.relation(OWNER_RELATION)
-			.relation(MEMBER_RELATION)
-			.relation(ADMIN_RELATION)
-			.relation(EDITOR_RELATION)
-				.union()
-					._this()
-					.computedUserset(OWNER_RELATION)
-			.relation(VIEWER_RELATION)
-				.union()
-					._this()
-					.computedUserset(EDITOR_RELATION);
+			.namespace(DOCUMENT)
+				.relation(OWNER)
+				.relation(ADMINISTRATOR)
+				.relation(EDITOR)
+					.union()
+						._this()
+						.computedUserset(OWNER)
+				.relation(VIEWER)
+					.union()
+						._this()
+						.computedUserset(EDITOR)
 
-		builder
-			.tuple(TODD, OWNER_RELATION, DOC_1234)
-			.tuple(ADMINISTRATORS, ADMIN_RELATION, ALL_DOCS)
-			.tuple(EVERYONE, VIEWER_RELATION, ALL_DOCS)
-			.tuple(ALL_USERS, MEMBER_RELATION, EVERYONE_GROUP)
-	
-			.forResource(ADMINS_GROUP)
-				.withRelation(MEMBER_RELATION)
-					.withUserset(SAM)
-					.withUserset(BOB)
-					.withUserset(SALLY)
-					.withUserset(BETTY);
+				.tuple(TODD, OWNER, DOC_1234)
+				.tuple(ADMINISTRATORS, ADMINISTRATOR, ALL_DOCS)
+				.tuple(EVERYONE, VIEWER, ALL_DOCS)
+		
+				.forResource(ADMINS_GROUP)
+					.withRelation(MEMBER)
+						.withUserset(SAM)
+						.withUserset(BOB)
+						.withUserset(SALLY)
+						.withUserset(BETTY)
+
+			.namespace(GROUP)
+				.relation(MEMBER)
+				.tuple(EVERY_USER, MEMBER, EVERYONE_GROUP);
 
 		AccessControlList acl = builder.build();
 		assertNotNull(acl);
-		assertTrue(acl.check(TODD, MEMBER_RELATION, EVERYONE_GROUP));
-		assertTrue(acl.check(JASMINE, MEMBER_RELATION, EVERYONE_GROUP));
-		assertTrue(acl.check(BETTY, MEMBER_RELATION, EVERYONE_GROUP));
-		assertTrue(acl.check(BOB, MEMBER_RELATION, EVERYONE_GROUP));
-		assertTrue(acl.check(SALLY, MEMBER_RELATION, EVERYONE_GROUP));
-		assertTrue(acl.check(SAM, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(TODD, MEMBER, EVERYONE_GROUP));
+		assertTrue(acl.check(JASMINE, MEMBER, EVERYONE_GROUP));
+		assertTrue(acl.check(BETTY, MEMBER, EVERYONE_GROUP));
+		assertTrue(acl.check(BOB, MEMBER, EVERYONE_GROUP));
+		assertTrue(acl.check(SALLY, MEMBER, EVERYONE_GROUP));
+		assertTrue(acl.check(SAM, MEMBER, EVERYONE_GROUP));
 	
-		assertFalse(acl.check(TODD, MEMBER_RELATION, ADMINS_GROUP));
-		assertFalse(acl.check(JASMINE, MEMBER_RELATION, ADMINS_GROUP));
-		assertTrue(acl.check(BETTY, MEMBER_RELATION, ADMINS_GROUP));
-		assertTrue(acl.check(BOB, MEMBER_RELATION, ADMINS_GROUP));
-		assertTrue(acl.check(SALLY, MEMBER_RELATION, ADMINS_GROUP));
-		assertTrue(acl.check(SAM, MEMBER_RELATION, ADMINS_GROUP));
+		assertFalse(acl.check(TODD, MEMBER, ADMINS_GROUP));
+		assertFalse(acl.check(JASMINE, MEMBER, ADMINS_GROUP));
+		assertTrue(acl.check(BETTY, MEMBER, ADMINS_GROUP));
+		assertTrue(acl.check(BOB, MEMBER, ADMINS_GROUP));
+		assertTrue(acl.check(SALLY, MEMBER, ADMINS_GROUP));
+		assertTrue(acl.check(SAM, MEMBER, ADMINS_GROUP));
 
-		assertTrue(acl.check(TODD, OWNER_RELATION, DOC_1234));
-		assertTrue(acl.check(TODD, VIEWER_RELATION, DOC_1234));
-		assertTrue(acl.check(JASMINE, VIEWER_RELATION, DOC_1234));
-		assertFalse(acl.check(JASMINE, OWNER_RELATION, DOC_1234));
-		assertFalse(acl.check(BOB, ADMIN_RELATION, "video:12345"));
-		assertFalse(acl.check(SALLY, ADMIN_RELATION, "video:12345"));
-		assertFalse(acl.check(JASMINE, ADMIN_RELATION, DOC_1234));
-		assertTrue(acl.check(TODD, ADMIN_RELATION, DOC_1234));
+		assertTrue(acl.check(TODD, OWNER, DOC_1234));
+		assertTrue(acl.check(TODD, VIEWER, DOC_1234));
+		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
+		assertTrue(acl.check(JASMINE, VIEWER, DOC_1234));
+		assertFalse(acl.check(JASMINE, OWNER, DOC_1234));
+		assertFalse(acl.check(BOB, ADMINISTRATOR, "video:12345"));
+		assertFalse(acl.check(SALLY, ADMINISTRATOR, "video:12345"));
+		assertFalse(acl.check(JASMINE, ADMINISTRATOR, DOC_1234));
 	}
 }

@@ -55,9 +55,19 @@ public class Resource
 		return resource;
 	}
 
+	public String getIdentifier()
+	{
+		return identifier;
+	}
+
 	protected void setIdentifier(String id)
 	{
 		this.identifier = id;
+	}
+
+	public String getNamespace()
+	{
+		return namespace;
 	}
 
 	protected void setNamespace(String namespace)

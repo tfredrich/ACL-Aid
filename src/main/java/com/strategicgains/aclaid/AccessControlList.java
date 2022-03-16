@@ -8,50 +8,31 @@ import java.util.Set;
 
 import com.strategicgains.aclaid.builder.Relation;
 import com.strategicgains.aclaid.domain.Resource;
-import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class AccessControlList
 {
-	private String namespace;
-	private Map<String, Relation> relations = new HashMap<>();
-	private Set<Tuple> tuples = new HashSet<>();
+	private Map<String, NamespaceAccessControlList> acls = new HashMap<>();
+	private Set<String> relations = new HashSet<>();
 
-	public AccessControlList(String namespace)
+	public boolean containsNamespace(String namespace)
 	{
-		super();
-		this.namespace = namespace;
-	}
-
-	public String getNamespace()
-	{
-		return namespace;
+		return acls.containsKey(namespace);
 	}
 
 	public boolean containsRelation(String relation)
 	{
-		return relations.containsKey(relation);
+		return relations.contains(relation);
 	}
 
 	public void addRelation(Relation relation)
 	{
-		relations.put(relation.getName(), relation);
+		relations.add(relation.getName());
 	}
 
-	public AccessControlList addTuple(Tuple tuple)
-	throws RelationNotRegisteredException
+	public void addAcl(NamespaceAccessControlList acl)
 	{
-		if (!containsRelation(tuple.getRelation())) throw new RelationNotRegisteredException(tuple.getRelation());
-
-		tuples.add(new Tuple(tuple));
-		return this;
-	}
-
-	public AccessControlList addTuple(Resource resource, String relation, UserSet userset)
-	throws RelationNotRegisteredException
-	{
-		return addTuple(new Tuple(resource, relation, userset));
+		acls.put(acl.getNamespace(), acl);
 	}
 
 	public boolean check(String userset, String relation, String resource)
@@ -62,20 +43,10 @@ public class AccessControlList
 
 	public boolean check(UserSet userset, String relation, Resource resource)
 	{
-		for (Tuple tuple : tuples)
-		{
-			if (tuple.matches(userset, relation, resource))
-			{
-				return true;
-			}
+		NamespaceAccessControlList acl = acls.get(resource.getNamespace());
 
-			if (tuple.getUserset().hasRelation() && tuple.applies(resource, relation))
-			{
-				//TODO: beware the recursion stack overflow!
-				if (check(userset, tuple.getUserset().getRelation(), tuple.getUserset())) return true;
-			}
-		}
+		if (acl == null) return false;
 
-		return false;
+		return acl.check(this, userset, relation, resource);
 	}
 }

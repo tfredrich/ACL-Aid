@@ -1,6 +1,6 @@
 package com.strategicgains.aclaid.builder;
 
-import com.strategicgains.aclaid.builder.AclBuilder.RelationBuilder;
+import com.strategicgains.aclaid.builder.NamespaceAclBuilder.RelationBuilder;
 
 public class IntersectionBuilder
 extends SetBuilder
