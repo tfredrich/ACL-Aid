@@ -4,7 +4,14 @@ import java.text.ParseException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
+/**
+ * This is the Zanzibar Resource property of a Tuple.
+ * 
+ * ⟨resource⟩::= ⟨namespace⟩‘:’⟨resource id⟩
+ * 
+ * @author toddfredrich
+ *
+ */
 public class Resource
 {
 	private static final String REGEX = "^(.*?):(.*?)$";

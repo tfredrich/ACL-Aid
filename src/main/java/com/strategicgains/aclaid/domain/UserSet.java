@@ -5,12 +5,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * This is the Zanzibar User (which is either a user or a user set).
+ * This is the Zanzibar User (which is either a user or a user set) property of a Tuple.
+ * It can be a user identifier or a userset, which is a reference to a relation on another
+ * resource (e.g. to determine if the user is a member of a group).
  * 
  * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
- * (user id) ::= 'user:'(object_id)
- * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩ 
- * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨object id⟩
+ * (user id) ::= 'user:'(resource id)
+ * ⟨userset⟩ ::= ⟨resource⟩‘#’⟨relation⟩
+ * ⟨resource⟩::= ⟨namespace⟩‘:’⟨resource id⟩
+ * 
+ * @author toddfredrich
 **/
 public class UserSet
 extends Resource

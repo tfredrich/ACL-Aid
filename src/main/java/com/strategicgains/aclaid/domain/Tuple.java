@@ -3,12 +3,14 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 
 /**
- * This is the Zanzibar Tuple.
+ * This is the Zanzibar Tuple containing a Resource, Relation and User[set].
  * 
  * ⟨tuple⟩   ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
- * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨object id⟩
+ * ⟨resource⟩::= ⟨namespace⟩‘:’⟨resource id⟩
+ * (relation)::= (relation name)
  * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
- * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩
+ * (user id) ::= 'user:'(resource id)
+ * ⟨userset⟩ ::= ⟨resource⟩‘#’⟨relation⟩
  * 
  * Would like to be able to answer as many "resource has relation on userset" questions as possible from memory.
  * With small footprint and high performance.
