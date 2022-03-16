@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
  * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
  * (user id) ::= 'user:'(object_id)
  * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩ 
- * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨object id⟩'
+ * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨object id⟩
 **/
 public class UserSet
 extends Resource
