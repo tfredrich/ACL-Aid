@@ -16,16 +16,17 @@ public class AclBuilder
 	{
 		NamespaceAclBuilder current = new NamespaceAclBuilder(this, namespace);
 		builders.put(namespace, current);
+		relations.clear();
 		return current;
-	}
-
-	public void registerRelation(String relation)
-	{
-		relations.add(relation);
 	}
 
 	public boolean containsRelation(String relation)
 	{
+		if (relations.isEmpty())
+		{
+			builders.values().stream().forEach(b -> relations.addAll(b.getRelationNames()));
+		}
+
 		return relations.contains(relation);
 	}
 
@@ -33,7 +34,7 @@ public class AclBuilder
 	{
 		AccessControlList acl = new AccessControlList();
 
-		builders.values().stream().forEach(b -> acl.addAcl(b.build(acl)));
+		builders.values().stream().forEach(b -> acl.addNamespaceAcl(b.build(acl)));
 
 		return acl;
 	}

@@ -2,9 +2,11 @@ package com.strategicgains.aclaid.builder;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.AccessControlList;
 import com.strategicgains.aclaid.NamespaceAccessControlList;
@@ -18,9 +20,9 @@ public class NamespaceAclBuilder
 {
 	private AclBuilder parent;
 	private String namespace;
-	private Set<RelationBuilder> relationBuilders = new HashSet<>();
+	private Set<RelationBuilder> builders = new HashSet<>();
 	private List<Tuple> tuples = new ArrayList<>();
-	private Tuple current;
+	private Tuple tuple;
 
 	public NamespaceAclBuilder(AclBuilder parent, String namespace)
 	{
@@ -29,73 +31,72 @@ public class NamespaceAclBuilder
 		this.parent = parent;
 	}
 
-	public NamespaceAclBuilder forResource(String qrn)
+	public NamespaceAclBuilder forResource(String resource)
 	throws ParseException, InvalidTupleException
 	{
-		current = new Tuple();
-		tuples.add(current);
-		return withResource(qrn);
+		tuple = new Tuple();
+		tuples.add(tuple);
+		return withResource(resource);
 	}
 
-	public NamespaceAclBuilder forUserset(String qrn)
+	public NamespaceAclBuilder forUserset(String userset)
 	throws ParseException, InvalidTupleException
 	{
-		current = new Tuple();
-		tuples.add(current);
-		return withUserset(qrn);
+		tuple = new Tuple();
+		tuples.add(tuple);
+		return withUserset(userset);
 	}
 
-	public NamespaceAclBuilder withResource(String qrn)
+	public NamespaceAclBuilder withResource(String resource)
 	throws ParseException, InvalidTupleException
 	{
-		if (current.hasResource())
+		if (tuple.hasResource())
 		{
-			current = cloneCurrent();
+			tuple = cloneCurrent();
 		}
 
-		current.setResource(Resource.parse(qrn));
+		tuple.setResource(Resource.parse(resource));
 		return this;
 	}
 
 	public NamespaceAclBuilder withRelation(String relation)
 	throws InvalidTupleException
 	{
-		if (current.hasRelation())
+		if (tuple.hasRelation())
 		{
-			current = cloneCurrent();
+			tuple = cloneCurrent();
 		}
 
-		current.setRelation(relation);
-		parent.registerRelation(relation);
+		tuple.setRelation(relation);
 		return this;
 	}
 
-	public NamespaceAclBuilder withUserset(String qrn)
+	public NamespaceAclBuilder withUserset(String userset)
 	throws ParseException, InvalidTupleException
 	{
-		if (current.hasUserset())
+		if (tuple.hasUserset())
 		{
-			current = cloneCurrent();
+			tuple = cloneCurrent();
 		}
 
-		current.setUserset(UserSet.parse(qrn));
+		tuple.setUserset(UserSet.parse(userset));
 		return this;
 	}
 
 	private Tuple cloneCurrent()
 	throws InvalidTupleException
 	{
-		if (!current.isValid()) throw new InvalidTupleException(current.toString());
+		if (!tuple.isValid()) throw new InvalidTupleException(tuple.toString());
 
-		Tuple g = new Tuple(current);
-		tuples.add(g);
-		return g;
+		Tuple t = new Tuple(tuple);
+		tuples.add(t);
+		return t;
 	}
 
 	public NamespaceAccessControlList build(AccessControlList parent)
 	{
 		NamespaceAccessControlList acl = new NamespaceAccessControlList(parent, namespace);
-		relationBuilders.stream().forEach(r -> acl.addRelation(r.build()));
+		builders.stream().forEach(r -> acl.addRelation(r.build()));
 		tuples.stream().forEach(t -> {
 			try
 			{
@@ -114,11 +115,15 @@ public class NamespaceAclBuilder
 		return parent.namespace(namespace);
 	}
 
+	public Collection<String> getRelationNames()
+	{
+		return builders.stream().map(rb -> rb.getName()).collect(Collectors.toList());
+	}
+
 	public RelationBuilder relation(String relation)
 	{
 		RelationBuilder rb = new RelationBuilder(relation, this);
-		relationBuilders.add(rb);
-		parent.registerRelation(relation);
+		builders.add(rb);
 		return rb;
 	}
 
@@ -131,10 +136,15 @@ public class NamespaceAclBuilder
 	public NamespaceAclBuilder tuple(Resource resource, String relation, UserSet userset)
 	throws RelationNotRegisteredException
 	{
-		if (!parent.containsRelation(relation)) throw new RelationNotRegisteredException(relation);
+		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
 
 		tuples.add(new Tuple(resource, relation, userset));
 		return this;
+	}
+
+	private boolean containsRelation(String relation)
+	{
+		return parent.containsRelation(relation);
 	}
 
 	public NamespaceAclBuilder tuple(String tuple)
@@ -159,6 +169,11 @@ public class NamespaceAclBuilder
 			this.parent = aclBuilder;
 		}
 
+		public String getName()
+		{
+			return name;
+		}
+	
 		public RelationBuilder relation(String relation)
 		{
 			parent.relation(relation);

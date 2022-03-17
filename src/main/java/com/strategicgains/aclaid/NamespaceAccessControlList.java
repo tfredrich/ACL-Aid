@@ -1,10 +1,10 @@
 package com.strategicgains.aclaid;
 
 import java.text.ParseException;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.builder.Relation;
 import com.strategicgains.aclaid.domain.Resource;
@@ -16,7 +16,7 @@ public class NamespaceAccessControlList
 {
 	private String namespace;
 	private AccessControlList parent;
-	private List<Relation> relations = new ArrayList<>();
+	private Set<Relation> relations = new HashSet<>();
 	private Set<Tuple> tuples = new HashSet<>();
 
 	public NamespaceAccessControlList(AccessControlList parent, String namespace)
@@ -34,12 +34,17 @@ public class NamespaceAccessControlList
 	public void addRelation(Relation relation)
 	{
 		relations.add(relation);
-		parent.addRelation(relation);
+	}
+
+	public Collection<String> getRelationNames()
+	{
+		return relations.stream().map(r -> r.getName()).collect(Collectors.toList());
 	}
 
 	private boolean containsRelation(String relation)
 	{
-		return parent.containsRelation(relation);
+		return relations.stream().anyMatch(r -> r.getName().equals(relation))
+			|| parent.containsRelation(relation);
 	}
 
 	public NamespaceAccessControlList addTuple(Tuple tuple)
