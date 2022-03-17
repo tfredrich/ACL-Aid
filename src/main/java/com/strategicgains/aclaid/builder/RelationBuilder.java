@@ -2,6 +2,7 @@ package com.strategicgains.aclaid.builder;
 
 import java.text.ParseException;
 
+import com.strategicgains.aclaid.domain.Relation;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class RelationBuilder

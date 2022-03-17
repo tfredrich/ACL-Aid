@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.strategicgains.aclaid.builder.Relation;
+import com.strategicgains.aclaid.domain.Relation;
 import com.strategicgains.aclaid.domain.Resource;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
