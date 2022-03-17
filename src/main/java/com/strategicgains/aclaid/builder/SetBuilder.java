@@ -2,7 +2,6 @@ package com.strategicgains.aclaid.builder;
 
 import java.text.ParseException;
 
-import com.strategicgains.aclaid.builder.NamespaceBuilder.RelationBuilder;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public abstract class SetBuilder
@@ -20,7 +19,7 @@ public abstract class SetBuilder
 		return parent.relation(name);
 	}
 
-	public NamespaceBuilder tuple(String resource, String relation, String userset)
+	public NamespaceConfigurationBuilder tuple(String resource, String relation, String userset)
 	throws ParseException, RelationNotRegisteredException
 	{
 		return parent.tuple(resource, relation, userset);

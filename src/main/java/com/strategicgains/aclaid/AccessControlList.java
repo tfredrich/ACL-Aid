@@ -9,16 +9,11 @@ import com.strategicgains.aclaid.domain.UserSet;
 
 public class AccessControlList
 {
-	private Map<String, NamespaceAccessControlList> namespaces = new HashMap<>();
+	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
 
-	public NamespaceAccessControlList namespace(String namespace)
+	public NamespaceConfiguration namespace(String namespace)
 	{
-		return namespaces.computeIfAbsent(namespace, n -> new NamespaceAccessControlList(this));
-	}
-
-	public boolean containsNamespace(String namespace)
-	{
-		return namespaces.containsKey(namespace);
+		return namespaces.computeIfAbsent(namespace, n -> new NamespaceConfiguration(this));
 	}
 
 	public boolean containsRelation(String relation)
@@ -34,7 +29,7 @@ public class AccessControlList
 
 	public boolean check(UserSet userset, String relation, Resource resource)
 	{
-		NamespaceAccessControlList acl = namespaces.get(resource.getNamespace());
+		NamespaceConfiguration acl = namespaces.get(resource.getNamespace());
 
 		if (acl == null) return false;
 

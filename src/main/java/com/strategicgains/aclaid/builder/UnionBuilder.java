@@ -3,8 +3,6 @@ package com.strategicgains.aclaid.builder;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.strategicgains.aclaid.builder.NamespaceBuilder.RelationBuilder;
-
 public class UnionBuilder
 extends SetBuilder
 {
