@@ -144,7 +144,8 @@ public class NamespaceConfigurationBuilder
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
 
-		tuples.add(new Tuple(resource, relation, userset));
+		workingTuple = new Tuple(resource, relation, userset);
+		tuples.add(workingTuple);
 		return this;
 	}
 
@@ -156,7 +157,8 @@ public class NamespaceConfigurationBuilder
 	public NamespaceConfigurationBuilder tuple(String tuple)
 	throws ParseException
 	{
-		tuples.add(Tuple.parse(tuple));
+		workingTuple = Tuple.parse(tuple);
+		tuples.add(workingTuple);
 		return this;
 	}
 }
