@@ -62,7 +62,11 @@ public class AccessControlListTest
 				.tuple(DOC_1234, OWNER, TODD)
 				.tuple(ALL_DOCS, ADMINISTRATOR, ADMINISTRATORS)
 				.tuple(ALL_DOCS, VIEWER, EVERYONE)
-		
+
+			.namespace(GROUP)
+				.relation(MEMBER)
+				.tuple(EVERYONE_GROUP, MEMBER, EVERY_USER)
+
 				// DSL-built multiple tuples
 				.forResource(ADMINS_GROUP)
 					.withRelation(MEMBER)
@@ -70,10 +74,7 @@ public class AccessControlListTest
 						.withUserset(BOB)
 						.withUserset(SALLY)
 						.withUserset(BETTY)
-
-			.namespace(GROUP)
-				.relation(MEMBER)
-				.tuple(EVERY_USER, MEMBER, EVERYONE_GROUP);
+			;
 
 		AccessControlList acl = builder.build();
 		assertNotNull(acl);
@@ -93,11 +94,12 @@ public class AccessControlListTest
 
 		assertTrue(acl.check(TODD, OWNER, DOC_1234));
 		assertTrue(acl.check(TODD, VIEWER, DOC_1234));
-		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
+//		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
 		assertTrue(acl.check(JASMINE, VIEWER, DOC_1234));
 		assertFalse(acl.check(JASMINE, OWNER, DOC_1234));
 		assertFalse(acl.check(BOB, ADMINISTRATOR, "video:12345"));
 		assertFalse(acl.check(SALLY, ADMINISTRATOR, "video:12345"));
 		assertFalse(acl.check(JASMINE, ADMINISTRATOR, DOC_1234));
+		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
 	}
 }

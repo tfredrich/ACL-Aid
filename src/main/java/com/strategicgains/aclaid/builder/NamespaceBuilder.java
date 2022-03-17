@@ -133,7 +133,7 @@ public class NamespaceBuilder
 		return rb;
 	}
 
-	public NamespaceBuilder tuple(String userset, String relation, String resource)
+	public NamespaceBuilder tuple(String resource, String relation, String userset)
 	throws ParseException, RelationNotRegisteredException
 	{
 		return tuple(Resource.parse(resource), relation, UserSet.parse(userset));
