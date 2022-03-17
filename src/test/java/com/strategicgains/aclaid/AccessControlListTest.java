@@ -6,6 +6,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlListBuilder;
@@ -40,9 +41,12 @@ public class AccessControlListTest
 	private static final String TODD = USER + ":todd";
 	private static final String JASMINE = USER + ":jasmine";
 
-	@Test
-	public void test()
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+
+	private AccessControlList acl;
+
+	@Before
+	public void initialize()
+	throws ParseException, InvalidTupleException, RelationNotRegisteredException
 	{
 		AccessControlListBuilder builder = new AccessControlListBuilder();
 		builder
@@ -76,30 +80,44 @@ public class AccessControlListTest
 						.withUserset(BETTY)
 			;
 
-		AccessControlList acl = builder.build();
-		assertNotNull(acl);
+		this.acl = builder.build();
+	}
+
+	@Test
+	public void testEveryoneWildcardGroup()
+	throws ParseException
+	{
 		assertTrue(acl.check(TODD, MEMBER, EVERYONE_GROUP));
 		assertTrue(acl.check(JASMINE, MEMBER, EVERYONE_GROUP));
 		assertTrue(acl.check(BETTY, MEMBER, EVERYONE_GROUP));
 		assertTrue(acl.check(BOB, MEMBER, EVERYONE_GROUP));
 		assertTrue(acl.check(SALLY, MEMBER, EVERYONE_GROUP));
 		assertTrue(acl.check(SAM, MEMBER, EVERYONE_GROUP));
-	
+	}
+
+	@Test
+	public void testAdminSpecifiedGroup()
+	throws ParseException
+	{
 		assertFalse(acl.check(TODD, MEMBER, ADMINS_GROUP));
 		assertFalse(acl.check(JASMINE, MEMBER, ADMINS_GROUP));
 		assertTrue(acl.check(BETTY, MEMBER, ADMINS_GROUP));
 		assertTrue(acl.check(BOB, MEMBER, ADMINS_GROUP));
 		assertTrue(acl.check(SALLY, MEMBER, ADMINS_GROUP));
 		assertTrue(acl.check(SAM, MEMBER, ADMINS_GROUP));
+		assertFalse(acl.check(BOB, ADMINISTRATOR, "video:12345"));
+		assertFalse(acl.check(SALLY, ADMINISTRATOR, "video:12345"));
+		assertFalse(acl.check(JASMINE, ADMINISTRATOR, DOC_1234));
+	}
 
+	@Test
+	public void testInheritance()
+	throws ParseException
+	{
 		assertTrue(acl.check(TODD, OWNER, DOC_1234));
 		assertTrue(acl.check(TODD, VIEWER, DOC_1234));
 //		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
 		assertTrue(acl.check(JASMINE, VIEWER, DOC_1234));
 		assertFalse(acl.check(JASMINE, OWNER, DOC_1234));
-		assertFalse(acl.check(BOB, ADMINISTRATOR, "video:12345"));
-		assertFalse(acl.check(SALLY, ADMINISTRATOR, "video:12345"));
-		assertFalse(acl.check(JASMINE, ADMINISTRATOR, DOC_1234));
-		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
 	}
 }
