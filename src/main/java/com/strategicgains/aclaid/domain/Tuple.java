@@ -37,9 +37,15 @@ public class Tuple
 		setUserset(userset);
 	}
 
-	public Tuple(Tuple grant)
+	public Tuple(String resource, String relation, String userset)
+	throws ParseException
 	{
-		this(grant.getResource(), grant.getRelation(), grant.getUserset());
+		this(Resource.parse(resource), relation, UserSet.parse(userset));
+	}
+
+	public Tuple(Tuple tuple)
+	{
+		this(tuple.getResource(), tuple.getRelation(), tuple.getUserset());
 	}
 
 	public boolean hasResource()
@@ -85,6 +91,11 @@ public class Tuple
 	public void setRelation(String relation)
 	{
 		this.relation = relation;
+	}
+
+	public boolean matches(Tuple that)
+	{
+		return matches(that.getUserset(), that.getRelation(), that.getResource());
 	}
 
 	public boolean matches(UserSet userset, String relation, Resource resource)

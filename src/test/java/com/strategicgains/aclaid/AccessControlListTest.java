@@ -8,7 +8,7 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-import com.strategicgains.aclaid.builder.AclBuilder;
+import com.strategicgains.aclaid.builder.AccessControlListBuilder;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
@@ -44,7 +44,7 @@ public class AccessControlListTest
 	public void test()
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
-		AclBuilder builder = new AclBuilder();
+		AccessControlListBuilder builder = new AccessControlListBuilder();
 		builder
 			.namespace(DOCUMENT)
 				.relation(OWNER)
@@ -58,10 +58,12 @@ public class AccessControlListTest
 						._this()
 						.computedUserset(EDITOR)
 
-				.tuple(TODD, OWNER, DOC_1234)
-				.tuple(ADMINISTRATORS, ADMINISTRATOR, ALL_DOCS)
-				.tuple(EVERYONE, VIEWER, ALL_DOCS)
+				// Directly-specified tuples
+				.tuple(DOC_1234, OWNER, TODD)
+				.tuple(ALL_DOCS, ADMINISTRATOR, ADMINISTRATORS)
+				.tuple(ALL_DOCS, VIEWER, EVERYONE)
 		
+				// DSL-built multiple tuples
 				.forResource(ADMINS_GROUP)
 					.withRelation(MEMBER)
 						.withUserset(SAM)

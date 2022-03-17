@@ -11,6 +11,11 @@ public class AccessControlList
 {
 	private Map<String, NamespaceAccessControlList> namespaces = new HashMap<>();
 
+	public NamespaceAccessControlList namespace(String namespace)
+	{
+		return namespaces.computeIfAbsent(namespace, n -> new NamespaceAccessControlList(this));
+	}
+
 	public boolean containsNamespace(String namespace)
 	{
 		return namespaces.containsKey(namespace);
@@ -18,12 +23,7 @@ public class AccessControlList
 
 	public boolean containsRelation(String relation)
 	{
-		return namespaces.values().stream().anyMatch(n -> n.getRelationNames().contains(relation));
-	}
-
-	public void addNamespaceAcl(NamespaceAccessControlList acl)
-	{
-		namespaces.put(acl.getNamespace(), acl);
+		return namespaces.values().stream().anyMatch(n -> n.containsRelation(relation));
 	}
 
 	public boolean check(String userset, String relation, String resource)

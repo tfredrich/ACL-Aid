@@ -7,14 +7,14 @@ import java.util.Set;
 
 import com.strategicgains.aclaid.AccessControlList;
 
-public class AclBuilder
+public class AccessControlListBuilder
 {
-	private Map<String, NamespaceAclBuilder> builders = new HashMap<>();
+	private Map<String, NamespaceBuilder> builders = new HashMap<>();
 	private Set<String> relations = new HashSet<>();
 
-	public NamespaceAclBuilder namespace(String namespace)
+	public NamespaceBuilder namespace(String namespace)
 	{
-		NamespaceAclBuilder current = new NamespaceAclBuilder(this, namespace);
+		NamespaceBuilder current = new NamespaceBuilder(this, namespace);
 		builders.put(namespace, current);
 		relations.clear();
 		return current;
@@ -34,7 +34,8 @@ public class AclBuilder
 	{
 		AccessControlList acl = new AccessControlList();
 
-		builders.values().stream().forEach(b -> acl.addNamespaceAcl(b.build(acl)));
+		builders.values().stream().forEach(b -> b.buildRelations(acl));
+		builders.values().stream().forEach(b -> b.buildTuples(acl));
 
 		return acl;
 	}
