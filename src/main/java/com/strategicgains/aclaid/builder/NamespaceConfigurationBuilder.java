@@ -13,16 +13,16 @@ import com.strategicgains.aclaid.NamespaceConfiguration;
 import com.strategicgains.aclaid.domain.Resource;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class NamespaceConfigurationBuilder
+implements Buildable
 {
 	private AccessControlListBuilder parent;
 	private String namespace;
-	private Set<RelationBuilder> builders = new HashSet<>();
+	private Set<RelationBuilder> relationBuilders = new HashSet<>();
+	private List<TupleBuilder> tupleBuilders = new ArrayList<>();
 	private List<Tuple> tuples = new ArrayList<>();
-	private Tuple workingTuple;
 
 	public NamespaceConfigurationBuilder(AccessControlListBuilder parent, String namespace)
 	{
@@ -31,78 +31,17 @@ public class NamespaceConfigurationBuilder
 		this.parent = parent;
 	}
 
-	public NamespaceConfigurationBuilder forResource(String resource)
-	throws ParseException, InvalidTupleException
-	{
-		workingTuple = new Tuple();
-		tuples.add(workingTuple);
-		return withResource(resource);
-	}
-
-	public NamespaceConfigurationBuilder forUserset(String userset)
-	throws ParseException, InvalidTupleException
-	{
-		workingTuple = new Tuple();
-		tuples.add(workingTuple);
-		return withUserset(userset);
-	}
-
-	public NamespaceConfigurationBuilder withResource(String resource)
-	throws ParseException, InvalidTupleException
-	{
-		if (workingTuple.hasResource())
-		{
-			workingTuple = cloneCurrent();
-		}
-
-		workingTuple.setResource(Resource.parse(resource));
-		return this;
-	}
-
-	public NamespaceConfigurationBuilder withRelation(String relation)
-	throws InvalidTupleException
-	{
-		if (workingTuple.hasRelation())
-		{
-			workingTuple = cloneCurrent();
-		}
-
-		workingTuple.setRelation(relation);
-		return this;
-	}
-
-	public NamespaceConfigurationBuilder withUserset(String userset)
-	throws ParseException, InvalidTupleException
-	{
-		if (workingTuple.hasUserset())
-		{
-			workingTuple = cloneCurrent();
-		}
-
-		workingTuple.setUserset(UserSet.parse(userset));
-		return this;
-	}
-
-	private Tuple cloneCurrent()
-	throws InvalidTupleException
-	{
-		if (!workingTuple.isValid()) throw new InvalidTupleException(workingTuple.toString());
-
-		Tuple t = new Tuple(workingTuple);
-		tuples.add(t);
-		return t;
-	}
-
 	public NamespaceConfiguration buildRelations(AccessControlList parent)
 	{
 		NamespaceConfiguration acl = parent.namespace(namespace);
-		builders.stream().forEach(r -> acl.addRelation(r.build()));
+		relationBuilders.stream().forEach(r -> acl.addRelation(r.build()));
 		return acl;
 	}
 
 	public NamespaceConfiguration buildTuples(AccessControlList parent)
 	{
 		NamespaceConfiguration acl = parent.namespace(namespace);
+		tupleBuilders.stream().forEach(b -> tuples.addAll(b.build()));
 		tuples.stream().forEach(t -> {
 			try
 			{
@@ -123,13 +62,13 @@ public class NamespaceConfigurationBuilder
 
 	public Collection<String> getRelationNames()
 	{
-		return builders.stream().map(rb -> rb.getName()).collect(Collectors.toList());
+		return relationBuilders.stream().map(RelationBuilder::getName).collect(Collectors.toList());
 	}
 
 	public RelationBuilder relation(String relation)
 	{
 		RelationBuilder rb = new RelationBuilder(relation, this);
-		builders.add(rb);
+		relationBuilders.add(rb);
 		return rb;
 	}
 
@@ -144,8 +83,7 @@ public class NamespaceConfigurationBuilder
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
 
-		workingTuple = new Tuple(resource, relation, userset);
-		tuples.add(workingTuple);
+		tuples.add(new Tuple(resource, relation, userset));
 		return this;
 	}
 
@@ -157,8 +95,14 @@ public class NamespaceConfigurationBuilder
 	public NamespaceConfigurationBuilder tuple(String tuple)
 	throws ParseException
 	{
-		workingTuple = Tuple.parse(tuple);
-		tuples.add(workingTuple);
+		tuples.add(Tuple.parse(tuple));
 		return this;
+	}
+
+	public TupleBuilder tuple()
+	{
+		TupleBuilder tb = new TupleBuilder(this);
+		tupleBuilders.add(tb);
+		return tb;
 	}
 }

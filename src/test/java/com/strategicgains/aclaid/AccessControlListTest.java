@@ -72,12 +72,13 @@ public class AccessControlListTest
 				.tuple(EVERYONE_GROUP, MEMBER, EVERY_USER)
 
 				// DSL-built multiple tuples
-				.forResource(ADMINS_GROUP)
-					.withRelation(MEMBER)
-						.withUserset(SAM)
-						.withUserset(BOB)
-						.withUserset(SALLY)
-						.withUserset(BETTY)
+				.tuple()
+					.forResource(ADMINS_GROUP)
+						.withRelation(MEMBER)
+							.withUserset(SAM)
+							.withUserset(BOB)
+							.withUserset(SALLY)
+							.withUserset(BETTY)
 			;
 
 		this.acl = builder.build();
