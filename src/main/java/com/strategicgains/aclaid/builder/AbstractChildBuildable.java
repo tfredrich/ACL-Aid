@@ -11,7 +11,7 @@ implements Buildable
 {
 	private NamespaceConfigurationBuilder parent;
 
-	public AbstractChildBuildable(NamespaceConfigurationBuilder parent)
+	protected AbstractChildBuildable(NamespaceConfigurationBuilder parent)
 	{
 		super();
 		this.parent = parent;

@@ -68,11 +68,11 @@ public class NamespaceConfiguration
 				return true;
 			}
 
-			if (tuple.getUserset().hasRelation() && tuple.applies(resource, relation))
-			{
-				//TODO: beware the recursion stack overflow!
-				if (acl.check(userset, tuple.getUserset().getRelation(), tuple.getUserset())) return true;
-			}
+			//TODO: beware the recursion stack overflow!
+			if (tuple.getUserset().hasRelation()
+				&& tuple.applies(resource, relation)
+				&& acl.check(userset, tuple.getUserset().getRelation(), tuple.getUserset()))
+				return true;
 		}
 
 		return false;
