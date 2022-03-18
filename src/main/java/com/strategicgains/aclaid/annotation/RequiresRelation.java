@@ -29,4 +29,5 @@ import java.lang.annotation.Target;
 public @interface RequiresRelation
 {
 	String value();
+	String resource() default "*";
 }

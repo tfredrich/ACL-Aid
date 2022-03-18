@@ -4,9 +4,18 @@ import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.strategicgains.aclaid.builder.AccessControlListBuilder;
 import com.strategicgains.aclaid.domain.Resource;
 import com.strategicgains.aclaid.domain.UserSet;
 
+/**
+ * A collection of NamespaceConfiguration instances that compose the rules, including
+ * Tuples, Relations and Policies for Access Control within an application.
+ * 
+ * @author tfredrich
+ * @since Mar 18, 2022
+ * @see AccessControlListBuilder
+ */
 public class AccessControlList
 {
 	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
