@@ -23,7 +23,7 @@ package com.strategicgains.aclaid.resource;
  */
 public interface Resource
 {
-	QualifiedResourceName getResourceName();
+	SimpleQualifiedResourceName getResourceName();
 	String getResourceType();
 	String getNamespace();
 }

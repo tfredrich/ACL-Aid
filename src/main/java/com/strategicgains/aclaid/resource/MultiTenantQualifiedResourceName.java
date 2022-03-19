@@ -5,7 +5,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class MultiTenantQualifiedResourceName
-extends QualifiedResourceName
+extends SimpleQualifiedResourceName
 {
 	public static final int SEGMENT_COUNT = 5;
 
@@ -146,41 +146,41 @@ extends QualifiedResourceName
 	public static MultiTenantQualifiedResourceName parse(String qrnString)
 	throws ParseException
 	{
-		String[] segments = QualifiedResourceName.parseSegments(qrnString, SEGMENT_COUNT);
+		String[] segments = SimpleQualifiedResourceName.toSegments(qrnString, SEGMENT_COUNT);
 
 		MultiTenantQualifiedResourceName qrn = new MultiTenantQualifiedResourceName();
 		qrn.setNamespace(segments[1].isEmpty() ? null : segments[1]);
-		setOrganization(qrn, segments[2], qrnString);
-		setAccount(qrn, segments[3], qrnString);
+		qrn.setOrganizationId(parseOrganizationId(segments, qrnString));
+		qrn.setAccountId(parseAccountId(segments, qrnString));
 		qrn.setResourcePath(ResourcePath.parse(segments[4]));
 
 		return qrn;
 	}
 
-	private static void setOrganization(MultiTenantQualifiedResourceName qrn, String orgId, String qrnString)
+	private static UUID parseOrganizationId(String[] segments, String qrnString)
 	throws ParseException
 	{
 		try
 		{
-			qrn.setOrganizationId(orgId.isEmpty() ? null : parseUuid(orgId));
+			return (segments[2].isEmpty() ? null : parseUuid(segments[2]));
 		}
 		catch (IllegalArgumentException e)
 		{
-			int offset = QRN_PREFIX.length() + (qrn.hasNamespace() ? qrn.getNamespace().length() : 0) + 1;
+			int offset = segments[0].length() + segments[1].length() + 1;
 			throw new ParseException("Cannot parse Organization ID in QRN: " + qrnString, qrnString.indexOf(":", offset));
 		}
 	}
 
-	private static void setAccount(MultiTenantQualifiedResourceName qrn, String accountId, String qrnString)
+	private static UUID parseAccountId(String[] segments, String qrnString)
 	throws ParseException
 	{
 		try
 		{
-			qrn.setAccountId(parseUuid(accountId));
+			return parseUuid(segments[3]);
 		}
 		catch (IllegalArgumentException e)
 		{
-			int offset = QRN_PREFIX.length() + (qrn.hasNamespace() ? qrn.getNamespace().length() : 0) + (qrn.hasOrganizationId() ? qrn.getOrganizationId().toString().length() : 0) + 1;
+			int offset = segments[0].length() + segments[1].length() + segments[2].length() + 1;
 			throw new ParseException("Cannot parse Account ID in QRN: " + qrnString, qrnString.indexOf(":", offset));
 		}
 	}

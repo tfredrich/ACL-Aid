@@ -128,7 +128,7 @@ public class MultiTenantQualifiedResourceNameTest
 		catch(Throwable t)
 		{
 			ParseException p = (ParseException) t;
-			assertEquals(9, p.getErrorOffset());
+			assertEquals(8, p.getErrorOffset());
 			assertEquals("Cannot parse Account ID in QRN: " + qrn, p.getMessage());
 		}
 	}

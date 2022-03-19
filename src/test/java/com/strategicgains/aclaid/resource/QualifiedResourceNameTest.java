@@ -14,7 +14,7 @@ public class QualifiedResourceNameTest
 	public void shouldParseUuid()
 	throws ParseException
 	{
-		QualifiedResourceName qrn = QualifiedResourceName.parse("qrn:test:directories/*");
+		QualifiedResourceName qrn = SimpleQualifiedResourceName.parse("qrn:test:directories/*");
 		assertQrn(qrn, "test", "directories/*");
 	}
 
@@ -22,15 +22,15 @@ public class QualifiedResourceNameTest
 	public void shouldParseStrings()
 	throws ParseException
 	{
-		QualifiedResourceName qrn = QualifiedResourceName.parse("qrn:test:directories/*");
+		QualifiedResourceName qrn = SimpleQualifiedResourceName.parse("qrn:test:directories/*");
 		assertQrn(qrn, "test", "directories/*");
-		qrn = QualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
+		qrn = SimpleQualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
 		assertQrn(qrn, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
-		qrn = QualifiedResourceName.parse("qrn::directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		qrn = SimpleQualifiedResourceName.parse("qrn::directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertQrn(qrn, null, "directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		qrn = QualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
+		qrn = SimpleQualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
 		assertQrn(qrn, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
-		qrn = QualifiedResourceName.parse("qrn:test:*");
+		qrn = SimpleQualifiedResourceName.parse("qrn:test:*");
 		assertQrn(qrn, "test", "*");
 	}
 
@@ -38,20 +38,20 @@ public class QualifiedResourceNameTest
 	public void shouldMatch()
 	throws ParseException
 	{
-		QualifiedResourceName a = QualifiedResourceName.parse("qrn:test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		QualifiedResourceName b = QualifiedResourceName.parse("qrn:test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		QualifiedResourceName a = SimpleQualifiedResourceName.parse("qrn:test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		QualifiedResourceName b = SimpleQualifiedResourceName.parse("qrn:test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn:test:directories/*");
+		b = SimpleQualifiedResourceName.parse("qrn:test:directories/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn:test:directories/*");
+		b = SimpleQualifiedResourceName.parse("qrn:test:directories/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn::directories/*");
+		b = SimpleQualifiedResourceName.parse("qrn::directories/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 	}
@@ -60,28 +60,28 @@ public class QualifiedResourceNameTest
 	public void shouldNotMatch()
 	throws ParseException
 	{
-		QualifiedResourceName a = QualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		QualifiedResourceName b = QualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		QualifiedResourceName a = SimpleQualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		QualifiedResourceName b = SimpleQualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = SimpleQualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = SimpleQualifiedResourceName.parse("qrn::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = SimpleQualifiedResourceName.parse("qrn::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:applications/*");
+		b = SimpleQualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:applications/*");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = QualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = SimpleQualifiedResourceName.parse("qrn:b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 	}
@@ -90,28 +90,28 @@ public class QualifiedResourceNameTest
 	public void ShouldThrowOnResourceType()
 	throws ParseException
 	{
-		QualifiedResourceName.parse("qrn:test: ");
+		SimpleQualifiedResourceName.parse("qrn:test: ");
 	}
 
 	@Test(expected=ParseException.class)
 	public void ShouldThrowOnTooShort()
 	throws ParseException
 	{
-		QualifiedResourceName.parse("qrn:test");
+		SimpleQualifiedResourceName.parse("qrn:test");
 	}
 
 	@Test(expected=ParseException.class)
 	public void ShouldThrowOnMissingPrefix()
 	throws ParseException
 	{
-		QualifiedResourceName.parse("test:directories/*");
+		SimpleQualifiedResourceName.parse("test:directories/*");
 	}
 
 	@Test(expected=ParseException.class)
 	public void ShouldThrowOnWrongPrefix()
 	throws ParseException
 	{
-		QualifiedResourceName.parse("x:test:directories/*");
+		SimpleQualifiedResourceName.parse("x:test:directories/*");
 	}
 
 	private void assertQrn(QualifiedResourceName qrn, String namespace, String path)
