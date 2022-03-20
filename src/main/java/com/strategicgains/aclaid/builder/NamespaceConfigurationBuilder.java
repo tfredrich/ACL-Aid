@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.AccessControlList;
 import com.strategicgains.aclaid.NamespaceConfiguration;
-import com.strategicgains.aclaid.domain.Resource;
+import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
@@ -75,10 +75,10 @@ implements Buildable
 	public NamespaceConfigurationBuilder tuple(String resource, String relation, String userset)
 	throws ParseException, RelationNotRegisteredException
 	{
-		return tuple(Resource.parse(resource), relation, UserSet.parse(userset));
+		return tuple(ResourceName.parse(resource), relation, UserSet.parse(userset));
 	}
 
-	public NamespaceConfigurationBuilder tuple(Resource resource, String relation, UserSet userset)
+	public NamespaceConfigurationBuilder tuple(ResourceName resource, String relation, UserSet userset)
 	throws RelationNotRegisteredException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);

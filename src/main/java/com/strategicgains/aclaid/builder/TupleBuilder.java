@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.strategicgains.aclaid.domain.Resource;
+import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
@@ -44,7 +44,7 @@ extends AbstractChildBuildable
 			workingTuple = cloneCurrent();
 		}
 
-		workingTuple.setResource(Resource.parse(resource));
+		workingTuple.setResource(ResourceName.parse(resource));
 		return this;
 	}
 

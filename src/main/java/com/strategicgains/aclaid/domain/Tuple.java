@@ -2,6 +2,8 @@ package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
 
+import com.strategicgains.aclaid.resource.QualifiedResourceName;
+
 /**
  * This is the Zanzibar Tuple containing a Resource, Relation and User[set].
  * 
@@ -20,7 +22,7 @@ import java.text.ParseException;
  */
 public class Tuple
 {
-	private Resource resource;	// 'video xyz', 'groupB'
+	private ResourceName resource;
 	private String relation;	// 'owner', 'viewer', 'member'
 	private UserSet userset;	// 'todd', 'groupB#member'
 
@@ -29,7 +31,7 @@ public class Tuple
 		super();
 	}
 
-	public Tuple(Resource resource, String relation, UserSet userset)
+	public Tuple(ResourceName resource, String relation, UserSet userset)
 	{
 		this();
 		setResource(resource);
@@ -40,7 +42,7 @@ public class Tuple
 	public Tuple(String resource, String relation, String userset)
 	throws ParseException
 	{
-		this(Resource.parse(resource), relation, UserSet.parse(userset));
+		this(ResourceName.parse(resource), relation, UserSet.parse(userset));
 	}
 
 	public Tuple(Tuple tuple)
@@ -53,12 +55,12 @@ public class Tuple
 		return (resource != null);
 	}
 
-	public Resource getResource()
+	public ResourceName getResource()
 	{
-		return new Resource(resource);
+		return resource;
 	}
 
-	public void setResource(Resource resource)
+	public void setResource(ResourceName resource)
 	{
 		this.resource = resource;
 	}
@@ -98,19 +100,19 @@ public class Tuple
 		return matches(that.getUserset(), that.getRelation(), that.getResource());
 	}
 
-	public boolean matches(UserSet userset, String relation, Resource resource)
+	public boolean matches(UserSet userset, String relation, QualifiedResourceName resource)
 	{
 		return (this.relation.equals(relation)
 			&& this.resource.matches(resource)
 			&& this.userset.matches(userset));
 	}
 
-	public boolean applies(Resource resource)
+	public boolean applies(ResourceName resource)
 	{
 		return this.resource.matches(resource);
 	}
 
-	public boolean applies(Resource resource, String relation)
+	public boolean applies(ResourceName resource, String relation)
 	{
 		return (this.relation.equals(relation)
 			&& this.resource.matches(resource));
@@ -181,6 +183,6 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation@userset: " + tuple, 0);
 
-		return new Tuple(Resource.parse(obj[0]), rel[0], UserSet.parse(rel[1]));
+		return new Tuple(ResourceName.parse(obj[0]), rel[0], UserSet.parse(rel[1]));
 	}
 }

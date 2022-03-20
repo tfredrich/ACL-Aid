@@ -1,8 +1,6 @@
 package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * This is the Zanzibar User (which is either a user or a user set) property of a Tuple.
@@ -17,11 +15,8 @@ import java.util.regex.Pattern;
  * @author toddfredrich
 **/
 public class UserSet
-extends Resource
 {
-	private static final String REGEX = "^(.*?):(.*?)(?:#(.*?)){0,1}$";
-	private static final Pattern PATTERN = Pattern.compile(REGEX);
-
+	private ResourceName resource;
 	private String relation;
 
 	public UserSet()
@@ -31,8 +26,9 @@ extends Resource
 
 	public UserSet(UserSet that)
 	{
-		super(that);
+		this();
 		setRelation(that.relation);
+		setResource(that.resource);
 	}
 
 	public static UserSet parse(String string)
@@ -40,35 +36,20 @@ extends Resource
 	{
 		if (string == null || string.isEmpty()) throw new ParseException("Usersets cannot be null or empty", 0);
 
-		Matcher m = PATTERN.matcher(string.trim());
+		String[] segments = string.trim().split("#", 2);
 
-		if (!m.matches()) throw new ParseException("Invalid userset: " + string, 0);
+		if (segments.length > 2) throw new ParseException("Invalid userset: " + string, 0);
 
+		
 		UserSet userset = new UserSet();
-		String namespace = m.group(1);
+		userset.setResource(ResourceName.parse(segments[0]));
 
-		if (namespace == null || namespace.isBlank()) throw new ParseException("Usersets must contain a namespace", 0);
-
-		userset.setNamespace(namespace.trim());
-		String identifier = m.group(2);
-
-		if (identifier != null && !identifier.isBlank()) userset.setIdentifier(identifier.trim());
-
-		String relation = m.group(3);
-
-		if (relation != null && !relation.isBlank()) userset.setRelation(relation.trim());
+		if (segments.length == 2)
+		{
+			userset.setRelation(segments[1].trim());
+		}
 
 		return userset;
-	}
-
-	public Resource asResourceReference()
-	{
-		return new Resource(this);
-	}
-
-	protected void setRelation(String relation)
-	{
-		this.relation = relation;
 	}
 
 	public String getRelation()
@@ -79,6 +60,21 @@ extends Resource
 	public boolean hasRelation()
 	{
 		return relation != null;
+	}
+
+	protected void setRelation(String relation)
+	{
+		this.relation = relation;
+	}
+
+	protected void setResource(ResourceName resource)
+	{
+		this.resource = resource;
+	}
+
+	public ResourceName getResource()
+	{
+		return resource;
 	}
 
 	public String toString()
@@ -92,5 +88,22 @@ extends Resource
 		}
 
 		return s.toString();
+	}
+
+	public boolean matches(UserSet that)
+	{
+		if (this.resource.matches(that.resource))
+		{
+			if (hasRelation())
+			{
+				return this.relation.equals(that.relation);
+			}
+			else
+			{
+				return (!that.hasRelation());
+			}
+		}
+
+		return false;
 	}
 }

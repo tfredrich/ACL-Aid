@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.strategicgains.aclaid.builder.AccessControlListBuilder;
-import com.strategicgains.aclaid.domain.Resource;
+import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.UserSet;
 
 /**
@@ -55,7 +55,7 @@ public class AccessControlList
 	public boolean check(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return check(UserSet.parse(userset), relation, Resource.parse(resource));
+		return check(UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
 	/**
@@ -66,7 +66,7 @@ public class AccessControlList
 	 * @param resource
 	 * @return
 	 */
-	public boolean check(UserSet userset, String relation, Resource resource)
+	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
 		NamespaceConfiguration acl = namespaces.get(resource.getNamespace());
 

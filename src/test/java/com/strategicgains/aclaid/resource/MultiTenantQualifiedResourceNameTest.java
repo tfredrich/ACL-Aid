@@ -109,13 +109,6 @@ public class MultiTenantQualifiedResourceNameTest
 		MultiTenantQualifiedResourceName.parse("test::c715912d-1075-4777-af98-0c1dbd1f0391:directories/*");
 	}
 
-	@Test(expected=ParseException.class)
-	public void ShouldThrowOnWrongPrefix()
-	throws ParseException
-	{
-		MultiTenantQualifiedResourceName.parse("x:test::c715912d-1075-4777-af98-0c1dbd1f0391:directories/*");
-	}
-
 	@Test
 	public void ShouldThrowOnBadAccount()
 	{

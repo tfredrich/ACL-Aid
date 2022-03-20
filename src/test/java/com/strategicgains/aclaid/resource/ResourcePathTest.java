@@ -8,6 +8,8 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
+import com.strategicgains.aclaid.domain.ResourcePath;
+
 public class ResourcePathTest
 {
 	@Test

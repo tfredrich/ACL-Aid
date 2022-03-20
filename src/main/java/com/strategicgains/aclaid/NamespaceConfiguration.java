@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.strategicgains.aclaid.domain.Relation;
-import com.strategicgains.aclaid.domain.Resource;
+import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
@@ -38,7 +38,7 @@ public class NamespaceConfiguration
 		return addTuple(new Tuple(resource, relation, userset));
 	}
 
-	public NamespaceConfiguration addTuple(Resource resource, String relation, UserSet userset)
+	public NamespaceConfiguration addTuple(ResourceName resource, String relation, UserSet userset)
 	throws RelationNotRegisteredException
 	{
 		return addTuple(new Tuple(resource, relation, userset));
@@ -56,10 +56,10 @@ public class NamespaceConfiguration
 	public boolean check(AccessControlList acl, String userset, String relation, String resource)
 	throws ParseException
 	{
-		return check(acl, UserSet.parse(userset), relation, Resource.parse(resource));
+		return check(acl, UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
-	public boolean check(AccessControlList acl, UserSet userset, String relation, Resource resource)
+	public boolean check(AccessControlList acl, UserSet userset, String relation, ResourceName resource)
 	{
 		for (Tuple tuple : tuples)
 		{
@@ -71,7 +71,7 @@ public class NamespaceConfiguration
 			//TODO: beware the recursion stack overflow!
 			if (tuple.getUserset().hasRelation()
 				&& tuple.applies(resource, relation)
-				&& acl.check(userset, tuple.getUserset().getRelation(), tuple.getUserset()))
+				&& acl.check(userset, tuple.getUserset().getRelation(), tuple.getUserset().getResource()))
 				return true;
 		}
 

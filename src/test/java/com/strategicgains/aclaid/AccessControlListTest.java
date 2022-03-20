@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid;
 
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
@@ -15,15 +14,19 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class AccessControlListTest
 {
-	private static final String DOCUMENT = "doc";
-	private static final String GROUP = "group";
-	private static final String USER = "user";
+	private static final String DOCUMENTS = "docs";
+	private static final String GROUPS = "groups";
+	private static final String USERS = "users";
 
-	private static final String ADMINS_GROUP = GROUP + ":admins";
-	private static final String EVERYONE_GROUP = GROUP + ":everyone";
+	private static final String DOCUMENTS_PREFIX = DOCUMENTS + ":";
+	private static final String GROUPS_PREFIX = GROUPS + ":";
+	private static final String USERS_PREFIX = USERS + ":";
 
-	private static final String ALL_DOCS = DOCUMENT + ":*";
-	private static final String DOC_1234 = DOCUMENT + ":1234";
+	private static final String ADMINS_GROUP = GROUPS_PREFIX + "admins";
+	private static final String EVERYONE_GROUP = GROUPS_PREFIX + "everyone";
+
+	private static final String ALL_DOCS = DOCUMENTS_PREFIX + "document/*";
+	private static final String DOC_1234 = DOCUMENTS_PREFIX + "document/1234";
 
 	private static final String ADMINISTRATOR = "administers";
 	private static final String EDITOR = "editor";
@@ -31,15 +34,15 @@ public class AccessControlListTest
 	private static final String OWNER = "owner";
 	private static final String VIEWER = "viewer";
 
-	private static final String EVERY_USER = USER + ":*";
+	private static final String EVERY_USER = USERS_PREFIX + "user/*";
 	private static final String ADMINISTRATORS = ADMINS_GROUP + "#" + MEMBER;
 	private static final String EVERYONE = EVERYONE_GROUP + "#" + MEMBER;
-	private static final String BETTY = USER + ":betty";
-	private static final String BOB = USER + ":bob";
-	private static final String SALLY = USER + ":sally";
-	private static final String SAM = USER + ":sam";
-	private static final String TODD = USER + ":todd";
-	private static final String JASMINE = USER + ":jasmine";
+	private static final String BETTY = USERS_PREFIX + "user/betty";
+	private static final String BOB = USERS_PREFIX + "user/bob";
+	private static final String SALLY = USERS_PREFIX + "user/sally";
+	private static final String SAM = USERS_PREFIX + "user/sam";
+	private static final String TODD = USERS_PREFIX + "user/todd";
+	private static final String JASMINE = USERS_PREFIX + "user/jasmine";
 
 
 	private AccessControlList acl;
@@ -50,7 +53,7 @@ public class AccessControlListTest
 	{
 		AccessControlListBuilder builder = new AccessControlListBuilder();
 		builder
-			.namespace(DOCUMENT)
+			.namespace(DOCUMENTS)
 				.relation(OWNER)
 				.relation(ADMINISTRATOR)
 				.relation(EDITOR)
@@ -67,7 +70,7 @@ public class AccessControlListTest
 				.tuple(ALL_DOCS, ADMINISTRATOR, ADMINISTRATORS)
 				.tuple(ALL_DOCS, VIEWER, EVERYONE)
 
-			.namespace(GROUP)
+			.namespace(GROUPS)
 				.relation(MEMBER)
 				.tuple(EVERYONE_GROUP, MEMBER, EVERY_USER)
 
@@ -106,8 +109,8 @@ public class AccessControlListTest
 		assertTrue(acl.check(BOB, MEMBER, ADMINS_GROUP));
 		assertTrue(acl.check(SALLY, MEMBER, ADMINS_GROUP));
 		assertTrue(acl.check(SAM, MEMBER, ADMINS_GROUP));
-		assertFalse(acl.check(BOB, ADMINISTRATOR, "video:12345"));
-		assertFalse(acl.check(SALLY, ADMINISTRATOR, "video:12345"));
+		assertFalse(acl.check(BOB, ADMINISTRATOR, "docs:video/12345"));
+		assertFalse(acl.check(SALLY, ADMINISTRATOR, "docs:video/12345"));
 		assertFalse(acl.check(JASMINE, ADMINISTRATOR, DOC_1234));
 	}
 

@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid.resource;
+package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
 import java.util.Objects;

@@ -4,8 +4,11 @@ import java.text.ParseException;
 import java.util.Objects;
 import java.util.UUID;
 
+import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ResourcePath;
+
 public class MultiTenantQualifiedResourceName
-extends SimpleQualifiedResourceName
+extends ResourceName
 {
 	public static final int SEGMENT_COUNT = 5;
 
@@ -146,7 +149,7 @@ extends SimpleQualifiedResourceName
 	public static MultiTenantQualifiedResourceName parse(String qrnString)
 	throws ParseException
 	{
-		String[] segments = SimpleQualifiedResourceName.toSegments(qrnString, SEGMENT_COUNT);
+		String[] segments = ResourceName.toSegments(qrnString, SEGMENT_COUNT);
 
 		MultiTenantQualifiedResourceName qrn = new MultiTenantQualifiedResourceName();
 		qrn.setNamespace(segments[1].isEmpty() ? null : segments[1]);

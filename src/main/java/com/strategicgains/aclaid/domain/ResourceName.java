@@ -1,34 +1,35 @@
-package com.strategicgains.aclaid.resource;
+package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
 import java.util.Objects;
 
-public class SimpleQualifiedResourceName
+import com.strategicgains.aclaid.resource.QualifiedResourceName;
+
+public class ResourceName
 implements QualifiedResourceName
 {
-	public static final String QRN_PREFIX = "qrn:";
 	public static final String SEPARATOR = ":";
-	private static final int SEGMENT_COUNT = 3;
+	private static final int SEGMENT_COUNT = 2;
 
 	private String namespace;
 	private ResourcePath resourcePath;
 
-	public SimpleQualifiedResourceName()
+	public ResourceName()
 	{
 		super();
 	}
 
-	public SimpleQualifiedResourceName(String namespace, String resourceType)
+	public ResourceName(String namespace, String resourceType)
 	{
 		this(namespace, new ResourcePath(resourceType));
 	}
 
-	public SimpleQualifiedResourceName(String namespace, String resourceType, String identifier)
+	public ResourceName(String namespace, String resourceType, String identifier)
 	{
 		this(namespace, new ResourcePath(resourceType, identifier));
 	}
 
-	public SimpleQualifiedResourceName(String namespace, ResourcePath resourcePath)
+	public ResourceName(String namespace, ResourcePath resourcePath)
 	{
 		this();
 		setNamespace(namespace);
@@ -87,12 +88,12 @@ implements QualifiedResourceName
 	public boolean equals(Object that)
 	{
 		if (this == that) return true;
-		if (!(that instanceof SimpleQualifiedResourceName)) return false;
+		if (!(that instanceof ResourceName)) return false;
 
-		return equals((SimpleQualifiedResourceName) that);
+		return equals((ResourceName) that);
 	}
 
-	public boolean equals(SimpleQualifiedResourceName that)
+	public boolean equals(ResourceName that)
 	{
 		if (!this.getNamespace().equals(that.getNamespace())) return false;
 
@@ -107,9 +108,7 @@ implements QualifiedResourceName
 
 	public String toString()
 	{
-		StringBuilder sb = new StringBuilder(QRN_PREFIX);
-
-		sb.append(getNamespace());
+		StringBuilder sb = new StringBuilder(getNamespace());
 		appendSegments(sb);
 
 		if (hasResourcePath())
@@ -154,31 +153,27 @@ implements QualifiedResourceName
 		return true;
 	}
 
-	public static SimpleQualifiedResourceName parse(String qrnString)
+	public static ResourceName parse(String qrnString)
 	throws ParseException
 	{
-		String[] segments = SimpleQualifiedResourceName.toSegments(qrnString, SEGMENT_COUNT);
+		String[] segments = ResourceName.toSegments(qrnString, SEGMENT_COUNT);
 
-		SimpleQualifiedResourceName qrn = new SimpleQualifiedResourceName();
-		qrn.setNamespace(segments[1].isEmpty() ? null : segments[1]);
-		qrn.setResourcePath(ResourcePath.parse(segments[2]));
-		return qrn;
+		ResourceName rn = new ResourceName();
+		rn.setNamespace(segments[0].isEmpty() ? null : segments[0]);
+		rn.setResourcePath(ResourcePath.parse(segments[1]));
+		return rn;
 	}
 
 	protected static String[] toSegments(String qrnString, int segmentCount)
 	throws ParseException
 	{
-		if (qrnString == null) throw new ParseException("QRN strings cannot be null", 0);
+		if (qrnString == null) throw new ParseException("Resource names cannot be null", 0);
 
 		String[] segments = qrnString.split(SEPARATOR);
 
 		if (segments.length != segmentCount)
 		{
-			throw new ParseException(String.format("QRNs have five (%d) segments, beginning with 'qrn:'", segmentCount), qrnString.lastIndexOf(':'));
-		}
-		else if (!"qrn".equalsIgnoreCase(segments[0]))
-		{
-			throw new ParseException("QRNs must begin with 'qrn:'", 0);
+			throw new ParseException(String.format("Resource names have %d segments, beginning with a namespace", segmentCount), qrnString.lastIndexOf(':'));
 		}
 
 		return segments;
