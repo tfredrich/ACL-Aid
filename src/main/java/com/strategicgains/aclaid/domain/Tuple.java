@@ -2,8 +2,6 @@ package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
 
-import com.strategicgains.aclaid.resource.QualifiedResourceName;
-
 /**
  * This is the Zanzibar Tuple containing a Resource, Relation and User[set].
  * 
@@ -100,7 +98,7 @@ public class Tuple
 		return matches(that.getUserset(), that.getRelation(), that.getResource());
 	}
 
-	public boolean matches(UserSet userset, String relation, QualifiedResourceName resource)
+	public boolean matches(UserSet userset, String relation, ResourceName resource)
 	{
 		return (this.relation.equals(relation)
 			&& this.resource.matches(resource)

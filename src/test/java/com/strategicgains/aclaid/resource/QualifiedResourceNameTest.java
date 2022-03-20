@@ -16,7 +16,7 @@ public class QualifiedResourceNameTest
 	public void shouldParseUuid()
 	throws ParseException
 	{
-		QualifiedResourceName qrn = ResourceName.parse("test:directories/*");
+		ResourceName qrn = ResourceName.parse("test:directories/*");
 		assertQrn(qrn, "test", "directories/*");
 	}
 
@@ -24,7 +24,7 @@ public class QualifiedResourceNameTest
 	public void shouldParseStrings()
 	throws ParseException
 	{
-		QualifiedResourceName qrn = ResourceName.parse("test:directories/*");
+		ResourceName qrn = ResourceName.parse("test:directories/*");
 		assertQrn(qrn, "test", "directories/*");
 		qrn = ResourceName.parse("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
 		assertQrn(qrn, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
@@ -40,8 +40,8 @@ public class QualifiedResourceNameTest
 	public void shouldMatch()
 	throws ParseException
 	{
-		QualifiedResourceName a = ResourceName.parse("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		QualifiedResourceName b = ResourceName.parse("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ResourceName a = ResourceName.parse("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ResourceName b = ResourceName.parse("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
@@ -62,8 +62,8 @@ public class QualifiedResourceNameTest
 	public void shouldNotMatch()
 	throws ParseException
 	{
-		QualifiedResourceName a = ResourceName.parse("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		QualifiedResourceName b = ResourceName.parse("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		ResourceName a = ResourceName.parse("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ResourceName b = ResourceName.parse("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
@@ -109,7 +109,7 @@ public class QualifiedResourceNameTest
 		ResourceName.parse("x:test:directories/*");
 	}
 
-	private void assertQrn(QualifiedResourceName qrn, String namespace, String path)
+	private void assertQrn(ResourceName qrn, String namespace, String path)
 	{
 		assertEquals(namespace, qrn.getNamespace());
 		assertEquals(path, qrn.getResourcePath().toString());

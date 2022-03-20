@@ -13,7 +13,7 @@
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
-package com.strategicgains.aclaid.resource;
+package com.strategicgains.aclaid.domain;
 
 /**
  * Defines the interface to retrieve a string resource ID from an object.
@@ -23,7 +23,7 @@ package com.strategicgains.aclaid.resource;
  */
 public interface Resource
 {
-	QualifiedResourceName getResourceName();
+	ResourceName getResourceName();
 	String getResourceType();
 	String getNamespace();
 }

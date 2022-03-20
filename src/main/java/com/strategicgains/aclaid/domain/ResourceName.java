@@ -3,10 +3,7 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 import java.util.Objects;
 
-import com.strategicgains.aclaid.resource.QualifiedResourceName;
-
 public class ResourceName
-implements QualifiedResourceName
 {
 	public static final String SEPARATOR = ":";
 	private static final int SEGMENT_COUNT = 2;
@@ -36,49 +33,41 @@ implements QualifiedResourceName
 		setResourcePath(resourcePath);
 	}
 
-	@Override
 	public String getResourceType()
 	{
 		return (hasResourcePath() ? getResourcePath().getResourceType() : null);
 	}
 
-	@Override
 	public String getNamespace()
 	{
 		return namespace;
 	}
 
-	@Override
 	public boolean hasNamespace()
 	{
 		return namespace != null;
 	}
 
-	@Override
 	public void setNamespace(String namespace)
 	{
 		this.namespace = namespace;
 	}
 
-	@Override
 	public ResourcePath getResourcePath()
 	{
 		return resourcePath;
 	}
 
-	@Override
 	public boolean hasResourcePath()
 	{
 		return resourcePath != null;
 	}
 
-	@Override
 	public void setResourcePath(ResourcePath resource)
 	{
 		this.resourcePath = resource;
 	}
 
-	@Override
 	public boolean isResourceTypeWildcard()
 	{
 		return (hasResourcePath() && resourcePath.isResourceTypeWildcard());
@@ -120,15 +109,13 @@ implements QualifiedResourceName
 		return sb.toString();
 	}
 
-	@Override
 	public boolean matches(String qrnString)
 	throws ParseException
 	{
 		return matches(parse(qrnString));
 	}
 
-	@Override
-	public boolean matches(QualifiedResourceName that)
+	public boolean matches(ResourceName that)
 	{
 		if (that == null) return false;
 
@@ -147,7 +134,7 @@ implements QualifiedResourceName
 		// Do nothing. No additional segments.
 	}
 
-	protected boolean segmentsMatch(QualifiedResourceName that)
+	protected boolean segmentsMatch(ResourceName that)
 	{
 		// No additional segments to match.
 		return true;
