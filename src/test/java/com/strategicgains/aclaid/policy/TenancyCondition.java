@@ -1,12 +1,22 @@
 package com.strategicgains.aclaid.policy;
 
-public class TenancyCondition implements Condition {
+import com.strategicgains.aclaid.domain.ResourceName;
+
+public class TenancyCondition
+implements Condition
+{
+	private ResourceName admin;
+	
+	public TenancyCondition(ResourceName admin)
+	{
+		super();
+		this.admin = admin;
+	}
 
 	@Override
 	public boolean test(PolicyContext context, PolicyStatement statement, String relation)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return true;
+//		return admin.matches(context.getPrincipal());
 	}
-
 }

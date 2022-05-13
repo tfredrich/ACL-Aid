@@ -66,10 +66,10 @@ public class PolicyStatementTest
 		p.deny("test:do:three");
 		p.setResource("test:*");
 
-		assertTrue(p.evaluate(null, "test:do:one"));
-		assertTrue(p.evaluate(null, "test:do:two"));
+		assertTrue(p.evaluate(null, "test:do:*"));
+		assertFalse(p.evaluate(null, "test:do:two"));
 		assertFalse(p.evaluate(null, "test:do:three"));
-		assertTrue(p.evaluate(null, "test:do:four"));
+		assertFalse(p.evaluate(null, "test:do:four"));
 		assertFalse(p.evaluate(null, "test:foo:bar"));
 	}
 }

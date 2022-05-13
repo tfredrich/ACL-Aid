@@ -6,23 +6,23 @@ import java.text.ParseException;
  * This is the Zanzibar Tuple containing a Resource, Relation and User[set].
  * 
  * ⟨tuple⟩   ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
- * ⟨resource⟩::= ⟨namespace⟩‘:’⟨resource id⟩
  * (relation)::= (relation name)
  * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
- * (user id) ::= 'user:'(resource id)
+ * (user id) ::= (resource)
  * ⟨userset⟩ ::= ⟨resource⟩‘#’⟨relation⟩
+ * ⟨resource⟩::= ⟨namespace⟩‘:’⟨resource id⟩
  * 
  * Would like to be able to answer as many "resource has relation on userset" questions as possible from memory.
  * With small footprint and high performance.
  * 
- * @author toddfredrich
+ * @author tfredrich
  *
  */
 public class Tuple
 {
-	private ResourceName resource;	// 'document:1', 'video:456', 'foobar:8'
+	private ResourceName resource;	// 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
 	private String relation;		// 'owner', 'viewer', 'member'
-	private UserSet userset;		// 'todd', 'groupB#member'
+	private UserSet userset;		// 'users:user/todd', 'users:group/B#member'
 
 	public Tuple()
 	{

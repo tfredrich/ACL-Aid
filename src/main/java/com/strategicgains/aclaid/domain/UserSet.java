@@ -67,6 +67,11 @@ public class UserSet
 		this.relation = relation;
 	}
 
+	protected boolean isUser()
+	{
+		return !hasRelation();
+	}
+
 	protected void setResource(ResourceName resource)
 	{
 		this.resource = resource;

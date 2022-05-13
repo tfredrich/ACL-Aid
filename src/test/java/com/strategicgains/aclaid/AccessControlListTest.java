@@ -55,15 +55,12 @@ public class AccessControlListTest
 		builder
 			.namespace(DOCUMENTS_NAMESPACE)
 				.relation(OWNER_RELATION)
-				.relation(ADMINISTRATOR_RELATION)
 				.relation(EDITOR_RELATION)
+				.relation(VIEWER_RELATION)
+				.relation(ADMINISTRATOR_RELATION)
 					.union()
 						._this()
 						.computedUserset(OWNER_RELATION)
-				.relation(VIEWER_RELATION)
-					.union()
-						._this()
-						.computedUserset(EDITOR_RELATION)
 
 				// Directly-specified tuples
 				.tuple(DOC_1234, OWNER_RELATION, TODD)
@@ -120,7 +117,7 @@ public class AccessControlListTest
 	{
 		assertTrue(acl.check(TODD, OWNER_RELATION, DOC_1234));
 		assertTrue(acl.check(TODD, VIEWER_RELATION, DOC_1234));
-//		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
+		assertTrue(acl.check(TODD, ADMINISTRATOR_RELATION, DOC_1234));
 		assertTrue(acl.check(JASMINE, VIEWER_RELATION, DOC_1234));
 		assertFalse(acl.check(JASMINE, OWNER_RELATION, DOC_1234));
 	}

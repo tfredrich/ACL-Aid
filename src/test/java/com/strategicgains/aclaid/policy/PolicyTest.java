@@ -13,25 +13,25 @@ import com.strategicgains.aclaid.domain.ResourceName;
 
 public class PolicyTest
 {
-	private static final UUID adminId = UUID.randomUUID();
+	private static final UUID ADMIN_ID = UUID.randomUUID();
 
 	@Test
 	public void testPermissionOnlyMatching()
 	throws ParseException
 	{
-		Policy p = new Policy();
-		p.statement()
-			.setResource("test:blogPost/*", "test:user/*")
-			.allow("test:do:one", "test:do:two");
-		p.statement()
-			.setResource("test:foo/*")
-			.allow("test:do:*")
-			.deny("test:do:three");
-		
 		String one = "test:do:one";
 		String two = "test:do:two";
 		String three = "test:do:three";
 		String four = "test:do:four";
+
+		Policy p = new Policy();
+		p.statement()
+			.setResource("test:blogPost/*", "test:user/*")
+			.allow(one, two);
+		p.statement()
+			.setResource("test:foo/*")
+			.allow(one, two, three, four)
+			.deny(three);
 
 		Resource x = new TransientResource("test", "blogPost", UUID.randomUUID());
 		PolicyContext c = new PolicyContext(null, x);
@@ -59,32 +59,30 @@ public class PolicyTest
 	public void testMatchEnforcingTenancy()
 	throws ParseException
 	{
+		ResourceName p1 = new ResourceName("test", "user", UUID.randomUUID().toString());
+		ResourceName admin = new ResourceName("test", "user", ADMIN_ID.toString());
 		Policy p = new Policy();
-		Condition tenancy = new TenancyCondition();
-
-		p.statement()
-			.setResource("test:blogPost/*", "test:user/*")
-			.allow("test:do:one", "test:do:two")
-			.withCondition(tenancy);
-		p.statement()
-			.setResource("test:foo/*")
-			.allow("test:do:*")
-			.deny("test:do:three")
-			.withCondition(tenancy);
-		p.statement()
-			.setPrincipal(String.format("iam:user/%s", adminId))
-			.setResource("test:foo/*")
-			.allow("test:do:*")
-			.deny("test:do:three")
-			.withCondition(tenancy);
-
+		Condition tenancy = new TenancyCondition(admin);
 		String one = "test:do:one";
 		String two = "test:do:two";
 		String three = "test:do:three";
 		String four = "test:do:four";
 
-		ResourceName p1 = new ResourceName("test", "user", UUID.randomUUID().toString());
-		ResourceName admin = new ResourceName("test", "user", adminId.toString());
+		p.statement()
+			.setResource("test:blogPost/*", "test:user/*")
+			.allow(one, two)
+			.withCondition(tenancy);
+		p.statement()
+			.setResource("test:foo/*")
+			.allow(one, two, three, four)
+			.deny("test:do:three")
+			.withCondition(tenancy);
+		p.statement()
+			.setUserset(String.format("iam:user/%s", ADMIN_ID))
+			.setResource("test:foo/*")
+			.allow(one, two, three, four)
+			.deny("test:do:three")
+			.withCondition(tenancy);
 
 		Resource x = new TransientResource("test", "blogPost", UUID.randomUUID());
 		PolicyContext c = new PolicyContext(p1, x);

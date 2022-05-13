@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.Collection;
 
 import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.policy.Condition;
 import com.strategicgains.aclaid.policy.PolicyStatement;
 
@@ -19,15 +20,15 @@ public class PolicyStatementBuilder
 		this.parent = parent;
 	}
 
-	public PolicyStatement principal(String qrnString)
+	public PolicyStatement userset(String userset)
 	throws ParseException
 	{
-		return statement.setPrincipal(qrnString);
+		return statement.setUserset(userset);
 	}
 
-	public PolicyStatement principal(ResourceName principal)
+	public PolicyStatement userset(UserSet userset)
 	{
-		return statement.setPrincipal(principal);
+		return statement.setUserset(userset);
 	}
 
 	public PolicyStatement resource(String... resourceQrns)

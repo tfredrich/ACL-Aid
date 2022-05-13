@@ -12,21 +12,29 @@ import java.util.Set;
 
 import com.strategicgains.aclaid.domain.Resource;
 import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.UserSet;
 
 /**
- * For a given principal (via a QualifiedResourceName and acceptable wildcards), defines access for a given set of resources.
- * Specifies the permissions allowed or denied for those resources. May also include a condition that must return true in order
- * for access to be granted.
+ * For a given UserSet (via a ResourceName and acceptable wildcards), defines access to a given set of resources (also
+ * via ResourceName and possible wildcards). Specifies the relations allowed or denied for those resources. May also
+ * include a condition that must return true in order for access to be granted.
  * 
  * @author toddf
  * @since Nov 2, 2018
  */
 public class PolicyStatement
 {
-	private ResourceName principal;
+	//resource, relation, user[set]
+	private UserSet userset;
 	private Set<ResourceName> resources = new HashSet<>();
+
+	// Allowed relations
 	private Set<String> allowed = new HashSet<>();
+
+	// Denied relations
 	private Set<String> denied = new HashSet<>();
+
+	// Arbitrary conditions.
 	private Condition condition;
 
 	public PolicyStatement()
@@ -39,26 +47,26 @@ public class PolicyStatement
 		return resources;
 	}
 
-	public PolicyStatement setPrincipal(String qrnString)
+	public PolicyStatement setUserset(String userset)
 	throws ParseException
 	{
-		return setPrincipal(qrnString != null ? ResourceName.parse(qrnString) : null);
+		return setUserset(userset != null ? UserSet.parse(userset) : null);
 	}
 
-	public PolicyStatement setPrincipal(ResourceName principal)
+	public PolicyStatement setUserset(UserSet userset)
 	{
-		this.principal = principal;
+		this.userset = userset;
 		return this;
 	}
 
-	public ResourceName getPrincipal()
+	public UserSet getUserset()
 	{
-		return principal;
+		return userset;
 	}
 
-	public boolean hasPrincipal()
+	public boolean hasUserset()
 	{
-		return (principal != null);
+		return (userset != null);
 	}
 
 	public PolicyStatement setResource(String... resourceQrns)
@@ -156,11 +164,11 @@ public class PolicyStatement
 	 * @param principal
 	 * @return
 	 */
-	public boolean appliesToPrincipal(ResourceName principal)
+	public boolean appliesToUser(ResourceName user)
 	{
-		if (!hasPrincipal()) return false;
+		if (!hasUserset()) return false;
 
-		return getPrincipal().matches(principal);
+		return getUserset().getResource().matches(user);
 	}
 
 	/**
@@ -173,7 +181,7 @@ public class PolicyStatement
 	public boolean evaluate(PolicyContext context, String relation)
 	{
 		if (context != null &&
-			!appliesToPrincipal(context.getPrincipal()) &&
+			!appliesToUser(context.getPrincipal()) &&
 			!appliesToResource(context.getResource()))
 		{
 			return false;

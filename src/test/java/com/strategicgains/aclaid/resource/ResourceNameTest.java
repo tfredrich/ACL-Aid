@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import com.strategicgains.aclaid.domain.ResourceName;
 
-public class QualifiedResourceNameTest
+public class ResourceNameTest
 {
 	@Test
 	public void shouldParseUuid()
