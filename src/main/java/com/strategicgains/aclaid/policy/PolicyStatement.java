@@ -4,6 +4,7 @@
 package com.strategicgains.aclaid.policy;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,13 +39,13 @@ public class PolicyStatement
 		return resources;
 	}
 
-	public PolicyStatement principal(String qrnString)
+	public PolicyStatement setPrincipal(String qrnString)
 	throws ParseException
 	{
-		return principal(qrnString != null ? ResourceName.parse(qrnString) : null);
+		return setPrincipal(qrnString != null ? ResourceName.parse(qrnString) : null);
 	}
 
-	public PolicyStatement principal(ResourceName principal)
+	public PolicyStatement setPrincipal(ResourceName principal)
 	{
 		this.principal = principal;
 		return this;
@@ -60,7 +61,7 @@ public class PolicyStatement
 		return (principal != null);
 	}
 
-	public PolicyStatement resource(String... resourceQrns)
+	public PolicyStatement setResource(String... resourceQrns)
 	throws ParseException
 	{
 		if (resourceQrns != null)
@@ -74,16 +75,26 @@ public class PolicyStatement
 		return this;
 	}
 
-	public PolicyStatement resources(Collection<ResourceName> resourceQrns)
+	public PolicyStatement setResources(Collection<ResourceName> resourceQrns)
 	{
 		this.resources.addAll(resourceQrns);
 		return this;
+	}
+
+	public PolicyStatement allow(String... relations)
+	{
+		return allow(Arrays.asList(relations));
 	}
 
 	public PolicyStatement allow(Collection<String> relations)
 	{
 		this.allowed.addAll(relations);
 		return this;
+	}
+
+	public PolicyStatement deny(String... relations)
+	{
+		return deny(Arrays.asList(relations));
 	}
 
 	public PolicyStatement deny(Collection<String> relations)

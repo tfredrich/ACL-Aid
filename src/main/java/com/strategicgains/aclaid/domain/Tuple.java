@@ -20,9 +20,9 @@ import java.text.ParseException;
  */
 public class Tuple
 {
-	private ResourceName resource;
-	private String relation;	// 'owner', 'viewer', 'member'
-	private UserSet userset;	// 'todd', 'groupB#member'
+	private ResourceName resource;	// 'document:1', 'video:456', 'foobar:8'
+	private String relation;		// 'owner', 'viewer', 'member'
+	private UserSet userset;		// 'todd', 'groupB#member'
 
 	public Tuple()
 	{

@@ -12,7 +12,7 @@ public interface Buildable
 
 	RelationBuilder relation(String name);
 
-	TupleBuilder tuple();
+	TupleBuilder tuples();
 
 	NamespaceConfigurationBuilder tuple(String resource, String relation, String userset)
 	throws ParseException, RelationNotRegisteredException;

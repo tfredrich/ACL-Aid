@@ -51,8 +51,8 @@ implements Buildable
 	}
 
 	@Override
-	public TupleBuilder tuple()
+	public TupleBuilder tuples()
 	{
-		return parent.tuple();
+		return parent.tuples();
 	}
 }

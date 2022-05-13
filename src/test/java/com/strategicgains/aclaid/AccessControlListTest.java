@@ -14,13 +14,13 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class AccessControlListTest
 {
-	private static final String DOCUMENTS = "docs";
-	private static final String GROUPS = "groups";
-	private static final String USERS = "users";
+	private static final String DOCUMENTS_NAMESPACE = "docs";
+	private static final String GROUPS_NAMESPACE = "groups";
+	private static final String USERS_NAMESPACE = "users";
 
-	private static final String DOCUMENTS_PREFIX = DOCUMENTS + ":";
-	private static final String GROUPS_PREFIX = GROUPS + ":";
-	private static final String USERS_PREFIX = USERS + ":";
+	private static final String DOCUMENTS_PREFIX = DOCUMENTS_NAMESPACE + ":";
+	private static final String GROUPS_PREFIX = GROUPS_NAMESPACE + ":";
+	private static final String USERS_PREFIX = USERS_NAMESPACE + ":";
 
 	private static final String ADMINS_GROUP = GROUPS_PREFIX + "admins";
 	private static final String EVERYONE_GROUP = GROUPS_PREFIX + "everyone";
@@ -28,15 +28,15 @@ public class AccessControlListTest
 	private static final String ALL_DOCS = DOCUMENTS_PREFIX + "document/*";
 	private static final String DOC_1234 = DOCUMENTS_PREFIX + "document/1234";
 
-	private static final String ADMINISTRATOR = "administers";
-	private static final String EDITOR = "editor";
-	private static final String MEMBER = "member";
-	private static final String OWNER = "owner";
-	private static final String VIEWER = "viewer";
+	private static final String ADMINISTRATOR_RELATION = "administers";
+	private static final String EDITOR_RELATION = "editor";
+	private static final String MEMBER_RELATION = "member";
+	private static final String OWNER_RELATION = "owner";
+	private static final String VIEWER_RELATION = "viewer";
 
 	private static final String EVERY_USER = USERS_PREFIX + "user/*";
-	private static final String ADMINISTRATORS = ADMINS_GROUP + "#" + MEMBER;
-	private static final String EVERYONE = EVERYONE_GROUP + "#" + MEMBER;
+	private static final String ADMINISTRATORS_USERSET = ADMINS_GROUP + "#" + MEMBER_RELATION;
+	private static final String EVERYONE_USERSET = EVERYONE_GROUP + "#" + MEMBER_RELATION;
 	private static final String BETTY = USERS_PREFIX + "user/betty";
 	private static final String BOB = USERS_PREFIX + "user/bob";
 	private static final String SALLY = USERS_PREFIX + "user/sally";
@@ -53,31 +53,31 @@ public class AccessControlListTest
 	{
 		AccessControlListBuilder builder = new AccessControlListBuilder();
 		builder
-			.namespace(DOCUMENTS)
-				.relation(OWNER)
-				.relation(ADMINISTRATOR)
-				.relation(EDITOR)
+			.namespace(DOCUMENTS_NAMESPACE)
+				.relation(OWNER_RELATION)
+				.relation(ADMINISTRATOR_RELATION)
+				.relation(EDITOR_RELATION)
 					.union()
 						._this()
-						.computedUserset(OWNER)
-				.relation(VIEWER)
+						.computedUserset(OWNER_RELATION)
+				.relation(VIEWER_RELATION)
 					.union()
 						._this()
-						.computedUserset(EDITOR)
+						.computedUserset(EDITOR_RELATION)
 
 				// Directly-specified tuples
-				.tuple(DOC_1234, OWNER, TODD)
-				.tuple(ALL_DOCS, ADMINISTRATOR, ADMINISTRATORS)
-				.tuple(ALL_DOCS, VIEWER, EVERYONE)
+				.tuple(DOC_1234, OWNER_RELATION, TODD)
+				.tuple(ALL_DOCS, ADMINISTRATOR_RELATION, ADMINISTRATORS_USERSET)
+				.tuple(ALL_DOCS, VIEWER_RELATION, EVERYONE_USERSET)
 
-			.namespace(GROUPS)
-				.relation(MEMBER)
-				.tuple(EVERYONE_GROUP, MEMBER, EVERY_USER)
+			.namespace(GROUPS_NAMESPACE)
+				.relation(MEMBER_RELATION)
+				.tuple(EVERYONE_GROUP, MEMBER_RELATION, EVERY_USER)
 
 				// DSL-built multiple tuples
-				.tuple()
+				.tuples()
 					.forResource(ADMINS_GROUP)
-						.withRelation(MEMBER)
+						.withRelation(MEMBER_RELATION)
 							.withUserset(SAM)
 							.withUserset(BOB)
 							.withUserset(SALLY)
@@ -91,37 +91,37 @@ public class AccessControlListTest
 	public void testEveryoneWildcardGroup()
 	throws ParseException
 	{
-		assertTrue(acl.check(TODD, MEMBER, EVERYONE_GROUP));
-		assertTrue(acl.check(JASMINE, MEMBER, EVERYONE_GROUP));
-		assertTrue(acl.check(BETTY, MEMBER, EVERYONE_GROUP));
-		assertTrue(acl.check(BOB, MEMBER, EVERYONE_GROUP));
-		assertTrue(acl.check(SALLY, MEMBER, EVERYONE_GROUP));
-		assertTrue(acl.check(SAM, MEMBER, EVERYONE_GROUP));
+		assertTrue(acl.check(TODD, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(JASMINE, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(BETTY, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(BOB, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(SALLY, MEMBER_RELATION, EVERYONE_GROUP));
+		assertTrue(acl.check(SAM, MEMBER_RELATION, EVERYONE_GROUP));
 	}
 
 	@Test
 	public void testAdminSpecifiedGroup()
 	throws ParseException
 	{
-		assertFalse(acl.check(TODD, MEMBER, ADMINS_GROUP));
-		assertFalse(acl.check(JASMINE, MEMBER, ADMINS_GROUP));
-		assertTrue(acl.check(BETTY, MEMBER, ADMINS_GROUP));
-		assertTrue(acl.check(BOB, MEMBER, ADMINS_GROUP));
-		assertTrue(acl.check(SALLY, MEMBER, ADMINS_GROUP));
-		assertTrue(acl.check(SAM, MEMBER, ADMINS_GROUP));
-		assertFalse(acl.check(BOB, ADMINISTRATOR, "docs:video/12345"));
-		assertFalse(acl.check(SALLY, ADMINISTRATOR, "docs:video/12345"));
-		assertFalse(acl.check(JASMINE, ADMINISTRATOR, DOC_1234));
+		assertFalse(acl.check(TODD, MEMBER_RELATION, ADMINS_GROUP));
+		assertFalse(acl.check(JASMINE, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(BETTY, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(BOB, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(SALLY, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(SAM, MEMBER_RELATION, ADMINS_GROUP));
+		assertFalse(acl.check(BOB, ADMINISTRATOR_RELATION, "docs:video/12345"));
+		assertFalse(acl.check(SALLY, ADMINISTRATOR_RELATION, "docs:video/12345"));
+		assertFalse(acl.check(JASMINE, ADMINISTRATOR_RELATION, DOC_1234));
 	}
 
 	@Test
 	public void testInheritance()
 	throws ParseException
 	{
-		assertTrue(acl.check(TODD, OWNER, DOC_1234));
-		assertTrue(acl.check(TODD, VIEWER, DOC_1234));
+		assertTrue(acl.check(TODD, OWNER_RELATION, DOC_1234));
+		assertTrue(acl.check(TODD, VIEWER_RELATION, DOC_1234));
 //		assertTrue(acl.check(TODD, ADMINISTRATOR, DOC_1234));
-		assertTrue(acl.check(JASMINE, VIEWER, DOC_1234));
-		assertFalse(acl.check(JASMINE, OWNER, DOC_1234));
+		assertTrue(acl.check(JASMINE, VIEWER_RELATION, DOC_1234));
+		assertFalse(acl.check(JASMINE, OWNER_RELATION, DOC_1234));
 	}
 }

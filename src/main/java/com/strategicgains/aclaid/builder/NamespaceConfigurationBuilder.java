@@ -99,7 +99,7 @@ implements Buildable
 		return this;
 	}
 
-	public TupleBuilder tuple()
+	public TupleBuilder tuples()
 	{
 		TupleBuilder tb = new TupleBuilder(this);
 		tupleBuilders.add(tb);

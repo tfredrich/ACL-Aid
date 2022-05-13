@@ -9,10 +9,11 @@ extends AbstractChildBuildable
 	private UnionBuilder union;
 	private IntersectionBuilder intersection;
 	private ExclusionBuilder exclusion;
+	private PolicyBuilder policy;
 
-	public RelationBuilder(String relation, NamespaceConfigurationBuilder aclBuilder)
+	public RelationBuilder(String relation, NamespaceConfigurationBuilder parent)
 	{
-		super(aclBuilder);
+		super(parent);
 		this.name = relation;
 	}
 
@@ -24,6 +25,12 @@ extends AbstractChildBuildable
 	Relation build()
 	{
 		return new Relation(name);
+	}
+
+	public PolicyBuilder policy()
+	{
+		this.policy = new PolicyBuilder(this);
+		return policy;
 	}
 
 	public UnionBuilder union()
