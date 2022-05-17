@@ -38,21 +38,20 @@ implements Buildable
 		return acl;
 	}
 
-	public NamespaceConfiguration buildTuples(AccessControlList parent)
+	public AccessControlList buildTuples(AccessControlList parent)
 	{
-		NamespaceConfiguration acl = parent.namespace(namespace);
 		tupleBuilders.stream().forEach(b -> tuples.addAll(b.build()));
 		tuples.stream().forEach(t -> {
 			try
 			{
-				acl.addTuple(t);
+				parent.addTuple(t);
 			}
 			catch (RelationNotRegisteredException e)
 			{
 				e.printStackTrace();
 			}
 		});
-		return acl;
+		return parent;
 	}
 
 	public NamespaceConfigurationBuilder namespace(String namespace)

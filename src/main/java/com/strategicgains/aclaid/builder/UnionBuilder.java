@@ -3,14 +3,12 @@ package com.strategicgains.aclaid.builder;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.strategicgains.aclaid.domain.Relation;
-
 public class UnionBuilder
 extends SetBuilder
 {
 	private boolean thisUnion;
 	private Set<String> computedUsersets = new HashSet<>();
-//	private Set<TupleToUserset> tupleToUsersets = new HashSet<>();
+	private Set<TupleToUsersetBuilder> tupleToUsersets = new HashSet<>();
 
 	public UnionBuilder(RelationBuilder parent)
 	{
@@ -29,5 +27,12 @@ extends SetBuilder
 
 		computedUsersets.add(relation);
 		return this;
+	}
+
+	public TupleToUsersetBuilder tupleToUserSet()
+	{
+		TupleToUsersetBuilder b = new TupleToUsersetBuilder(this);
+		tupleToUsersets.add(b);
+		return b;
 	}
 }

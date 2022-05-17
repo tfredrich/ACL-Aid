@@ -84,7 +84,7 @@ public class UserSet
 
 	public String toString()
 	{
-		StringBuilder s = new StringBuilder(super.toString());
+		StringBuilder s = new StringBuilder(resource.toString());
 
 		if (hasRelation())
 		{

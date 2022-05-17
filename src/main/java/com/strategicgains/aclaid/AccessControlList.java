@@ -2,15 +2,21 @@ package com.strategicgains.aclaid;
 
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.builder.AccessControlListBuilder;
 import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
- * A collection of NamespaceConfiguration instances that compose the rules, including
- * Tuples, Relations and Policies for Access Control within an application.
+ * A collection of NamespaceConfiguration instances that compose the tuples and 
+ * userset rewrite rules, including Relations and Policies for Access Control
+ * within an application.
  * 
  * @author tfredrich
  * @since Mar 18, 2022
@@ -19,6 +25,28 @@ import com.strategicgains.aclaid.domain.UserSet;
 public class AccessControlList
 {
 	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
+	private Set<Tuple> tuples = new HashSet<>();
+
+	public AccessControlList addTuple(String resource, String relation, String userset)
+	throws ParseException, RelationNotRegisteredException
+	{
+		return addTuple(new Tuple(resource, relation, userset));
+	}
+
+	public AccessControlList addTuple(ResourceName resource, String relation, UserSet userset)
+	throws RelationNotRegisteredException
+	{
+		return addTuple(new Tuple(resource, relation, userset));
+	}
+
+	public AccessControlList addTuple(Tuple tuple)
+	throws RelationNotRegisteredException
+	{
+		if (!containsRelation(tuple.getRelation())) throw new RelationNotRegisteredException(tuple.getRelation());
+
+		tuples.add(new Tuple(tuple));
+		return this;
+	}
 
 	/**
 	 * Get an existing NamespaceConfiguration by name or create a new, empty one.
@@ -70,8 +98,33 @@ public class AccessControlList
 	{
 		NamespaceConfiguration acl = namespaces.get(resource.getNamespace());
 
-		if (acl == null) return false;
+		if (acl != null && acl.check(this, userset, relation, resource)) return true;
 
-		return acl.check(this, userset, relation, resource);
+		return checkTuples(userset, relation, resource);
+	}
+
+	@Override
+	public String toString()
+	{
+		return String.format("namespaces=(%s)", namespaces.keySet().stream().collect(Collectors.joining(", ")));
+	}
+
+	private boolean checkTuples(UserSet userset, String relation, ResourceName resource)
+	{
+		for (Tuple tuple : tuples)
+		{
+			if (tuple.matches(userset, relation, resource))
+			{
+				return true;
+			}
+
+			//TODO: beware the recursion stack overflow!
+			if (tuple.getUserset().hasRelation()
+				&& tuple.applies(resource, relation)
+				&& check(userset, tuple.getUserset().getRelation(), tuple.getUserset().getResource()))
+				return true;
+		}
+
+		return false;
 	}
 }

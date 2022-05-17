@@ -14,7 +14,6 @@ public class NamespaceConfiguration
 {
 	private AccessControlList rootAcl;
 	private Set<Relation> relations = new HashSet<>();
-	private Set<Tuple> tuples = new HashSet<>();
 
 	public NamespaceConfiguration(AccessControlList parent)
 	{
@@ -32,27 +31,6 @@ public class NamespaceConfiguration
 		return relations.stream().anyMatch(r -> r.getName().equals(relation));
 	}
 
-	public NamespaceConfiguration addTuple(String resource, String relation, String userset)
-	throws ParseException, RelationNotRegisteredException
-	{
-		return addTuple(new Tuple(resource, relation, userset));
-	}
-
-	public NamespaceConfiguration addTuple(ResourceName resource, String relation, UserSet userset)
-	throws RelationNotRegisteredException
-	{
-		return addTuple(new Tuple(resource, relation, userset));
-	}
-
-	public NamespaceConfiguration addTuple(Tuple tuple)
-	throws RelationNotRegisteredException
-	{
-		if (!rootAcl.containsRelation(tuple.getRelation())) throw new RelationNotRegisteredException(tuple.getRelation());
-
-		tuples.add(new Tuple(tuple));
-		return this;
-	}
-
 	public boolean check(AccessControlList acl, String userset, String relation, String resource)
 	throws ParseException
 	{
@@ -61,19 +39,19 @@ public class NamespaceConfiguration
 
 	public boolean check(AccessControlList acl, UserSet userset, String relation, ResourceName resource)
 	{
-		for (Tuple tuple : tuples)
-		{
-			if (tuple.matches(userset, relation, resource))
-			{
-				return true;
-			}
-
-			//TODO: beware the recursion stack overflow!
-			if (tuple.getUserset().hasRelation()
-				&& tuple.applies(resource, relation)
-				&& acl.check(userset, tuple.getUserset().getRelation(), tuple.getUserset().getResource()))
-				return true;
-		}
+//		for (Tuple tuple : tuples)
+//		{
+//			if (tuple.matches(userset, relation, resource))
+//			{
+//				return true;
+//			}
+//
+//			//TODO: beware the recursion stack overflow!
+//			if (tuple.getUserset().hasRelation()
+//				&& tuple.applies(resource, relation)
+//				&& acl.check(userset, tuple.getUserset().getRelation(), tuple.getUserset().getResource()))
+//				return true;
+//		}
 
 		return false;
 	}

@@ -162,7 +162,7 @@ public class Tuple
 	@Override
 	public String toString()
 	{
-		return String.format("%s#%s@%s)", resource, relation, userset);
+		return String.format("(%s#%s@%s)", resource, relation, userset);
 	}
 
 	public boolean isValid()

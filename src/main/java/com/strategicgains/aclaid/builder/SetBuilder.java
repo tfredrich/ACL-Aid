@@ -24,4 +24,10 @@ public abstract class SetBuilder
 	{
 		return parent.tuple(resource, relation, userset);
 	}
+
+	public NamespaceConfigurationBuilder namespace(String namespace)
+	{
+		return parent.namespace(namespace);
+	}
+
 }
