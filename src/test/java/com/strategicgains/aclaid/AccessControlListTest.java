@@ -18,15 +18,11 @@ public class AccessControlListTest
 	private static final String GROUPS_NAMESPACE = "groups";
 	private static final String USERS_NAMESPACE = "users";
 
-	private static final String DOCUMENTS_PREFIX = DOCUMENTS_NAMESPACE + ":";
-	private static final String GROUPS_PREFIX = GROUPS_NAMESPACE + ":";
-	private static final String USERS_PREFIX = USERS_NAMESPACE + ":";
+	private static final String ADMINS_GROUP = GROUPS_NAMESPACE + ":admins";
+	private static final String EVERYONE_GROUP = GROUPS_NAMESPACE + ":everyone";
 
-	private static final String ADMINS_GROUP = GROUPS_PREFIX + "admins";
-	private static final String EVERYONE_GROUP = GROUPS_PREFIX + "everyone";
-
-	private static final String ALL_DOCS = DOCUMENTS_PREFIX + "document/*";
-	private static final String DOC_1234 = DOCUMENTS_PREFIX + "document/1234";
+	private static final String ALL_DOCS = DOCUMENTS_NAMESPACE + ":document/*";
+	private static final String DOC_1234 = DOCUMENTS_NAMESPACE + ":document/1234";
 
 	private static final String ADMINISTRATOR_RELATION = "administers";
 	private static final String EDITOR_RELATION = "editor";
@@ -34,15 +30,15 @@ public class AccessControlListTest
 	private static final String OWNER_RELATION = "owner";
 	private static final String VIEWER_RELATION = "viewer";
 
-	private static final String EVERY_USER = USERS_PREFIX + "user/*";
+	private static final String EVERY_USER = USERS_NAMESPACE + ":user/*";
 	private static final String ADMINISTRATORS_USERSET = ADMINS_GROUP + "#" + MEMBER_RELATION;
 	private static final String EVERYONE_USERSET = EVERYONE_GROUP + "#" + MEMBER_RELATION;
-	private static final String BETTY = USERS_PREFIX + "user/betty";
-	private static final String BOB = USERS_PREFIX + "user/bob";
-	private static final String SALLY = USERS_PREFIX + "user/sally";
-	private static final String SAM = USERS_PREFIX + "user/sam";
-	private static final String TODD = USERS_PREFIX + "user/todd";
-	private static final String JASMINE = USERS_PREFIX + "user/jasmine";
+	private static final String BETTY = USERS_NAMESPACE + ":user/betty";
+	private static final String BOB = USERS_NAMESPACE + ":user/bob";
+	private static final String SALLY = USERS_NAMESPACE + ":user/sally";
+	private static final String SAM = USERS_NAMESPACE + ":user/sam";
+	private static final String TODD = USERS_NAMESPACE + ":user/todd";
+	private static final String JASMINE = USERS_NAMESPACE + ":user/jasmine";
 
 
 	private AccessControlList acl;
@@ -58,9 +54,10 @@ public class AccessControlListTest
 				.relation(EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
 				.relation(ADMINISTRATOR_RELATION)
-					.union()
-						._this()
-						.computedUserset(OWNER_RELATION)
+					.usersetRewrite()
+						.union()
+							._this()
+							.computedUserset(OWNER_RELATION)
 
 				// Directly-specified tuples
 				.tuple(DOC_1234, OWNER_RELATION, TODD)

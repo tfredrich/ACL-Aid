@@ -6,9 +6,9 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public abstract class SetBuilder
 {
-	private RelationBuilder parent;
+	private UsersetRewriteBuilder parent;
 
-	protected SetBuilder(RelationBuilder parent)
+	protected SetBuilder(UsersetRewriteBuilder parent)
 	{
 		super();
 		this.parent = parent;

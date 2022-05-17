@@ -10,7 +10,7 @@ extends SetBuilder
 	private Set<String> computedUsersets = new HashSet<>();
 	private Set<TupleToUsersetBuilder> tupleToUsersets = new HashSet<>();
 
-	public UnionBuilder(RelationBuilder parent)
+	public UnionBuilder(UsersetRewriteBuilder parent)
 	{
 		super(parent);
 	}

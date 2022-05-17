@@ -12,8 +12,8 @@ import com.strategicgains.aclaid.builder.UserSets;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
- * A unit test that checks ACL-Aid against the examples and concepts
- * explained at: https://zanzibar.academy/
+ * A unit test that checks ACL-Aid against the Zanzibar-based
+ * examples and concepts explained at: https://zanzibar.academy/
  * 
  * @author tfredrich
  * @see https://zanzibar.academy/
@@ -120,13 +120,15 @@ public class ZanzibarAcademyTest
 			.namespace(DOCUMENT_NAMESPACE)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
-					.union()
-						._this()
-						.computedUserset(OWNER_RELATION)
+					.usersetRewrite()
+						.union()
+							._this()
+							.computedUserset(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
-					.union()
-						._this()
-						.computedUserset(EDITOR_RELATION)
+					.usersetRewrite()
+						.union()
+							._this()
+							.computedUserset(EDITOR_RELATION)
 
 			.tuple(DOC_ROADMAP, OWNER_RELATION, KIM)
 			.tuple(DOC_ROADMAP, EDITOR_RELATION, BEN)
@@ -179,13 +181,15 @@ public class ZanzibarAcademyTest
 			.namespace(DOCUMENT_NAMESPACE)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
-					.union()
-						._this()
-						.computedUserset(OWNER_RELATION)
+					.usersetRewrite()
+						.union()
+							._this()
+							.computedUserset(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
-					.union()
-						._this()
-						.computedUserset(EDITOR_RELATION)
+					.usersetRewrite()
+						.union()
+							._this()
+							.computedUserset(EDITOR_RELATION)
 
 			.tuple(CONTOSO, MEMBER_RELATION, CARL)
 			.tuple(DOC_SLIDES, VIEWER_RELATION, CONTOSO + "#" + MEMBER_RELATION);
@@ -265,16 +269,18 @@ public class ZanzibarAcademyTest
 				.relation(PARENT_RELATION)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
-					.union()
-						._this()
-						.computedUserset(OWNER_RELATION)
-						.tupleToUserSet()
-							.tupleSet(PARENT_RELATION)
-							.computedUserset(UserSets.TUPLE_USERSET_OBJECT, EDITOR_RELATION)
+					.usersetRewrite()
+						.union()
+							._this()
+							.computedUserset(OWNER_RELATION)
+							.tupleToUserSet()
+								.tupleSet(PARENT_RELATION)
+								.computedUserset(UserSets.TUPLE_USERSET_OBJECT, EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
-					.union()
-						._this()
-						.computedUserset(EDITOR_RELATION)
+					.usersetRewrite()
+						.union()
+							._this()
+							.computedUserset(EDITOR_RELATION)
 		
 			.namespace(ORGANIZATION_NAMESPACE)
 				.relation(MEMBER_RELATION)

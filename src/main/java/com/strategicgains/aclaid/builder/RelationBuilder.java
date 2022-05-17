@@ -6,9 +6,7 @@ public class RelationBuilder
 extends AbstractChildBuildable
 {
 	private String name;
-	private UnionBuilder union;
-	private IntersectionBuilder intersection;
-	private ExclusionBuilder exclusion;
+	private UsersetRewriteBuilder rewriteBuilder;
 	private PolicyBuilder policy;
 
 	public RelationBuilder(String relation, NamespaceConfigurationBuilder parent)
@@ -33,21 +31,9 @@ extends AbstractChildBuildable
 		return policy;
 	}
 
-	public UnionBuilder union()
+	public UsersetRewriteBuilder usersetRewrite()
 	{
-		union = new UnionBuilder(this);
-		return union;
-	}
-
-	public IntersectionBuilder intersection()
-	{
-		intersection = new IntersectionBuilder(this);
-		return intersection;
-	}
-
-	public ExclusionBuilder exclusion()
-	{
-		exclusion = new ExclusionBuilder(this);
-		return exclusion;
+		this.rewriteBuilder = new UsersetRewriteBuilder(this);
+		return rewriteBuilder;
 	}
 }
