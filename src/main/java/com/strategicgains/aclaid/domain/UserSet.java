@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
+import java.util.Objects;
 
 /**
  * This is the Zanzibar User (which is either a user or a user set) property of a Tuple.
@@ -93,6 +94,25 @@ public class UserSet
 		}
 
 		return s.toString();
+	}
+
+	@Override
+	public int hashCode()
+	{
+		return Objects.hash(relation, resource);
+	}
+
+	@Override
+	public boolean equals(Object obj)
+	{
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserSet other = (UserSet) obj;
+		return Objects.equals(relation, other.relation) && Objects.equals(resource, other.resource);
 	}
 
 	public boolean matches(UserSet that)

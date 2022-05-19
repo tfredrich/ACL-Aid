@@ -44,7 +44,14 @@ public class AccessControlList
 	{
 		if (!containsRelation(tuple.getRelation())) throw new RelationNotRegisteredException(tuple.getRelation());
 
-		tuples.add(new Tuple(tuple));
+		tuples.add(tuple);
+		return this;
+	}
+
+	public AccessControlList removeTuple(ResourceName resource, String relation, UserSet userset)
+	throws RelationNotRegisteredException
+	{
+		tuples.remove(new Tuple(resource, relation, userset));
 		return this;
 	}
 
