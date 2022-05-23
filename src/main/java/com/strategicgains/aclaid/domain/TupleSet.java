@@ -24,7 +24,7 @@ public class TupleSet
 		if (usersets == null) return;
 
 		usersets.stream().forEach(userset -> {
-			addTuple(resource, relation, userset);
+			add(resource, relation, userset);
 		});
 	}
 
@@ -34,7 +34,7 @@ public class TupleSet
 		if (resources == null) return;
 
 		resources.stream().forEach(resource -> {
-			addTuple(resource, relation, userset);
+			add(resource, relation, userset);
 		});
 	}
 
@@ -91,7 +91,7 @@ public class TupleSet
 		if (usersets == null) return null;
 		if (usersets.contains(userset)) return new Tuple(resource, relation, userset);
 
-		//TODO: recursively check memberships...
+		//Recursively check memberships...
 		if (usersets.stream().filter(set -> set.hasRelation()).map(set -> readOne(userset, set.getRelation(), set.getResource()))
 			.filter(t -> (t != null)).count() > 0)
 		{
@@ -101,13 +101,13 @@ public class TupleSet
 		return null;
 	}
 
-	public TupleSet addTuple(String resource, String relation, String userset)
+	public TupleSet add(String resource, String relation, String userset)
 	throws ParseException
 	{
-		return addTuple(ResourceName.parse(resource), relation, UserSet.parse(userset));
+		return add(ResourceName.parse(resource), relation, UserSet.parse(userset));
 	}
 
-	public TupleSet addTuple(ResourceName resource, String relation, UserSet userset)
+	public TupleSet add(ResourceName resource, String relation, UserSet userset)
 	{
 		writeUsersetTree(resource, relation, userset);
 		writeResourceTree(resource, relation, userset);
@@ -115,9 +115,16 @@ public class TupleSet
 		return this;
 	}
 
-	public TupleSet addTuple(Tuple tuple)
+	public TupleSet add(Tuple tuple)
 	{
-		return addTuple(tuple.getResource(), tuple.getRelation(), tuple.getUserset());
+		return add(tuple.getResource(), tuple.getRelation(), tuple.getUserset());
+	}
+
+	public TupleSet remove(ResourceName resource, String relation, UserSet userset)
+	{
+		removeUsersetTree(resource, relation, userset);
+		removeResourceTree(resource, relation, userset);
+		return this;
 	}
 
 	private void writeUsersetTree(ResourceName resource, String relation, UserSet userset)
@@ -132,5 +139,31 @@ public class TupleSet
 		Map<String, Set<UserSet>> relationSubtree = resourceTree.computeIfAbsent(resource, t -> new HashMap<>());
 		Set<UserSet> usersets = relationSubtree.computeIfAbsent(relation, s -> new HashSet<>());
 		usersets.add(userset);
+	}
+
+	private void removeUsersetTree(ResourceName resource, String relation, UserSet userset)
+	{
+		Map<String, Set<ResourceName>> relationSubtree = usersetTree.get(userset);
+
+		if (relationSubtree == null) return;
+
+		Set<ResourceName> resources = relationSubtree.computeIfAbsent(relation, s -> new HashSet<>());
+
+		if (resources == null) return;
+
+		resources.remove(resource);
+	}
+
+	private void removeResourceTree(ResourceName resource, String relation, UserSet userset)
+	{
+		Map<String, Set<UserSet>> relationSubtree = resourceTree.get(resource);
+
+		if (relationSubtree == null) return;
+
+		Set<UserSet> usersets = relationSubtree.computeIfAbsent(relation, s -> new HashSet<>());
+
+		if (usersets == null) return;
+
+		usersets.remove(userset);
 	}
 }

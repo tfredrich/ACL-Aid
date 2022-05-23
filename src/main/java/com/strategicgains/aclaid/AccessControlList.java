@@ -2,14 +2,13 @@ package com.strategicgains.aclaid;
 
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.builder.AccessControlListBuilder;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
+import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
@@ -25,7 +24,7 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 public class AccessControlList
 {
 	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
-	private Set<Tuple> tuples = new HashSet<>();
+	private TupleSet tuples = new TupleSet();
 
 	public AccessControlList addTuple(String resource, String relation, String userset)
 	throws ParseException, RelationNotRegisteredException
@@ -36,22 +35,22 @@ public class AccessControlList
 	public AccessControlList addTuple(ResourceName resource, String relation, UserSet userset)
 	throws RelationNotRegisteredException
 	{
-		return addTuple(new Tuple(resource, relation, userset));
+		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
+
+		tuples.add(resource, relation, userset);
+		return this;
 	}
 
 	public AccessControlList addTuple(Tuple tuple)
 	throws RelationNotRegisteredException
 	{
-		if (!containsRelation(tuple.getRelation())) throw new RelationNotRegisteredException(tuple.getRelation());
-
-		tuples.add(tuple);
-		return this;
+		return addTuple(tuple.getResource(), tuple.getRelation(), tuple.getUserset());
 	}
 
 	public AccessControlList removeTuple(ResourceName resource, String relation, UserSet userset)
 	throws RelationNotRegisteredException
 	{
-		tuples.remove(new Tuple(resource, relation, userset));
+		tuples.remove(resource, relation, userset);
 		return this;
 	}
 
@@ -118,20 +117,6 @@ public class AccessControlList
 
 	private boolean checkTuples(UserSet userset, String relation, ResourceName resource)
 	{
-		for (Tuple tuple : tuples)
-		{
-			if (tuple.matches(userset, relation, resource))
-			{
-				return true;
-			}
-
-			//TODO: beware the recursion stack overflow!
-			if (tuple.getUserset().hasRelation()
-				&& tuple.applies(resource, relation)
-				&& check(userset, tuple.getUserset().getRelation(), tuple.getUserset().getResource()))
-				return true;
-		}
-
-		return false;
+		return (tuples.readOne(userset, relation, resource) != null);
 	}
 }
