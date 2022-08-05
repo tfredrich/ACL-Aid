@@ -19,10 +19,10 @@ public abstract class SetBuilder
 		return parent.relation(name);
 	}
 
-	public NamespaceConfigurationBuilder tuple(String resource, String relation, String userset)
+	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException
 	{
-		return parent.tuple(resource, relation, userset);
+		return parent.tuple(userset, relation, resource);
 	}
 
 	public NamespaceConfigurationBuilder namespace(String namespace)

@@ -72,9 +72,9 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
 
-			.tuple(DOC_ROADMAP, OWNER_RELATION, KIM)
-			.tuple(DOC_ROADMAP, EDITOR_RELATION, BEN)
-			.tuple(DOC_SLIDES, VIEWER_RELATION, CARL);
+			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
+			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)
+			.tuple(CARL, VIEWER_RELATION, DOC_SLIDES);
 
 		AccessControlList acl = builder.build();
 
@@ -84,7 +84,7 @@ public class ZanzibarAcademyTest
 
 		assertFalse(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
 		// Add Kim as editor of the doc:roadmap
-		acl.addTuple(DOC_ROADMAP, EDITOR_RELATION, KIM);
+		acl.addTuple(KIM, EDITOR_RELATION, DOC_ROADMAP);
 		assertTrue(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
 	}
 
@@ -130,9 +130,9 @@ public class ZanzibarAcademyTest
 							._this()
 							.computedUserset(EDITOR_RELATION)
 
-			.tuple(DOC_ROADMAP, OWNER_RELATION, KIM)
-			.tuple(DOC_ROADMAP, EDITOR_RELATION, BEN)
-			.tuple(DOC_SLIDES, VIEWER_RELATION, CARL);
+			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
+			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)
+			.tuple(CARL, VIEWER_RELATION, DOC_SLIDES);
 
 		AccessControlList acl = builder.build();
 
@@ -191,8 +191,10 @@ public class ZanzibarAcademyTest
 							._this()
 							.computedUserset(EDITOR_RELATION)
 
-			.tuple(CONTOSO, MEMBER_RELATION, CARL)
-			.tuple(DOC_SLIDES, VIEWER_RELATION, CONTOSO + "#" + MEMBER_RELATION);
+//			.tuple(CARL, EDITOR_RELATION, CONTOSO)
+//			.tuple(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES);
+			.tuple(CARL, MEMBER_RELATION, CONTOSO)
+			.tuple(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES);
 
 		AccessControlList acl = builder.build();
 
@@ -291,8 +293,8 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
 
-			.tuple(DOC_README, PARENT_RELATION, FOLDER_PLANNING)
-			.tuple(FOLDER_PLANNING, VIEWER_RELATION, KIM);
+			.tuple(FOLDER_PLANNING, PARENT_RELATION, DOC_README)
+			.tuple(KIM, VIEWER_RELATION, FOLDER_PLANNING);
 
 		AccessControlList acl = builder.build();
 
@@ -309,9 +311,9 @@ public class ZanzibarAcademyTest
 		assertFalse(acl.check(FOLDER_ENGINEERING, PARENT_RELATION, FOLDER_PLANNING));
 
 		// Add Dana to org:contoso, org:contoso#member editor of folder:engineering, folder:engineering parent of folder:planning.
-		acl.addTuple(CONTOSO, MEMBER_RELATION, DANA)
-			.addTuple(FOLDER_ENGINEERING, EDITOR_RELATION, CONTOSO + "#" + MEMBER_RELATION)
-			.addTuple(FOLDER_PLANNING, PARENT_RELATION, FOLDER_ENGINEERING);
+		acl.addTuple(DANA, MEMBER_RELATION, CONTOSO)
+			.addTuple(CONTOSO + "#" + MEMBER_RELATION, EDITOR_RELATION, FOLDER_ENGINEERING)
+			.addTuple(FOLDER_ENGINEERING, PARENT_RELATION, FOLDER_PLANNING);
 
 		assertTrue(acl.check(DANA, MEMBER_RELATION, CONTOSO));
 		assertTrue(acl.check(DANA, EDITOR_RELATION, FOLDER_ENGINEERING));

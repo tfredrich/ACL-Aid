@@ -71,18 +71,18 @@ implements Buildable
 		return rb;
 	}
 
-	public NamespaceConfigurationBuilder tuple(String resource, String relation, String userset)
+	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException
 	{
-		return tuple(ResourceName.parse(resource), relation, UserSet.parse(userset));
+		return tuple(UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
-	public NamespaceConfigurationBuilder tuple(ResourceName resource, String relation, UserSet userset)
+	public NamespaceConfigurationBuilder tuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
 
-		tuples.add(new Tuple(resource, relation, userset));
+		tuples.add(new Tuple(userset, relation, resource));
 		return this;
 	}
 

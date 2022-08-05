@@ -26,13 +26,13 @@ public class AccessControlList
 	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
 	private TupleSet tuples = new TupleSet();
 
-	public AccessControlList addTuple(String resource, String relation, String userset)
+	public AccessControlList addTuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException
 	{
-		return addTuple(new Tuple(resource, relation, userset));
+		return addTuple(new Tuple(userset, relation, resource));
 	}
 
-	public AccessControlList addTuple(ResourceName resource, String relation, UserSet userset)
+	public AccessControlList addTuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
@@ -44,10 +44,10 @@ public class AccessControlList
 	public AccessControlList addTuple(Tuple tuple)
 	throws RelationNotRegisteredException
 	{
-		return addTuple(tuple.getResource(), tuple.getRelation(), tuple.getUserset());
+		return addTuple(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
 
-	public AccessControlList removeTuple(ResourceName resource, String relation, UserSet userset)
+	public AccessControlList removeTuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException
 	{
 		tuples.remove(resource, relation, userset);

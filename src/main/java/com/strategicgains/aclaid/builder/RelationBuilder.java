@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.builder;
 
 import com.strategicgains.aclaid.domain.Relation;
+import com.strategicgains.aclaid.policy.PolicyBuilder;
 
 public class RelationBuilder
 extends AbstractChildBuildable

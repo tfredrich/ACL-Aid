@@ -59,13 +59,13 @@ public class AccessControlListTest
 							.computedUserset(OWNER_RELATION)
 
 				// Directly-specified tuples
-				.tuple(DOC_1234, OWNER_RELATION, TODD)
-				.tuple(ALL_DOCS, ADMINISTRATOR_RELATION, ADMINISTRATORS_USERSET)
-				.tuple(ALL_DOCS, VIEWER_RELATION, EVERYONE_USERSET)
+				.tuple(TODD, OWNER_RELATION, DOC_1234)
+				.tuple(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS)
+				.tuple(EVERYONE_USERSET, VIEWER_RELATION, ALL_DOCS)
 
 			.namespace(GROUPS_NAMESPACE)
 				.relation(MEMBER_RELATION)
-				.tuple(EVERYONE_GROUP, MEMBER_RELATION, EVERY_USER)
+				.tuple(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
 
 				// DSL-built multiple tuples
 				.tuples()

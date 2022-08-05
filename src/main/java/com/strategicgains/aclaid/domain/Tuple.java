@@ -3,9 +3,9 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 
 /**
- * This is the Zanzibar Tuple containing a Resource, Relation and User[set].
+ * This is the Zanzibar Tuple containing an Object, Relation and User[set].
  * 
- * ⟨tuple⟩   ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
+ * ⟨tuple⟩   ::= ⟨resource⟩‘#’⟨relation⟩‘@’⟨user⟩
  * (relation)::= (relation name)
  * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
  * (user id) ::= (resource)
@@ -29,7 +29,7 @@ public class Tuple
 		super();
 	}
 
-	public Tuple(ResourceName resource, String relation, UserSet userset)
+	public Tuple(UserSet userset, String relation, ResourceName resource)
 	{
 		this();
 		setResource(resource);
@@ -37,15 +37,15 @@ public class Tuple
 		setUserset(userset);
 	}
 
-	public Tuple(String resource, String relation, String userset)
+	public Tuple(String userset, String relation, String resource)
 	throws ParseException
 	{
-		this(ResourceName.parse(resource), relation, UserSet.parse(userset));
+		this(UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
 	public Tuple(Tuple tuple)
 	{
-		this(tuple.getResource(), tuple.getRelation(), tuple.getUserset());
+		this(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
 
 	public boolean hasResource()
@@ -98,10 +98,10 @@ public class Tuple
 		return matches(that.getUserset(), that.getRelation(), that.getResource());
 	}
 
-	public boolean matches(UserSet userset, String relation, ResourceName resource)
+	public boolean matches(UserSet userset, String relation, ResourceName object)
 	{
 		return (this.relation.equals(relation)
-			&& this.resource.matches(resource)
+			&& this.resource.matches(object)
 			&& this.userset.matches(userset));
 	}
 
@@ -162,6 +162,11 @@ public class Tuple
 	@Override
 	public String toString()
 	{
+		return String.format("(%s@%s#%s)", userset, relation, resource);
+	}
+
+	public String toZanzibar()
+	{
 		return String.format("(%s#%s@%s)", resource, relation, userset);
 	}
 
@@ -170,7 +175,31 @@ public class Tuple
 		return hasResource() && hasUserset() && hasRelation();
 	}
 
+	/*
+	 * Parses an ACL-AID Tuple of the form:
+	 * User[#relation]@relation#resource
+	 * User[set]@relation#resource
+	 */
 	public static Tuple parse(String tuple)
+	throws ParseException
+	{
+		String[] obj = tuple.split("@");
+
+		if (obj.length < 2) throw new ParseException("Invalid tuple userset@relation: " + tuple, 0);
+
+		String[] rel = obj[1].split("#");
+
+		if (rel.length < 2) throw new ParseException("Invalid tuple relation#resource: " + tuple, 0);
+
+		return new Tuple(UserSet.parse(obj[0]), rel[0], ResourceName.parse(rel[1]));
+	}
+
+	/*
+	 * Parses a Zanzibar Tuple of the form:
+	 * resource#relation@user[#relation]
+	 * resource#relation@user[set]
+	 */
+	public static Tuple parseZanzibar(String tuple)
 	throws ParseException
 	{
 		String[] obj = tuple.split("#");
@@ -181,6 +210,6 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation@userset: " + tuple, 0);
 
-		return new Tuple(ResourceName.parse(obj[0]), rel[0], UserSet.parse(rel[1]));
+		return new Tuple(UserSet.parse(rel[1]), rel[0], ResourceName.parse(obj[0]));
 	}
 }

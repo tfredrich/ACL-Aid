@@ -6,6 +6,7 @@ package com.strategicgains.aclaid.policy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 
 /**
@@ -32,6 +33,11 @@ implements Iterable<PolicyStatement>
 		return statements.iterator();
 	}
 
+	public Stream<PolicyStatement> stream()
+	{
+		return statements.stream();
+	}
+
 	public Policy add(PolicyStatement statement)
 	{
 		statements.add(statement);
@@ -54,7 +60,7 @@ implements Iterable<PolicyStatement>
 	 */
 	public boolean evaluate(PolicyContext context, String relations)
 	{
-		return statements.stream().anyMatch(s -> s.evaluate(context, relations));
+		return stream().anyMatch(s -> s.evaluate(context, relations));
 	}
 
 	/**

@@ -89,13 +89,13 @@ public class TupleSet
 		Set<UserSet> usersets = subtree1.get(relation);
 
 		if (usersets == null) return null;
-		if (usersets.contains(userset)) return new Tuple(resource, relation, userset);
+		if (usersets.contains(userset)) return new Tuple(userset, relation, resource);
 
 		//Recursively check memberships...
 		if (usersets.stream().filter(set -> set.hasRelation()).map(set -> readOne(userset, set.getRelation(), set.getResource()))
 			.filter(t -> (t != null)).count() > 0)
 		{
-			return new Tuple(resource, relation, userset);
+			return new Tuple(userset, relation, resource);
 		}
 
 		return null;

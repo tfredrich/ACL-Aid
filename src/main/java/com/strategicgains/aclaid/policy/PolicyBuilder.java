@@ -1,6 +1,6 @@
-package com.strategicgains.aclaid.builder;
+package com.strategicgains.aclaid.policy;
 
-import com.strategicgains.aclaid.policy.Policy;
+import com.strategicgains.aclaid.builder.RelationBuilder;
 
 public class PolicyBuilder
 {

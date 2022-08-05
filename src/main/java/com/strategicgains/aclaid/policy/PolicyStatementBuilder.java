@@ -1,12 +1,10 @@
-package com.strategicgains.aclaid.builder;
+package com.strategicgains.aclaid.policy;
 
 import java.text.ParseException;
 import java.util.Collection;
 
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.policy.Condition;
-import com.strategicgains.aclaid.policy.PolicyStatement;
 
 public class PolicyStatementBuilder
 {

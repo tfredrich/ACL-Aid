@@ -39,6 +39,6 @@ public class TupleToUsersetBuilder
 	public NamespaceConfigurationBuilder tuple(String resource, String relation, String userset)
 	throws ParseException, RelationNotRegisteredException
 	{
-		return parent.tuple(resource, relation, userset);
+		return parent.tuple(userset, relation, resource);
 	}
 }

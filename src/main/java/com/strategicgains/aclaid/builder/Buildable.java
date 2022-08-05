@@ -14,11 +14,12 @@ public interface Buildable
 
 	TupleBuilder tuples();
 
-	NamespaceConfigurationBuilder tuple(String resource, String relation, String userset)
+	NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException;
 
-	NamespaceConfigurationBuilder tuple(ResourceName resource, String relation, UserSet userset)
+	NamespaceConfigurationBuilder tuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException;
 
-	NamespaceConfigurationBuilder tuple(String tuple) throws ParseException;
+	NamespaceConfigurationBuilder tuple(String tuple)
+	throws ParseException;
 }
