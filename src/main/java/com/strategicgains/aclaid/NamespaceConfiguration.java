@@ -6,14 +6,14 @@ import java.util.Set;
 
 import com.strategicgains.aclaid.domain.Relation;
 import com.strategicgains.aclaid.domain.ResourceName;
-import com.strategicgains.aclaid.domain.Tuple;
+import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class NamespaceConfiguration
 {
 	private AccessControlList rootAcl;
 	private Set<Relation> relations = new HashSet<>();
+	private TupleSet tuples;
 
 	public NamespaceConfiguration(AccessControlList parent)
 	{
