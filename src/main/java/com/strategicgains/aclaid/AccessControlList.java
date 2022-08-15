@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.builder.AccessControlListBuilder;
+import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -24,7 +25,7 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 public class AccessControlList
 {
 	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
-	private TupleSet tuples = new TupleSet();
+	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControlList addTuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException
@@ -37,7 +38,7 @@ public class AccessControlList
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
 
-		tuples.add(resource, relation, userset);
+		tuples.add(userset, relation, resource);
 		return this;
 	}
 
@@ -50,7 +51,7 @@ public class AccessControlList
 	public AccessControlList removeTuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException
 	{
-		tuples.remove(resource, relation, userset);
+		tuples.remove(userset, relation, resource);
 		return this;
 	}
 

@@ -38,22 +38,22 @@ public class TupleSetTest
 	private static final String FOLDER_PLANNING = FOLDER_NAMESPACE + ":folder/planning";
 	private static final String FOLDER_ENGINEERING = FOLDER_NAMESPACE + ":folder/engineering";
 
-	private TupleSet ts;
+	private LocalTupleSet ts;
 
 	@Before
 	public void initialize()
 	throws ParseException
 	{
-		ts = new TupleSet()
-			.add(DOC_ROADMAP, OWNER_RELATION, KIM)
-			.add(DOC_ROADMAP, EDITOR_RELATION, BEN)
-			.add(DOC_ROADMAP, EDITOR_RELATION, KIM)
-			.add(CONTOSO, MEMBER_RELATION, CARL)
-			.add(CONTOSO, MEMBER_RELATION, DANA)
-			.add(DOC_SLIDES, VIEWER_RELATION, CONTOSO + "#" + MEMBER_RELATION)
-			.add(FOLDER_ENGINEERING, EDITOR_RELATION, CONTOSO + "#" + MEMBER_RELATION)
-			.add(FOLDER_PLANNING, PARENT_RELATION, FOLDER_ENGINEERING)
-			.add(DOC_README, PARENT_RELATION, FOLDER_PLANNING);
+		ts = new LocalTupleSet()
+			.add(KIM, OWNER_RELATION, DOC_ROADMAP)
+			.add(BEN, EDITOR_RELATION, DOC_ROADMAP)
+			.add(KIM, EDITOR_RELATION, DOC_ROADMAP)
+			.add(CARL, MEMBER_RELATION, CONTOSO)
+			.add(DANA, MEMBER_RELATION, CONTOSO)
+			.add(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES)
+			.add(CONTOSO + "#" + MEMBER_RELATION, EDITOR_RELATION, FOLDER_ENGINEERING)
+			.add(FOLDER_ENGINEERING, PARENT_RELATION, FOLDER_PLANNING)
+			.add(FOLDER_PLANNING, PARENT_RELATION, DOC_README);
 
 	}
 
@@ -91,7 +91,7 @@ public class TupleSetTest
 	public void testReadEditorsForRoadmap()
 	throws ParseException
 	{
-		TupleSet tupleSet = ts.read(EDITOR_RELATION, ResourceName.parse(DOC_ROADMAP));
+		LocalTupleSet tupleSet = ts.read(EDITOR_RELATION, ResourceName.parse(DOC_ROADMAP));
 		assertNotNull(tupleSet);
 		assertEquals(2, tupleSet.size());
 	}

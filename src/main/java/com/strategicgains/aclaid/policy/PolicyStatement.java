@@ -24,7 +24,6 @@ import com.strategicgains.aclaid.domain.UserSet;
  */
 public class PolicyStatement
 {
-	//resource, relation, user[set]
 	private UserSet userset;
 	private Set<ResourceName> resources = new HashSet<>();
 
