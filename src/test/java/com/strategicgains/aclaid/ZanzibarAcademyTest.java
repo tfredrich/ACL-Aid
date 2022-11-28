@@ -137,9 +137,9 @@ public class ZanzibarAcademyTest
 		AccessControlList acl = builder.build();
 
 		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
-		assertTrue(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
-		assertTrue(acl.check(KIM, OWNER_RELATION, DOC_ROADMAP));
 		assertTrue(acl.check(BEN, EDITOR_RELATION, DOC_ROADMAP));
+		assertTrue(acl.check(KIM, OWNER_RELATION, DOC_ROADMAP));
+		assertTrue(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
 	}
 
 	/**
