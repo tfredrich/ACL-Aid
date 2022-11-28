@@ -5,18 +5,33 @@ import java.text.ParseException;
 /**
  * This is the Zanzibar Tuple containing an Object, Relation and User[set].
  * 
+ * From the Zanzibar paper:
+ * ⟨tuple⟩ ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
+ * ⟨object⟩ ::= ⟨namespace⟩‘:’⟨object id⟩
+ * ⟨user⟩ ::= ⟨user id⟩ | ⟨userset⟩
+ * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩
+ * 
+ * Where ⟨namespace⟩ and ⟨relation⟩ are predefined in client configurations (§2.3),
+ * ⟨object id⟩ is a string, and
+ * ⟨user id⟩ is an integer.
+ * 
+ * The primary keys required to identify a relation tuple are ⟨namespace⟩, ⟨object id⟩, ⟨relation⟩, and ⟨user⟩. 
+ * One feature worth noting is that a ⟨userset⟩ allows ACLs to refer to groups and thus supports representing nested group membership.
+ * 
+ * We redefine subtly here to use the following vocabulary instead:
  * ⟨tuple⟩   ::= ⟨resource⟩‘#’⟨relation⟩‘@’⟨user⟩
  * (relation)::= (relation name)
  * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
  * (user id) ::= (resource)
  * ⟨userset⟩ ::= ⟨resource⟩‘#’⟨relation⟩
- * ⟨resource⟩::= ⟨namespace⟩‘:’⟨resource id⟩
+ * ⟨resource⟩  ::= ⟨namespace⟩‘:’⟨resource id⟩
+ * 
+ * Where 'object' becomes 'resource' and a user ID is also a namespaced, fully-qualified resource.
  * 
  * Would like to be able to answer as many "resource has relation on userset" questions as possible from memory.
  * With small footprint and high performance.
  * 
  * @author tfredrich
- *
  */
 public class Tuple
 {
