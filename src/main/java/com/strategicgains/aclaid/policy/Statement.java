@@ -22,7 +22,7 @@ import com.strategicgains.aclaid.domain.UserSet;
  * @author toddf
  * @since Nov 2, 2018
  */
-public class PolicyStatement
+public class Statement
 {
 	private UserSet userset;
 	private Set<ResourceName> resources = new HashSet<>();
@@ -36,7 +36,7 @@ public class PolicyStatement
 	// Arbitrary conditions.
 	private Condition condition;
 
-	public PolicyStatement()
+	public Statement()
 	{
 		super();
 	}
@@ -46,13 +46,13 @@ public class PolicyStatement
 		return resources;
 	}
 
-	public PolicyStatement setUserset(String userset)
+	public Statement setUserset(String userset)
 	throws ParseException
 	{
 		return setUserset(userset != null ? UserSet.parse(userset) : null);
 	}
 
-	public PolicyStatement setUserset(UserSet userset)
+	public Statement setUserset(UserSet userset)
 	{
 		this.userset = userset;
 		return this;
@@ -68,7 +68,7 @@ public class PolicyStatement
 		return (userset != null);
 	}
 
-	public PolicyStatement setResource(String... resourceQrns)
+	public Statement setResource(String... resourceQrns)
 	throws ParseException
 	{
 		if (resourceQrns != null)
@@ -82,29 +82,29 @@ public class PolicyStatement
 		return this;
 	}
 
-	public PolicyStatement setResources(Collection<ResourceName> resourceQrns)
+	public Statement setResources(Collection<ResourceName> resourceQrns)
 	{
 		this.resources.addAll(resourceQrns);
 		return this;
 	}
 
-	public PolicyStatement allow(String... relations)
+	public Statement allow(String... relations)
 	{
 		return allow(Arrays.asList(relations));
 	}
 
-	public PolicyStatement allow(Collection<String> relations)
+	public Statement allow(Collection<String> relations)
 	{
 		this.allowed.addAll(relations);
 		return this;
 	}
 
-	public PolicyStatement deny(String... relations)
+	public Statement deny(String... relations)
 	{
 		return deny(Arrays.asList(relations));
 	}
 
-	public PolicyStatement deny(Collection<String> relations)
+	public Statement deny(Collection<String> relations)
 	{
 		this.denied.addAll(relations);
 		return this;
@@ -127,7 +127,7 @@ public class PolicyStatement
 	 * @param condition
 	 * @return
 	 */
-	public PolicyStatement withCondition(Condition condition)
+	public Statement withCondition(Condition condition)
 	{
 		if (hasCondition() && this.condition != condition)
 		{
@@ -163,24 +163,24 @@ public class PolicyStatement
 	 * @param principal
 	 * @return
 	 */
-	public boolean appliesToUser(ResourceName user)
+	public boolean appliesToUser(UserSet user)
 	{
 		if (!hasUserset()) return false;
 
-		return getUserset().getResource().matches(user);
+		return getUserset().matches(user);
 	}
 
 	/**
 	 * If a conditional is present, executes the conditional to determine access. Otherwise, simply looks at the permissions in this policy.
 	 * 
 	 * @param context
-	 * @param permission
+	 * @param relation
 	 * @return
 	 */
 	public boolean evaluate(PolicyContext context, String relation)
 	{
 		if (context != null &&
-			!appliesToUser(context.getPrincipal()) &&
+			!appliesToUser(context.getUser()) &&
 			!appliesToResource(context.getResource()))
 		{
 			return false;

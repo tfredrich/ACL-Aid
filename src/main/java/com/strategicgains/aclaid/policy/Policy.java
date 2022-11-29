@@ -4,7 +4,6 @@
 package com.strategicgains.aclaid.policy;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -18,32 +17,31 @@ import java.util.stream.Stream;
  * @since Nov 2, 2018
  */
 public class Policy
-implements Iterable<PolicyStatement>
 {
-	private List<PolicyStatement> statements = new ArrayList<>();
+	private List<Statement> statements = new ArrayList<>();
 
 	public Policy()
 	{
 		super();
 	}
 
-	@Override
-	public Iterator<PolicyStatement> iterator()
-	{
-		return statements.iterator();
-	}
-
-	public Stream<PolicyStatement> stream()
-	{
-		return statements.stream();
-	}
-
-	public Policy add(PolicyStatement statement)
+	/**
+	 * Add a statement to this policy.
+	 * 
+	 * @param statement
+	 * @return
+	 */
+	public Policy add(Statement statement)
 	{
 		statements.add(statement);
 		return this;
 	}
 
+	/**
+	 * Merge another policy into this policy.
+	 * 
+	 * @param that
+	 */
 	public void merge(Policy that)
 	{
 		if (that == null) return;
@@ -55,12 +53,12 @@ implements Iterable<PolicyStatement>
 	 * Evaluate the policy with the given context for the permission.
 	 * 
 	 * @param context
-	 * @param relations
+	 * @param relation
 	 * @return
 	 */
-	public boolean evaluate(PolicyContext context, String relations)
+	public boolean evaluate(PolicyContext context, String relation)
 	{
-		return stream().anyMatch(s -> s.evaluate(context, relations));
+		return stream().anyMatch(s -> s.evaluate(context, relation));
 	}
 
 	/**
@@ -68,10 +66,15 @@ implements Iterable<PolicyStatement>
 	 * 
 	 * @return a new empty Policy Statement.
 	 */
-	public PolicyStatement statement()
+	public Statement statement()
 	{
-		PolicyStatement stmt = new PolicyStatement();
+		Statement stmt = new Statement();
 		add(stmt);
 		return stmt; 
+	}
+
+	private Stream<Statement> stream()
+	{
+		return statements.stream();
 	}
 }

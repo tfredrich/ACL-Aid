@@ -14,7 +14,7 @@ implements Condition
 	}
 
 	@Override
-	public boolean test(PolicyContext context, PolicyStatement statement, String relation)
+	public boolean test(PolicyContext context, Statement statement, String relation)
 	{
 		return true;
 //		return admin.matches(context.getPrincipal());

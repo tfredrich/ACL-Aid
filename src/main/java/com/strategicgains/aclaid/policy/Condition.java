@@ -9,5 +9,5 @@ package com.strategicgains.aclaid.policy;
  */
 public interface Condition
 {
-	boolean test(PolicyContext context, PolicyStatement statement, String relation);
+	boolean test(PolicyContext context, Statement statement, String relation);
 }

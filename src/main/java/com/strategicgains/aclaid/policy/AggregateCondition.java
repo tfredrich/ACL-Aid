@@ -47,7 +47,7 @@ implements Condition
 	 * @param relation
 	 */
 	@Override
-	public boolean test(PolicyContext context, PolicyStatement statement, String relation)
+	public boolean test(PolicyContext context, Statement statement, String relation)
 	{
 		return conditions.stream().anyMatch(c -> c.test(context, statement, relation));
 	}

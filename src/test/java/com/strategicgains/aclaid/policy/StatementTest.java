@@ -9,19 +9,19 @@ import java.util.UUID;
 
 import org.junit.Test;
 
-public class PolicyStatementTest
+public class StatementTest
 {
 	@Test
 	public void testToString()
 	{
-		assertEquals("{resources: [], allowed: [], denied: [], hasCondition: false}", new PolicyStatement().toString());
+		assertEquals("{resources: [], allowed: [], denied: [], hasCondition: false}", new Statement().toString());
 	}
 
 	@Test
 	public void testResourceMatches()
 	throws ParseException
 	{
-		PolicyStatement p = new PolicyStatement();
+		Statement p = new Statement();
 		p.allow("test:do:one", "test:do:two");
 		p.deny("test:dont:one", "test:dont:two");
 		p.setResource("test:blogPost/*", "test:user/*");
@@ -41,7 +41,7 @@ public class PolicyStatementTest
 	public void testResourceTypeWildcard()
 	throws ParseException
 	{
-		PolicyStatement p = new PolicyStatement();
+		Statement p = new Statement();
 		p.allow("test:do:one", "test:do:two");
 		p.deny("test:dont:one", "test:dont:two");
 		p.setResource("test:*");
@@ -61,7 +61,7 @@ public class PolicyStatementTest
 	public void testPermissionWildcard()
 	throws ParseException
 	{
-		PolicyStatement p = new PolicyStatement();
+		Statement p = new Statement();
 		p.allow("test:do:*");
 		p.deny("test:do:three");
 		p.setResource("test:*");

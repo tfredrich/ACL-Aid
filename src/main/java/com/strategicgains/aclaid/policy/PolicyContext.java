@@ -5,17 +5,18 @@ import java.util.Map;
 
 import com.strategicgains.aclaid.domain.Resource;
 import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.UserSet;
 
 public class PolicyContext
 {
-	private ResourceName principal;
+	private UserSet user;
 	private Resource resource;
 	private Map<String, Object> meta;
 
-	public PolicyContext(ResourceName principal, Resource resource)
+	public PolicyContext(UserSet user, Resource resource)
 	{
 		super();
-		this.principal = principal;
+		this.user = user;
 		this.resource = resource;
 	}
 
@@ -40,14 +41,14 @@ public class PolicyContext
 		return (hasMeta() ? meta.get(key) : null);
 	}
 
-	public boolean hasPrincipal()
+	public boolean hasUser()
 	{
-		return (principal != null);
+		return (user != null);
 	}
 
-	public ResourceName getPrincipal()
+	public UserSet getUser()
 	{
-		return principal;
+		return user;
 	}
 
 	public Resource getResource()

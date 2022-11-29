@@ -23,9 +23,9 @@ public class PolicyBuilder
 	 * 
 	 * @return a new empty Policy Statement.
 	 */
-	public PolicyStatementBuilder statement()
+	public StatementBuilder statement()
 	{
-		return new PolicyStatementBuilder(policy.statement(), this);
+		return new StatementBuilder(policy.statement(), this);
 	}
 
 	public Policy build()

@@ -1,15 +1,11 @@
 package com.strategicgains.aclaid.domain;
 
-import com.strategicgains.aclaid.policy.Policy;
+import java.util.List;
 
 public class Relation
 {
 	private String name;
-	private Union union;
-	private Intersection intersection;
-	private Exclusion exclusion;
-
-	private Policy policy;
+	private List<UsersetRewriteRule> usersetRewriteRules;
 
 	public Relation(String name)
 	{
@@ -25,45 +21,5 @@ public class Relation
 	public void setName(String name)
 	{
 		this.name = name;
-	}
-
-	public Union getUnion()
-	{
-		return union;
-	}
-
-	public void setUnion(Union union)
-	{
-		this.union = union;
-	}
-
-	public Intersection getIntersection()
-	{
-		return intersection;
-	}
-
-	public void setIntersection(Intersection intersection)
-	{
-		this.intersection = intersection;
-	}
-
-	public Exclusion getExclusion()
-	{
-		return exclusion;
-	}
-
-	public void setExclusion(Exclusion exclusion)
-	{
-		this.exclusion = exclusion;
-	}
-
-	public Policy getPolicy()
-	{
-		return policy;
-	}
-
-	public void setPolicy(Policy policy)
-	{
-		this.policy = policy;
 	}
 }

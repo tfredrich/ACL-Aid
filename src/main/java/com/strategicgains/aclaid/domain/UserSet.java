@@ -25,6 +25,18 @@ public class UserSet
 		super();
 	}
 
+	public UserSet(ResourceName resource)
+	{
+		this(resource, null);
+	}
+
+	public UserSet(ResourceName resource, String relation)
+	{
+		this();
+		setRelation(relation);
+		setResource(resource);
+	}
+
 	public UserSet(UserSet that)
 	{
 		this();

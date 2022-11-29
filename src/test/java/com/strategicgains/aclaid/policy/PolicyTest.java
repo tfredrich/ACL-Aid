@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.strategicgains.aclaid.domain.Resource;
 import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.UserSet;
 
 public class PolicyTest
 {
@@ -59,10 +60,10 @@ public class PolicyTest
 	public void testMatchEnforcingTenancy()
 	throws ParseException
 	{
-		ResourceName p1 = new ResourceName("test", "user", UUID.randomUUID().toString());
-		ResourceName admin = new ResourceName("test", "user", ADMIN_ID.toString());
+		UserSet p1 = new UserSet(new ResourceName("test", "user", UUID.randomUUID().toString()));
+		UserSet admin = new UserSet(new ResourceName("test", "user", ADMIN_ID.toString()));
 		Policy p = new Policy();
-		Condition tenancy = new TenancyCondition(admin);
+		Condition tenancy = new TenancyCondition(admin.getResource());
 		String one = "test:do:one";
 		String two = "test:do:two";
 		String three = "test:do:three";

@@ -6,66 +6,66 @@ import java.util.Collection;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.UserSet;
 
-public class PolicyStatementBuilder
+public class StatementBuilder
 {
-	private PolicyStatement statement;
+	private Statement statement;
 	private PolicyBuilder parent;
 
-	public PolicyStatementBuilder(PolicyStatement statement, PolicyBuilder parent)
+	public StatementBuilder(Statement statement, PolicyBuilder parent)
 	{
 		super();
 		this.statement = statement;
 		this.parent = parent;
 	}
 
-	public PolicyStatement userset(String userset)
+	public Statement userset(String userset)
 	throws ParseException
 	{
 		return statement.setUserset(userset);
 	}
 
-	public PolicyStatement userset(UserSet userset)
+	public Statement userset(UserSet userset)
 	{
 		return statement.setUserset(userset);
 	}
 
-	public PolicyStatement resource(String... resourceQrns)
+	public Statement resource(String... resourceQrns)
 	throws ParseException
 	{
 		return statement.setResource(resourceQrns);
 	}
 
-	public PolicyStatement resources(Collection<ResourceName> resourceQrns)
+	public Statement resources(Collection<ResourceName> resourceQrns)
 	{
 		return statement.setResources(resourceQrns);
 	}
 
-	public PolicyStatement allow(String... relations)
+	public Statement allow(String... relations)
 	{
 		return statement.allow(relations);
 	}
 
-	public PolicyStatement allow(Collection<String> relations)
+	public Statement allow(Collection<String> relations)
 	{
 		return statement.allow(relations);
 	}
 
-	public PolicyStatement deny(String... relations)
+	public Statement deny(String... relations)
 	{
 		return statement.deny(relations);
 	}
 
-	public PolicyStatement deny(Collection<String> relations)
+	public Statement deny(Collection<String> relations)
 	{
 		return statement.deny(relations);
 	}
 
-	public PolicyStatement withCondition(Condition condition)
+	public Statement withCondition(Condition condition)
 	{
 		return statement.withCondition(condition);
 	}
 
-	public PolicyStatementBuilder statement()
+	public StatementBuilder statement()
 	{
 		return parent.statement();
 	}
