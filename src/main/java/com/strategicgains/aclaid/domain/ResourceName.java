@@ -6,7 +6,7 @@ import java.util.Objects;
 public class ResourceName
 {
 	public static final String SEPARATOR = ":";
-	private static final int SEGMENT_COUNT = 2;
+	protected static final int DEFAULT_SEGMENT_COUNT = 2;
 
 	private String namespace;
 	private ResourcePath resourcePath;
@@ -74,6 +74,7 @@ public class ResourceName
 	}
 
 	@Override
+	//TODO: What about additional segments?
 	public boolean equals(Object that)
 	{
 		if (this == that) return true;
@@ -82,6 +83,7 @@ public class ResourceName
 		return equals((ResourceName) that);
 	}
 
+	//TODO: What about additional segments?
 	public boolean equals(ResourceName that)
 	{
 		if (!this.getNamespace().equals(that.getNamespace())) return false;
@@ -109,12 +111,25 @@ public class ResourceName
 		return sb.toString();
 	}
 
-	public boolean matches(String qrnString)
+	/**
+	 * Determines if this ResourceName matches another ResourceName (by String), allowing for wildcards.
+	 * 
+	 * @param resourceName
+	 * @return
+	 * @throws ParseException
+	 */
+	public boolean matches(String resourceName)
 	throws ParseException
 	{
-		return matches(parse(qrnString));
+		return matches(parse(resourceName));
 	}
 
+	/**
+	 * Determines if this ResourceName matches another ResourceName, allowing for wildcards.
+	 * 
+	 * @param that
+	 * @return
+	 */
 	public boolean matches(ResourceName that)
 	{
 		if (that == null) return false;
@@ -129,40 +144,49 @@ public class ResourceName
 		return (namespaceMatches && segmentsMatch(that) && this.getResourcePath().matches(that.getResourcePath()));
 	}
 
+	/**
+	 * Subclasses must implement to add segments to the string.
+	 * 
+	 * @param sb
+	 */
 	protected void appendSegments(StringBuilder sb)
 	{
 		// Do nothing. No additional segments.
 	}
 
+	/**
+	 * Subclasses must implement to compare additional segments.
+	 * 
+	 * @param that
+	 * @return
+	 */
 	protected boolean segmentsMatch(ResourceName that)
 	{
 		// No additional segments to match.
 		return true;
 	}
 
-	public static ResourceName parse(String qrnString)
+	public static ResourceName parse(String resourceName)
 	throws ParseException
 	{
-		String[] segments = ResourceName.toSegments(qrnString, SEGMENT_COUNT);
+		if (resourceName == null) throw new ParseException("Resource names cannot be null", 0);
+
+		String[] segments = resourceName.split(SEPARATOR);
+
+		if (segments.length != DEFAULT_SEGMENT_COUNT)
+		{
+			throw new ParseException(String.format("Resource names have %d segments, beginning with a namespace", DEFAULT_SEGMENT_COUNT), resourceName.lastIndexOf(':'));
+		}
 
 		ResourceName rn = new ResourceName();
-		rn.setNamespace(segments[0].isEmpty() ? null : segments[0]);
-		rn.setResourcePath(ResourcePath.parse(segments[1]));
+		fromSegments(rn, segments);
 		return rn;
 	}
 
-	protected static String[] toSegments(String qrnString, int segmentCount)
+	protected static void fromSegments(ResourceName rn, String... segments)
 	throws ParseException
 	{
-		if (qrnString == null) throw new ParseException("Resource names cannot be null", 0);
-
-		String[] segments = qrnString.split(SEPARATOR);
-
-		if (segments.length != segmentCount)
-		{
-			throw new ParseException(String.format("Resource names have %d segments, beginning with a namespace", segmentCount), qrnString.lastIndexOf(':'));
-		}
-
-		return segments;
+		rn.setNamespace(segments[0].isEmpty() ? null : segments[0]);
+		rn.setResourcePath(ResourcePath.parse(segments[1]));
 	}
 }
