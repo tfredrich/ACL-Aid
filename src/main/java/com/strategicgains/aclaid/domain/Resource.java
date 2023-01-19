@@ -16,7 +16,7 @@
 package com.strategicgains.aclaid.domain;
 
 /**
- * Defines the interface to retrieve a string resource ID from an object.
+ * Defines the interface to retrieve a ResourceName from an object.
  * 
  * @author toddf
  * @since Feb 24, 2016
