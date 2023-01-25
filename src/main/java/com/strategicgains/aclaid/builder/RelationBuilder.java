@@ -23,7 +23,10 @@ extends AbstractChildBuildable
 
 	Relation build()
 	{
-		return new Relation(name);
+		Relation r = new Relation(name);
+		rewriteBuilder.apply(r);
+		policy.apply(r);
+		return r;
 	}
 
 	public PolicyBuilder policy()

@@ -11,11 +11,11 @@ import com.strategicgains.aclaid.domain.UserSet;
 
 public class NamespaceConfiguration
 {
-	private AccessControlList rootAcl;
+	private AccessControl rootAcl;
 	private Set<Relation> relations = new HashSet<>();
 	private TupleSet tuples;
 
-	public NamespaceConfiguration(AccessControlList parent)
+	public NamespaceConfiguration(AccessControl parent)
 	{
 		super();
 		this.rootAcl = parent;
@@ -31,13 +31,13 @@ public class NamespaceConfiguration
 		return relations.stream().anyMatch(r -> r.getName().equals(relation));
 	}
 
-	public boolean check(AccessControlList acl, String userset, String relation, String resource)
+	public boolean check(AccessControl acl, String userset, String relation, String resource)
 	throws ParseException
 	{
 		return check(acl, UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
-	public boolean check(AccessControlList acl, UserSet userset, String relation, ResourceName resource)
+	public boolean check(AccessControl acl, UserSet userset, String relation, ResourceName resource)
 	{
 //		for (Tuple tuple : tuples)
 //		{

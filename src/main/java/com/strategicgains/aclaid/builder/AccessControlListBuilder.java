@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.strategicgains.aclaid.AccessControlList;
+import com.strategicgains.aclaid.AccessControl;
 
 public class AccessControlListBuilder
 {
@@ -30,9 +30,9 @@ public class AccessControlListBuilder
 		return relations.contains(relation);
 	}
 
-	public AccessControlList build()
+	public AccessControl build()
 	{
-		AccessControlList acl = new AccessControlList();
+		AccessControl acl = new AccessControl();
 
 		builders.values().stream().forEach(b -> b.buildRelations(acl));
 		builders.values().stream().forEach(b -> b.buildTuples(acl));

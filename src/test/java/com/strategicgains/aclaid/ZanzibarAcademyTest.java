@@ -8,7 +8,6 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlListBuilder;
-import com.strategicgains.aclaid.builder.UserSets;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
@@ -68,15 +67,15 @@ public class ZanzibarAcademyTest
 		AccessControlListBuilder builder = new AccessControlListBuilder();
 		builder
 			.namespace(DOCUMENT_NAMESPACE)
-				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
+				.relation(OWNER_RELATION)
 
 			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
 			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)
 			.tuple(CARL, VIEWER_RELATION, DOC_SLIDES);
 
-		AccessControlList acl = builder.build();
+		AccessControl acl = builder.build();
 
 		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
 		assertTrue(acl.check(KIM, OWNER_RELATION, DOC_ROADMAP));
@@ -121,20 +120,22 @@ public class ZanzibarAcademyTest
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.usersetRewrite()
-						.union()
-							._this()
-							.computedUserset(OWNER_RELATION)
+						.childOf(OWNER_RELATION)
+//						.union()
+//							._this()
+//							.computedUserset(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
 					.usersetRewrite()
-						.union()
-							._this()
-							.computedUserset(EDITOR_RELATION)
+						.childOf(EDITOR_RELATION)
+//						.union()
+//							._this()
+//							.computedUserset(EDITOR_RELATION)
 
 			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
 			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)
 			.tuple(CARL, VIEWER_RELATION, DOC_SLIDES);
 
-		AccessControlList acl = builder.build();
+		AccessControl acl = builder.build();
 
 		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
 		assertTrue(acl.check(BEN, EDITOR_RELATION, DOC_ROADMAP));
@@ -182,21 +183,21 @@ public class ZanzibarAcademyTest
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.usersetRewrite()
-						.union()
-							._this()
-							.computedUserset(OWNER_RELATION)
+						.childOf(OWNER_RELATION)
+//						.union()
+//							._this()
+//							.computedUserset(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
 					.usersetRewrite()
-						.union()
-							._this()
-							.computedUserset(EDITOR_RELATION)
+						.childOf(EDITOR_RELATION)
+//						.union()
+//							._this()
+//							.computedUserset(EDITOR_RELATION)
 
-//			.tuple(CARL, EDITOR_RELATION, CONTOSO)
-//			.tuple(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES);
 			.tuple(CARL, MEMBER_RELATION, CONTOSO)
 			.tuple(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES);
 
-		AccessControlList acl = builder.build();
+		AccessControl acl = builder.build();
 
 		assertTrue(acl.check(CARL, MEMBER_RELATION, CONTOSO));
 		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
@@ -272,17 +273,19 @@ public class ZanzibarAcademyTest
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.usersetRewrite()
-						.union()
-							._this()
-							.computedUserset(OWNER_RELATION)
-							.tupleToUserSet()
-								.tupleSet(PARENT_RELATION)
-								.computedUserset(UserSets.TUPLE_USERSET_OBJECT, EDITOR_RELATION)
+						.childOf(OWNER_RELATION)
+//						.union()
+//							._this()
+//							.computedUserset(OWNER_RELATION)
+//							.tupleToUserSet()
+//								.tupleSet(PARENT_RELATION)
+//								.computedUserset(UserSets.TUPLE_USERSET_OBJECT, EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
 					.usersetRewrite()
-						.union()
-							._this()
-							.computedUserset(EDITOR_RELATION)
+						.childOf(EDITOR_RELATION)
+//						.union()
+//							._this()
+//							.computedUserset(EDITOR_RELATION)
 		
 			.namespace(ORGANIZATION_NAMESPACE)
 				.relation(MEMBER_RELATION)
@@ -296,7 +299,7 @@ public class ZanzibarAcademyTest
 			.tuple(FOLDER_PLANNING, PARENT_RELATION, DOC_README)
 			.tuple(KIM, VIEWER_RELATION, FOLDER_PLANNING);
 
-		AccessControlList acl = builder.build();
+		AccessControl acl = builder.build();
 
 		assertTrue(acl.check(FOLDER_PLANNING, PARENT_RELATION, DOC_README));
 		assertTrue(acl.check(KIM, VIEWER_RELATION, FOLDER_PLANNING));

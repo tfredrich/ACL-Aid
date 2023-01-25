@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.policy;
 
 import com.strategicgains.aclaid.builder.RelationBuilder;
+import com.strategicgains.aclaid.domain.Relation;
 
 public class PolicyBuilder
 {
@@ -31,5 +32,10 @@ public class PolicyBuilder
 	public Policy build()
 	{
 		return policy;
+	}
+
+	public void apply(Relation r) {
+		// TODO Auto-generated method stub
+		
 	}
 }

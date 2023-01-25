@@ -40,7 +40,7 @@ public class AccessControlListTest
 	private static final String TODD = USERS_NAMESPACE + ":user/todd";
 	private static final String JASMINE = USERS_NAMESPACE + ":user/jasmine";
 
-	private AccessControlList acl;
+	private AccessControl acl;
 
 	@Before
 	public void initialize()

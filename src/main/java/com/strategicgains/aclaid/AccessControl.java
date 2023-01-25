@@ -22,18 +22,18 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  * @since Mar 18, 2022
  * @see AccessControlListBuilder
  */
-public class AccessControlList
+public class AccessControl
 {
 	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
 	private TupleSet tuples = new LocalTupleSet();
 
-	public AccessControlList addTuple(String userset, String relation, String resource)
+	public AccessControl addTuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException
 	{
 		return addTuple(new Tuple(userset, relation, resource));
 	}
 
-	public AccessControlList addTuple(UserSet userset, String relation, ResourceName resource)
+	public AccessControl addTuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
@@ -42,13 +42,13 @@ public class AccessControlList
 		return this;
 	}
 
-	public AccessControlList addTuple(Tuple tuple)
+	public AccessControl addTuple(Tuple tuple)
 	throws RelationNotRegisteredException
 	{
 		return addTuple(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
 
-	public AccessControlList removeTuple(UserSet userset, String relation, ResourceName resource)
+	public AccessControl removeTuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException
 	{
 		tuples.remove(userset, relation, resource);
@@ -57,7 +57,7 @@ public class AccessControlList
 
 	/**
 	 * Get an existing NamespaceConfiguration by name or create a new, empty one.
-	 * Changes to the instance make changes to this AccessControlList.
+	 * Changes to the instance make changes to this AccessControl.
 	 * 
 	 * @param namespace
 	 * @return an existing or new, empty NamespaceConfiguration instance.

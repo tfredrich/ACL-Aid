@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.strategicgains.aclaid.AccessControlList;
+import com.strategicgains.aclaid.AccessControl;
 import com.strategicgains.aclaid.NamespaceConfiguration;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
@@ -31,14 +31,14 @@ implements Buildable
 		this.parent = parent;
 	}
 
-	public NamespaceConfiguration buildRelations(AccessControlList parent)
+	public NamespaceConfiguration buildRelations(AccessControl parent)
 	{
 		NamespaceConfiguration acl = parent.namespace(namespace);
 		relationBuilders.stream().forEach(r -> acl.addRelation(r.build()));
 		return acl;
 	}
 
-	public AccessControlList buildTuples(AccessControlList parent)
+	public AccessControl buildTuples(AccessControl parent)
 	{
 		tupleBuilders.stream().forEach(b -> tuples.addAll(b.build()));
 		tuples.stream().forEach(t -> {
