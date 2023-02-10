@@ -2,6 +2,7 @@ package com.strategicgains.aclaid.builder;
 
 import java.text.ParseException;
 
+import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public abstract class SetBuilder
@@ -20,7 +21,7 @@ public abstract class SetBuilder
 	}
 
 	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}

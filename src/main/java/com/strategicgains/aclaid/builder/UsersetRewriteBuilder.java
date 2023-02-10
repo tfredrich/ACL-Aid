@@ -4,16 +4,21 @@ import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.strategicgains.aclaid.domain.ChildOfRewriteRule;
 import com.strategicgains.aclaid.domain.Relation;
+import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.Rule;
+import com.strategicgains.aclaid.domain.RuleSet;
+import com.strategicgains.aclaid.domain.RulesSetRewriteRule;
+import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class UsersetRewriteBuilder
 {
 	private RelationBuilder parentBuilder;
 	private Set<String> parentRelations;
-	private UnionBuilder union;
-	private IntersectionBuilder intersection;
-	private ExclusionBuilder exclusion;
+	private RuleSet rules;
 
 	public UsersetRewriteBuilder(RelationBuilder parent)
 	{
@@ -32,22 +37,27 @@ public class UsersetRewriteBuilder
 		return this;
 	}
 
-	public UnionBuilder union()
+	public UsersetRewriteBuilder rule(String userset, String relation, String resource)
+	throws ParseException
 	{
-		union = new UnionBuilder(this);
-		return union;
+		return rule(UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
-	public IntersectionBuilder intersection()
+	public UsersetRewriteBuilder rule(UserSet userset, String relation, ResourceName resource)
 	{
-		intersection = new IntersectionBuilder(this);
-		return intersection;
+		if (rules == null)
+		{
+			rules = new RuleSet();
+		}
+
+		rules.add(new Rule(userset, relation, resource));
+		return this;
 	}
 
-	public ExclusionBuilder exclusion()
+	public UsersetRewriteBuilder tupleToUserSet(String relation, TUPLE tupleObject)
 	{
-		exclusion = new ExclusionBuilder(this);
-		return exclusion;
+		// TODO Auto-generated method stub
+		return this;
 	}
 
 	public NamespaceConfigurationBuilder namespace(String namespace)
@@ -61,14 +71,35 @@ public class UsersetRewriteBuilder
 	}
 
 	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return parentBuilder.tuple(userset, relation, resource);
 	}
 
 	public void apply(Relation r)
 	{
-		// tuple (userset#parent, relation, resource);
-//		r.addRewriteRule(new ChildOfRewriteRule());
+		addChildRewriteRules(r);
+		addRuleRewrites(r);
+	}
+
+	private void addChildRewriteRules(Relation r)
+	{
+		if (parentRelations != null)
+		{
+			parentRelations.stream().forEach(p -> r.addRewriteRule(new ChildOfRewriteRule(p)));
+		}
+	}
+
+	private void addRuleRewrites(Relation r)
+	{
+		if (rules != null)
+		{
+			r.addRewriteRule(new RulesSetRewriteRule(rules));
+		}
+	}
+
+	public TupleBuilder tuples()
+	{
+		return parentBuilder.tuples();
 	}
 }

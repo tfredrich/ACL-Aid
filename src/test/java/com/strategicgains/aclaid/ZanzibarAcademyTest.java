@@ -7,7 +7,9 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-import com.strategicgains.aclaid.builder.AccessControlListBuilder;
+import com.strategicgains.aclaid.builder.AccessControlBuilder;
+import com.strategicgains.aclaid.builder.TUPLE;
+import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
@@ -59,12 +61,16 @@ public class ZanzibarAcademyTest
 	 * 
 	 * Then add:
 	 * Kim is editor of the doc:roadmap
+	 * 
+	 * @throws ParseException 
+	 * @throws RelationNotRegisteredException 
+	 * @throws InvalidTupleException 
 	 */
 	@Test
 	public void test01Basics()
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
-		AccessControlListBuilder builder = new AccessControlListBuilder();
+		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.namespace(DOCUMENT_NAMESPACE)
 				.relation(EDITOR_RELATION)
@@ -82,6 +88,7 @@ public class ZanzibarAcademyTest
 		assertTrue(acl.check(BEN, EDITOR_RELATION, DOC_ROADMAP));
 
 		assertFalse(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
+
 		// Add Kim as editor of the doc:roadmap
 		acl.addTuple(KIM, EDITOR_RELATION, DOC_ROADMAP);
 		assertTrue(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
@@ -111,25 +118,19 @@ public class ZanzibarAcademyTest
 	 * Carl is viewer of the doc:slides
 	 */
 	@Test
-	public void test02EditorsViewer()
-	throws ParseException, RelationNotRegisteredException
+	public void test02Inheritence()
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
-		AccessControlListBuilder builder = new AccessControlListBuilder();
+		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.namespace(DOCUMENT_NAMESPACE)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.usersetRewrite()
 						.childOf(OWNER_RELATION)
-//						.union()
-//							._this()
-//							.computedUserset(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
 					.usersetRewrite()
 						.childOf(EDITOR_RELATION)
-//						.union()
-//							._this()
-//							.computedUserset(EDITOR_RELATION)
 
 			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
 			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)
@@ -137,10 +138,12 @@ public class ZanzibarAcademyTest
 
 		AccessControl acl = builder.build();
 
-		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
-		assertTrue(acl.check(BEN, EDITOR_RELATION, DOC_ROADMAP));
 		assertTrue(acl.check(KIM, OWNER_RELATION, DOC_ROADMAP));
 		assertTrue(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
+		assertTrue(acl.check(KIM, VIEWER_RELATION, DOC_ROADMAP));
+		assertTrue(acl.check(BEN, EDITOR_RELATION, DOC_ROADMAP));
+		assertTrue(acl.check(BEN, VIEWER_RELATION, DOC_ROADMAP));
+		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
 	}
 
 	/**
@@ -172,9 +175,9 @@ public class ZanzibarAcademyTest
 	 */
 	@Test
 	public void test03Groups()
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
-		AccessControlListBuilder builder = new AccessControlListBuilder();
+		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.namespace(ORGANIZATION_NAMESPACE)
 				.relation(MEMBER_RELATION)
@@ -184,15 +187,9 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR_RELATION)
 					.usersetRewrite()
 						.childOf(OWNER_RELATION)
-//						.union()
-//							._this()
-//							.computedUserset(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
 					.usersetRewrite()
 						.childOf(EDITOR_RELATION)
-//						.union()
-//							._this()
-//							.computedUserset(EDITOR_RELATION)
 
 			.tuple(CARL, MEMBER_RELATION, CONTOSO)
 			.tuple(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES);
@@ -264,9 +261,9 @@ public class ZanzibarAcademyTest
 	 */
 	@Test
 	public void test04Folders()
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
-		AccessControlListBuilder builder = new AccessControlListBuilder();
+		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.namespace(FOLDER_NAMESPACE)
 				.relation(PARENT_RELATION)
@@ -274,27 +271,24 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR_RELATION)
 					.usersetRewrite()
 						.childOf(OWNER_RELATION)
-//						.union()
-//							._this()
-//							.computedUserset(OWNER_RELATION)
-//							.tupleToUserSet()
-//								.tupleSet(PARENT_RELATION)
-//								.computedUserset(UserSets.TUPLE_USERSET_OBJECT, EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
 					.usersetRewrite()
 						.childOf(EDITOR_RELATION)
-//						.union()
-//							._this()
-//							.computedUserset(EDITOR_RELATION)
-		
-			.namespace(ORGANIZATION_NAMESPACE)
-				.relation(MEMBER_RELATION)
 		
 			.namespace(DOCUMENT_NAMESPACE)
 				.relation(PARENT_RELATION)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
+					.usersetRewrite()
+						.childOf(OWNER_RELATION)
+						.tupleToUserSet(PARENT_RELATION, TUPLE.USERSET_OBJECT)
 				.relation(VIEWER_RELATION)
+					.usersetRewrite()
+						.childOf(EDITOR_RELATION)
+						.tupleToUserSet(PARENT_RELATION, TUPLE.USERSET_OBJECT)
+
+			.namespace(ORGANIZATION_NAMESPACE)
+				.relation(MEMBER_RELATION)
 
 			.tuple(FOLDER_PLANNING, PARENT_RELATION, DOC_README)
 			.tuple(KIM, VIEWER_RELATION, FOLDER_PLANNING);

@@ -5,12 +5,13 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.strategicgains.aclaid.builder.AccessControlListBuilder;
+import com.strategicgains.aclaid.builder.AccessControlBuilder;
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
@@ -20,7 +21,7 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  * 
  * @author tfredrich
  * @since Mar 18, 2022
- * @see AccessControlListBuilder
+ * @see AccessControlBuilder
  */
 public class AccessControl
 {
@@ -28,7 +29,7 @@ public class AccessControl
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return addTuple(new Tuple(userset, relation, resource));
 	}
@@ -59,12 +60,12 @@ public class AccessControl
 	 * Get an existing NamespaceConfiguration by name or create a new, empty one.
 	 * Changes to the instance make changes to this AccessControl.
 	 * 
-	 * @param namespace
+	 * @param namespace the name of the namespace.
 	 * @return an existing or new, empty NamespaceConfiguration instance.
 	 */
 	public NamespaceConfiguration namespace(String namespace)
 	{
-		return namespaces.computeIfAbsent(namespace, n -> new NamespaceConfiguration(this));
+		return namespaces.computeIfAbsent(namespace, n -> new NamespaceConfiguration(this, namespace));
 	}
 
 	/**
@@ -103,9 +104,15 @@ public class AccessControl
 	 */
 	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
-		NamespaceConfiguration acl = namespaces.get(resource.getNamespace());
+		if (checkNamespace(resource.getNamespace(), userset, relation, resource)) return true;
+		return checkNamespace(userset.getResource().getNamespace(), userset, relation, resource);
+	}
 
-		if (acl != null && acl.check(this, userset, relation, resource)) return true;
+	private boolean checkNamespace(String namespace, UserSet userset, String relation, ResourceName resource)
+	{
+		NamespaceConfiguration namespaceConfiguration = namespaces.get(resource.getNamespace());
+
+		if (namespaceConfiguration != null && namespaceConfiguration.check(userset, relation, resource)) return true;
 
 		return checkTuples(userset, relation, resource);
 	}

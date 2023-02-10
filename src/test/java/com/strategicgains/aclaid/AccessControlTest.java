@@ -8,11 +8,11 @@ import java.text.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.strategicgains.aclaid.builder.AccessControlListBuilder;
+import com.strategicgains.aclaid.builder.AccessControlBuilder;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
-public class AccessControlListTest
+public class AccessControlTest
 {
 	private static final String DOCUMENTS_NAMESPACE = "docs";
 	private static final String GROUPS_NAMESPACE = "groups";
@@ -46,7 +46,7 @@ public class AccessControlListTest
 	public void initialize()
 	throws ParseException, InvalidTupleException, RelationNotRegisteredException
 	{
-		AccessControlListBuilder builder = new AccessControlListBuilder();
+		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.namespace(DOCUMENTS_NAMESPACE)
 				.relation(OWNER_RELATION)
@@ -54,18 +54,17 @@ public class AccessControlListTest
 				.relation(VIEWER_RELATION)
 				.relation(ADMINISTRATOR_RELATION)
 					.usersetRewrite()
-						.union()
-							._this()
-							.computedUserset(OWNER_RELATION)
+						.childOf(OWNER_RELATION)
+						.rule(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS)
+						.rule(EVERYONE_USERSET, VIEWER_RELATION, ALL_DOCS)
 
 				// Directly-specified tuples
 				.tuple(TODD, OWNER_RELATION, DOC_1234)
-				.tuple(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS)
-				.tuple(EVERYONE_USERSET, VIEWER_RELATION, ALL_DOCS)
 
 			.namespace(GROUPS_NAMESPACE)
 				.relation(MEMBER_RELATION)
-				.tuple(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
+					.usersetRewrite()
+						.rule(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
 
 				// DSL-built multiple tuples
 				.tuples()
@@ -102,6 +101,8 @@ public class AccessControlListTest
 		assertTrue(acl.check(BOB, MEMBER_RELATION, ADMINS_GROUP));
 		assertTrue(acl.check(SALLY, MEMBER_RELATION, ADMINS_GROUP));
 		assertTrue(acl.check(SAM, MEMBER_RELATION, ADMINS_GROUP));
+		assertTrue(acl.check(BOB, ADMINISTRATOR_RELATION, DOC_1234));
+		assertTrue(acl.check(SALLY, ADMINISTRATOR_RELATION, DOC_1234));
 		assertFalse(acl.check(BOB, ADMINISTRATOR_RELATION, "docs:video/12345"));
 		assertFalse(acl.check(SALLY, ADMINISTRATOR_RELATION, "docs:video/12345"));
 		assertFalse(acl.check(JASMINE, ADMINISTRATOR_RELATION, DOC_1234));

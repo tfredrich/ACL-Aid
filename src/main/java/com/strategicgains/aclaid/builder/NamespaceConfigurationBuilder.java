@@ -13,18 +13,19 @@ import com.strategicgains.aclaid.NamespaceConfiguration;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class NamespaceConfigurationBuilder
 implements Buildable
 {
-	private AccessControlListBuilder parent;
+	private AccessControlBuilder parent;
 	private String namespace;
 	private Set<RelationBuilder> relationBuilders = new HashSet<>();
 	private List<TupleBuilder> tupleBuilders = new ArrayList<>();
 	private List<Tuple> tuples = new ArrayList<>();
 
-	public NamespaceConfigurationBuilder(AccessControlListBuilder parent, String namespace)
+	public NamespaceConfigurationBuilder(AccessControlBuilder parent, String namespace)
 	{
 		super();
 		this.namespace = namespace;
@@ -33,9 +34,9 @@ implements Buildable
 
 	public NamespaceConfiguration buildRelations(AccessControl parent)
 	{
-		NamespaceConfiguration acl = parent.namespace(namespace);
-		relationBuilders.stream().forEach(r -> acl.addRelation(r.build()));
-		return acl;
+		NamespaceConfiguration namespaceConfiguration = parent.namespace(namespace);
+		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build(namespaceConfiguration)));
+		return namespaceConfiguration;
 	}
 
 	public AccessControl buildTuples(AccessControl parent)
@@ -72,13 +73,13 @@ implements Buildable
 	}
 
 	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return tuple(UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
 	public NamespaceConfigurationBuilder tuple(UserSet userset, String relation, ResourceName resource)
-	throws RelationNotRegisteredException
+	throws RelationNotRegisteredException, InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
 
@@ -92,7 +93,7 @@ implements Buildable
 	}
 
 	public NamespaceConfigurationBuilder tuple(String tuple)
-	throws ParseException
+	throws ParseException, InvalidTupleException
 	{
 		tuples.add(Tuple.parse(tuple));
 		return this;

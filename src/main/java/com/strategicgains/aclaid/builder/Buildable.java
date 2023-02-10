@@ -4,6 +4,7 @@ import java.text.ParseException;
 
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public interface Buildable
@@ -15,11 +16,11 @@ public interface Buildable
 	TupleBuilder tuples();
 
 	NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException;
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException;
 
 	NamespaceConfigurationBuilder tuple(UserSet userset, String relation, ResourceName resource)
-	throws RelationNotRegisteredException;
+	throws RelationNotRegisteredException, InvalidTupleException;
 
 	NamespaceConfigurationBuilder tuple(String tuple)
-	throws ParseException;
+	throws ParseException, InvalidTupleException;
 }

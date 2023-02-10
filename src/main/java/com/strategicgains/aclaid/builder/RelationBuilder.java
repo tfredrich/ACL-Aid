@@ -1,5 +1,6 @@
 package com.strategicgains.aclaid.builder;
 
+import com.strategicgains.aclaid.NamespaceConfiguration;
 import com.strategicgains.aclaid.domain.Relation;
 import com.strategicgains.aclaid.policy.PolicyBuilder;
 
@@ -7,7 +8,7 @@ public class RelationBuilder
 extends AbstractChildBuildable
 {
 	private String name;
-	private UsersetRewriteBuilder rewriteBuilder;
+	private UsersetRewriteBuilder rewrites;
 	private PolicyBuilder policy;
 
 	public RelationBuilder(String relation, NamespaceConfigurationBuilder parent)
@@ -21,14 +22,6 @@ extends AbstractChildBuildable
 		return name;
 	}
 
-	Relation build()
-	{
-		Relation r = new Relation(name);
-		rewriteBuilder.apply(r);
-		policy.apply(r);
-		return r;
-	}
-
 	public PolicyBuilder policy()
 	{
 		this.policy = new PolicyBuilder(this);
@@ -37,7 +30,30 @@ extends AbstractChildBuildable
 
 	public UsersetRewriteBuilder usersetRewrite()
 	{
-		this.rewriteBuilder = new UsersetRewriteBuilder(this);
-		return rewriteBuilder;
+		this.rewrites = new UsersetRewriteBuilder(this);
+		return this.rewrites;
+	}
+
+	public String toString()
+	{
+		return (String.format("Relation: %s", name));
+	}
+
+	Relation build(NamespaceConfiguration namespace)
+	{
+		Relation r = new Relation(namespace, name);
+		if (hasRewrites()) rewrites.apply(r);
+		if (hasPolicy()) policy.apply(r);
+		return r;
+	}
+
+	private boolean hasRewrites()
+	{
+		return (rewrites != null);
+	}
+
+	private boolean hasPolicy()
+	{
+		return (policy != null);
 	}
 }

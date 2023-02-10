@@ -2,8 +2,6 @@ package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
 
-import com.strategicgains.aclaid.exception.InvalidTupleException;
-
 /**
  * This is the Zanzibar Tuple containing an Object, Relation and User[set].
  * 
@@ -35,19 +33,18 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * 
  * @author tfredrich
  */
-public class Tuple
+public class Rule
 {
 	private ResourceName resource;	// 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
 	private String relation;		// 'owner', 'viewer', 'member'
 	private UserSet userset;		// 'users:user/todd', 'users:group/B#member'
 
-	public Tuple()
+	public Rule()
 	{
 		super();
 	}
 
-	public Tuple(UserSet userset, String relation, ResourceName resource)
-	throws InvalidTupleException
+	public Rule(UserSet userset, String relation, ResourceName resource)
 	{
 		this();
 		setResource(resource);
@@ -55,14 +52,13 @@ public class Tuple
 		setUserset(userset);
 	}
 
-	public Tuple(String userset, String relation, String resource)
-	throws ParseException, InvalidTupleException
+	public Rule(String userset, String relation, String resource)
+	throws ParseException
 	{
 		this(UserSet.parse(userset), relation, ResourceName.parse(resource));
 	}
 
-	public Tuple(Tuple tuple)
-	throws InvalidTupleException
+	public Rule(Rule tuple)
 	{
 		this(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
@@ -78,9 +74,7 @@ public class Tuple
 	}
 
 	public void setResource(ResourceName resource)
-	throws InvalidTupleException
 	{
-		if (resource.isWildcard()) throw new InvalidTupleException("Wildcard resources not permitted in tuples: " + resource.toString());
 		this.resource = resource;
 	}
 
@@ -95,9 +89,7 @@ public class Tuple
 	}
 
 	public void setUserset(UserSet userset)
-	throws InvalidTupleException
 	{
-		if (userset.getResource().isWildcard()) throw new InvalidTupleException("Wildcard usersets not permitted in tuples: " + userset.toString());
 		this.userset = userset;
 	}
 
@@ -116,7 +108,7 @@ public class Tuple
 		this.relation = relation;
 	}
 
-	public boolean matches(Tuple that)
+	public boolean matches(Rule that)
 	{
 		return matches(that.getUserset(), that.getRelation(), that.getResource());
 	}
@@ -159,7 +151,7 @@ public class Tuple
 
 		if (getClass() != obj.getClass()) return false;
 
-		Tuple other = (Tuple) obj;
+		Rule other = (Rule) obj;
 
 		if (resource == null)
 		{
@@ -203,8 +195,8 @@ public class Tuple
 	 * User[#relation]@relation#resource
 	 * User[set]@relation#resource
 	 */
-	public static Tuple parse(String tuple)
-	throws ParseException, InvalidTupleException
+	public static Rule parse(String tuple)
+	throws ParseException
 	{
 		String[] obj = tuple.split("@");
 
@@ -214,7 +206,7 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation#resource: " + tuple, 0);
 
-		return new Tuple(UserSet.parse(obj[0]), rel[0], ResourceName.parse(rel[1]));
+		return new Rule(UserSet.parse(obj[0]), rel[0], ResourceName.parse(rel[1]));
 	}
 
 	/*
@@ -222,8 +214,8 @@ public class Tuple
 	 * resource#relation@user[#relation]
 	 * resource#relation@user[set]
 	 */
-	public static Tuple parseZanzibar(String tuple)
-	throws ParseException, InvalidTupleException
+	public static Rule parseZanzibar(String tuple)
+	throws ParseException
 	{
 		String[] obj = tuple.split("#");
 
@@ -233,6 +225,6 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation@userset: " + tuple, 0);
 
-		return new Tuple(UserSet.parse(rel[1]), rel[0], ResourceName.parse(obj[0]));
+		return new Rule(UserSet.parse(rel[1]), rel[0], ResourceName.parse(obj[0]));
 	}
 }

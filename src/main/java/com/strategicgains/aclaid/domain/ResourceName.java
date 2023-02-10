@@ -73,6 +73,16 @@ public class ResourceName
 		return (hasResourcePath() && resourcePath.isResourceTypeWildcard());
 	}
 
+	public boolean isIdentifierWildcard()
+	{
+		return (hasResourcePath() && resourcePath.isIdentifierWildcard());
+	}
+
+	public boolean isWildcard()
+	{
+		return (isResourceTypeWildcard() || isIdentifierWildcard());
+	}
+
 	@Override
 	//TODO: What about additional segments?
 	public boolean equals(Object that)

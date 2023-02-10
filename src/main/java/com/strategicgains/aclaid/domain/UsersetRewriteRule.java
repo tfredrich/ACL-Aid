@@ -1,8 +1,8 @@
 package com.strategicgains.aclaid.domain;
 
-import java.util.Set;
+import com.strategicgains.aclaid.NamespaceConfiguration;
 
 public interface UsersetRewriteRule
 {
-	UserSetExpression rewrite(Resource resource);
+	boolean matches(NamespaceConfiguration namespace, UserSet userset, String relation, ResourceName resource);
 }

@@ -7,9 +7,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
+import com.strategicgains.aclaid.exception.InvalidTupleException;
+
 public class LocalTupleSet
 implements TupleSet
 {
+	boolean allowWildcards = false;
 	private LinkedList<UserSet> usersets = new LinkedList<>();
 	private Map<UserSet, Map<String, Set<ResourceName>>> usersetTree = new HashMap<>();
 	private Map<ResourceName, Map<String, Set<UserSet>>> resourceTree = new HashMap<>();
@@ -17,6 +20,12 @@ implements TupleSet
 	public LocalTupleSet()
 	{
 		super();
+	}
+
+	public LocalTupleSet(boolean allowWildcards)
+	{
+		super();
+		this.allowWildcards = allowWildcards;
 	}
 
 	protected LocalTupleSet(ResourceName resource, String relation, Set<UserSet> usersets)
@@ -96,13 +105,16 @@ implements TupleSet
 		Set<UserSet> usersets = subtree1.get(relation);
 
 		if (usersets == null) return null;
-		if (usersets.contains(userset)) return new Tuple(userset, relation, resource);
+		if (usersets.stream().anyMatch(u -> u.matches(userset)))
+		{
+			return newDynamicTuple(userset, relation, resource);
+		}
 
 		//Recursively check memberships...
 		if (usersets.stream().filter(set -> set.hasRelation()).map(set -> readOne(userset, set.getRelation(), set.getResource()))
 			.filter(t -> (t != null)).count() > 0)
 		{
-			return new Tuple(userset, relation, resource);
+			return newDynamicTuple(userset, relation, resource);
 		}
 
 		return null;
@@ -118,7 +130,7 @@ implements TupleSet
 	@Override
 	public LocalTupleSet add(UserSet userset, String relation, ResourceName resource)
 	{
-		return add(new Tuple(userset, relation, resource));
+		return add(newDynamicTuple(userset, relation, resource));
 	}
 
 	@Override
@@ -141,7 +153,7 @@ implements TupleSet
 	@Override
 	public LocalTupleSet remove(UserSet userset, String relation, ResourceName resource)
 	{
-		return remove(new Tuple(userset, relation, resource));
+		return remove(newDynamicTuple(userset, relation, resource));
 	}
 
 	private void writeUsersetTree(Tuple tuple)
@@ -182,5 +194,17 @@ implements TupleSet
 		if (usersets == null) return;
 
 		usersets.remove(tuple.getUserset());
+	}
+
+	private Tuple newDynamicTuple(UserSet userset, String relation, ResourceName resource)
+	{
+		try
+		{
+			return new Tuple(userset, relation, resource);
+		}
+		catch (InvalidTupleException e)
+		{
+			return null;
+		}
 	}
 }
