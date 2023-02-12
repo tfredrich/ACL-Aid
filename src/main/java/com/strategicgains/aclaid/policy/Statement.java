@@ -75,7 +75,7 @@ public class Statement
 		{
 			for(String qrn : resourceQrns)
 			{
-				resources.add(ResourceName.parse(qrn));
+				resources.add(new ResourceName(qrn));
 			}
 		}
 

@@ -16,6 +16,20 @@ public class ResourceName
 		super();
 	}
 
+	public ResourceName(String resourceName)
+	throws ParseException
+	{
+		this(resourceName, DEFAULT_SEGMENT_COUNT);
+	}
+
+	protected ResourceName(String resourceName, int segmentCount)
+	throws ParseException
+	{
+		this();
+		String[] segments = parseSegments(resourceName, segmentCount);		
+		setSegments(segments);
+	}
+
 	public ResourceName(String namespace, String resourceType)
 	{
 		this(namespace, new ResourcePath(resourceType));
@@ -131,7 +145,7 @@ public class ResourceName
 	public boolean matches(String resourceName)
 	throws ParseException
 	{
-		return matches(parse(resourceName));
+		return matches(new ResourceName(resourceName));
 	}
 
 	/**
@@ -166,6 +180,7 @@ public class ResourceName
 
 	/**
 	 * Subclasses must implement to compare additional segments.
+	 * @param <T>
 	 * 
 	 * @param that
 	 * @return
@@ -176,27 +191,25 @@ public class ResourceName
 		return true;
 	}
 
-	public static ResourceName parse(String resourceName)
+	protected String[] parseSegments(String resourceName, int segmentCount)
 	throws ParseException
 	{
 		if (resourceName == null) throw new ParseException("Resource names cannot be null", 0);
 
 		String[] segments = resourceName.split(SEPARATOR);
 
-		if (segments.length != DEFAULT_SEGMENT_COUNT)
+		if (segments.length != segmentCount)
 		{
-			throw new ParseException(String.format("Resource names have %d segments, beginning with a namespace", DEFAULT_SEGMENT_COUNT), resourceName.lastIndexOf(':'));
+			throw new ParseException(String.format("Resource names have %d segments, beginning with a namespace", segmentCount), resourceName.lastIndexOf(':'));
 		}
 
-		ResourceName rn = new ResourceName();
-		fromSegments(rn, segments);
-		return rn;
+		return segments;
 	}
 
-	protected static void fromSegments(ResourceName rn, String... segments)
+	protected void setSegments(String... segments)
 	throws ParseException
 	{
-		rn.setNamespace(segments[0].isEmpty() ? null : segments[0]);
-		rn.setResourcePath(ResourcePath.parse(segments[1]));
+		setNamespace(segments[0].isEmpty() ? null : segments[0]);
+		setResourcePath(ResourcePath.parse(segments[segments.length - 1]));
 	}
 }

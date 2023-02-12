@@ -75,7 +75,7 @@ implements Buildable
 	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
-		return tuple(UserSet.parse(userset), relation, ResourceName.parse(resource));
+		return tuple(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	public NamespaceConfigurationBuilder tuple(UserSet userset, String relation, ResourceName resource)

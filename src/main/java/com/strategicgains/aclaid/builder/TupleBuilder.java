@@ -44,7 +44,7 @@ extends AbstractChildBuildable
 			workingTuple = cloneCurrent();
 		}
 
-		workingTuple.setResource(ResourceName.parse(resource));
+		workingTuple.setResource(new ResourceName(resource));
 		return this;
 	}
 

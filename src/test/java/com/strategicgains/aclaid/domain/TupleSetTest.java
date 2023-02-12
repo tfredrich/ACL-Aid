@@ -91,7 +91,7 @@ public class TupleSetTest
 	public void testReadEditorsForRoadmap()
 	throws ParseException
 	{
-		LocalTupleSet tupleSet = ts.read(EDITOR_RELATION, ResourceName.parse(DOC_ROADMAP));
+		LocalTupleSet tupleSet = ts.read(EDITOR_RELATION, new ResourceName(DOC_ROADMAP));
 		assertNotNull(tupleSet);
 		assertEquals(2, tupleSet.size());
 	}

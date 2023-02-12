@@ -91,7 +91,7 @@ public class AccessControl
 	public boolean check(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return check(UserSet.parse(userset), relation, ResourceName.parse(resource));
+		return check(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	/**

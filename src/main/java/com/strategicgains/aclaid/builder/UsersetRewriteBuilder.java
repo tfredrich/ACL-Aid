@@ -40,7 +40,7 @@ public class UsersetRewriteBuilder
 	public UsersetRewriteBuilder rule(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return rule(UserSet.parse(userset), relation, ResourceName.parse(resource));
+		return rule(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	public UsersetRewriteBuilder rule(UserSet userset, String relation, ResourceName resource)

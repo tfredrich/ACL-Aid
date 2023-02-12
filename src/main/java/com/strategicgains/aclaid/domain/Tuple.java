@@ -58,7 +58,7 @@ public class Tuple
 	public Tuple(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
-		this(UserSet.parse(userset), relation, ResourceName.parse(resource));
+		this(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	public Tuple(Tuple tuple)
@@ -214,7 +214,7 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation#resource: " + tuple, 0);
 
-		return new Tuple(UserSet.parse(obj[0]), rel[0], ResourceName.parse(rel[1]));
+		return new Tuple(UserSet.parse(obj[0]), rel[0], new ResourceName(rel[1]));
 	}
 
 	/*
@@ -233,6 +233,6 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation@userset: " + tuple, 0);
 
-		return new Tuple(UserSet.parse(rel[1]), rel[0], ResourceName.parse(obj[0]));
+		return new Tuple(UserSet.parse(rel[1]), rel[0], new ResourceName(obj[0]));
 	}
 }

@@ -90,7 +90,7 @@ implements TupleSet
 	public Tuple readOne(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return readOne(UserSet.parse(userset), relation, ResourceName.parse(resource));
+		return readOne(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	// Read a single tuple.
@@ -124,7 +124,7 @@ implements TupleSet
 	public LocalTupleSet add(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return add(UserSet.parse(userset), relation, ResourceName.parse(resource));
+		return add(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	@Override

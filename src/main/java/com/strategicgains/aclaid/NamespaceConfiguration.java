@@ -36,7 +36,7 @@ public class NamespaceConfiguration
 	public boolean check(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return check(UserSet.parse(userset), relation, ResourceName.parse(resource));
+		return check(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	public boolean check(UserSet userset, String relation, ResourceName resource)

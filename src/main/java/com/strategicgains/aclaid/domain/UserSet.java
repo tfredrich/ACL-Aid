@@ -55,7 +55,7 @@ public class UserSet
 
 		
 		UserSet userset = new UserSet();
-		userset.setResource(ResourceName.parse(segments[0]));
+		userset.setResource(new ResourceName(segments[0]));
 
 		if (segments.length == 2)
 		{
