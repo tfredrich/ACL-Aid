@@ -121,7 +121,7 @@ public class Statement
 	}
 
 	/**
-	 * If more-than one condition is added, the conditions are added to an underlying {@link AggregateCondition}.
+	 * If more-than one condition is added, the conditions are added to an underlying {@link AnyOfCondition}.
 	 * If any of the conditions return true, access is granted.
 	 * 
 	 * @param condition
@@ -131,13 +131,13 @@ public class Statement
 	{
 		if (hasCondition() && this.condition != condition)
 		{
-			if (AggregateCondition.class.isAssignableFrom(this.condition.getClass()))
+			if (AnyOfCondition.class.isAssignableFrom(this.condition.getClass()))
 			{
-				((AggregateCondition) this.condition).add(condition);
+				((AnyOfCondition) this.condition).add(condition);
 			}
 			else
 			{
-				AggregateCondition aa = new AggregateCondition()
+				Condition aa = new AnyOfCondition()
 					.add(this.condition)
 					.add(condition);
 				this.condition = aa;

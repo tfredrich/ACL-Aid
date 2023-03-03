@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * An assertion that contains multiple conditions where any of the conditions are true, returns true.
+ * An assertion that contains multiple conditions.
  * 
- * @author toddf
- * @since Mar 8, 2016
+ * @author tfredrich
+ * @since Mar 3, 2023
  */
-public class AggregateCondition
+public abstract class AbstractAggregateCondition
 implements Condition
 {
 	private List<Condition> conditions = new ArrayList<>();
@@ -29,7 +29,7 @@ implements Condition
 	 * @param condition
 	 * @return this instance for method chaining.
 	 */
-	public AggregateCondition add(Condition condition)
+	public AbstractAggregateCondition add(Condition condition)
 	{
 		if (!conditions.contains(condition))
 		{
@@ -37,18 +37,5 @@ implements Condition
 		}
 
 		return this;
-	}
-
-	/**
-	 * Tests the aggregated conditions, returning true on the first condition that returns true. Otherwise, returns false.
-	 * 
-	 * @param context
-	 * @param statement
-	 * @param relation
-	 */
-	@Override
-	public boolean test(PolicyContext context, Statement statement, String relation)
-	{
-		return conditions.stream().anyMatch(c -> c.test(context, statement, relation));
 	}
 }
