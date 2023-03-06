@@ -110,7 +110,7 @@ public class AccessControl
 
 	private boolean checkNamespace(String namespace, UserSet userset, String relation, ResourceName resource)
 	{
-		NamespaceConfiguration namespaceConfiguration = namespaces.get(resource.getNamespace());
+		NamespaceConfiguration namespaceConfiguration = namespaces.get(namespace);
 
 		if (namespaceConfiguration != null && namespaceConfiguration.check(userset, relation, resource)) return true;
 
