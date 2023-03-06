@@ -88,7 +88,7 @@ extends ResourceName
 			}
 			catch(IllegalArgumentException e)
 			{
-				throw new ParseException("Invalid Organization UUID", 0);
+				throw new ParseException("Invalid Organization ID: " + segments[1], 2);
 			}
 		}
 
@@ -100,10 +100,16 @@ extends ResourceName
 			}
 			catch(IllegalArgumentException e)
 			{
-				throw new ParseException("Invalid Account UUID", 0);
+				throw new ParseException("Invalid Account ID: " + segments[2], 3);
 			}
 		}
 
 		super.setSegments(segments);
+	}
+
+	public static MultitenantResourceName parse(String string)
+	throws ParseException
+	{
+		return new MultitenantResourceName(string);
 	}
 }
