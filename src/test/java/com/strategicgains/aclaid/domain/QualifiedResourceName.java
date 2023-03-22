@@ -3,13 +3,13 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 import java.util.UUID;
 
-public class MultitenantResourceName
+public class QualifiedResourceName
 extends ResourceName
 {
 	private UUID accountId;
 	private UUID organizationId;
 
-	public MultitenantResourceName(String string)
+	public QualifiedResourceName(String string)
 	throws ParseException
 	{
 		super(string, DEFAULT_SEGMENT_COUNT + 2);
@@ -56,7 +56,7 @@ extends ResourceName
 	@Override
 	protected boolean segmentsMatch(ResourceName other)
 	{
-		MultitenantResourceName that = (MultitenantResourceName) other;
+		QualifiedResourceName that = (QualifiedResourceName) other;
 		boolean orgMatches = (!this.hasOrganizationId() || !that.hasOrganizationId());
 
 		if (!orgMatches)
@@ -107,9 +107,9 @@ extends ResourceName
 		super.setSegments(segments);
 	}
 
-	public static MultitenantResourceName parse(String string)
+	public static QualifiedResourceName parse(String string)
 	throws ParseException
 	{
-		return new MultitenantResourceName(string);
+		return new QualifiedResourceName(string);
 	}
 }

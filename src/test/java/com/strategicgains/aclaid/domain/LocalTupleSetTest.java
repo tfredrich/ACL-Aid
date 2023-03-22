@@ -9,7 +9,7 @@ import java.text.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TupleSetTest
+public class LocalTupleSetTest
 {
 	private static final String DOCUMENT_NAMESPACE = "doc";
 	private static final String ORGANIZATION_NAMESPACE = "org";

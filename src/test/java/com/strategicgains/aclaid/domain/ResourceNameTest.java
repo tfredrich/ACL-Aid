@@ -111,13 +111,13 @@ public class ResourceNameTest
 	public void ShouldParseMultitenantStrings()
 	throws ParseException
 	{
-		MultitenantResourceName a = new MultitenantResourceName("namespace:::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		QualifiedResourceName a = new QualifiedResourceName("namespace:::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertMultiQrn(a, "namespace", "", "", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
-		MultitenantResourceName b = new MultitenantResourceName("namespace:::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		QualifiedResourceName b = new QualifiedResourceName("namespace:::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertMultiQrn(b, "namespace", "", "", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
-		MultitenantResourceName c = new MultitenantResourceName("namespace:b17544eb-f533-4c92-a4be-1a6391600ec5:d79e866b-a24c-4a27-906c-5985dbc6e378:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		QualifiedResourceName c = new QualifiedResourceName("namespace:b17544eb-f533-4c92-a4be-1a6391600ec5:d79e866b-a24c-4a27-906c-5985dbc6e378:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertMultiQrn(c, "namespace", "b17544eb-f533-4c92-a4be-1a6391600ec5", "d79e866b-a24c-4a27-906c-5985dbc6e378", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
-		MultitenantResourceName d = new MultitenantResourceName("namespace:b17544eb-f533-4c92-a4be-1a6391600ec5:d79e866b-a24c-4a27-906c-5985dbc6e378:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		QualifiedResourceName d = new QualifiedResourceName("namespace:b17544eb-f533-4c92-a4be-1a6391600ec5:d79e866b-a24c-4a27-906c-5985dbc6e378:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertMultiQrn(d, "namespace", "b17544eb-f533-4c92-a4be-1a6391600ec5", "d79e866b-a24c-4a27-906c-5985dbc6e378", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 
 		assertTrue(a.matches(b));
@@ -133,15 +133,15 @@ public class ResourceNameTest
 	throws ParseException
 	{
 		String aString = "namespace:::directories/d79e866b-a24c-4a27-906c-5985dbc6e378";
-		MultitenantResourceName a = new MultitenantResourceName(aString);
+		QualifiedResourceName a = new QualifiedResourceName(aString);
 		String bString = "namespace:b17544eb-f533-4c92-a4be-1a6391600ec5:d79e866b-a24c-4a27-906c-5985dbc6e378:directories/d79e866b-a24c-4a27-906c-5985dbc6e378";
-		MultitenantResourceName b = new MultitenantResourceName(bString);
+		QualifiedResourceName b = new QualifiedResourceName(bString);
 
 		assertEquals(aString, a.toString());
 		assertEquals(bString, b.toString());
 	}
 
-	private void assertMultiQrn(MultitenantResourceName qrn, String namespace, String org, String account, String path)
+	private void assertMultiQrn(QualifiedResourceName qrn, String namespace, String org, String account, String path)
 	{
 		assertQrn(qrn, namespace, path);
 		assertEquals(org, qrn.hasOrganizationId() ? qrn.getOrganizationId().toString() : "");
