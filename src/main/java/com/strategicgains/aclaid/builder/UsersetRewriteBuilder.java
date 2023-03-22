@@ -5,12 +5,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.strategicgains.aclaid.domain.ChildOfRewriteRule;
+import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.Relation;
 import com.strategicgains.aclaid.domain.ResourceName;
-import com.strategicgains.aclaid.domain.Rule;
-import com.strategicgains.aclaid.domain.RuleSet;
-import com.strategicgains.aclaid.domain.RulesSetRewriteRule;
+import com.strategicgains.aclaid.domain.Tuple;
+import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.UsersetRewriteRuleImpl;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
@@ -18,7 +19,7 @@ public class UsersetRewriteBuilder
 {
 	private RelationBuilder parentBuilder;
 	private Set<String> parentRelations;
-	private RuleSet rules;
+	private TupleSet rules;
 
 	public UsersetRewriteBuilder(RelationBuilder parent)
 	{
@@ -38,19 +39,20 @@ public class UsersetRewriteBuilder
 	}
 
 	public UsersetRewriteBuilder rule(String userset, String relation, String resource)
-	throws ParseException
+	throws ParseException, InvalidTupleException
 	{
 		return rule(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	public UsersetRewriteBuilder rule(UserSet userset, String relation, ResourceName resource)
+	throws InvalidTupleException
 	{
 		if (rules == null)
 		{
-			rules = new RuleSet();
+			rules = new LocalTupleSet();
 		}
 
-		rules.add(new Rule(userset, relation, resource));
+		rules.add(new Tuple(userset, relation, resource));
 		return this;
 	}
 
@@ -94,7 +96,7 @@ public class UsersetRewriteBuilder
 	{
 		if (rules != null)
 		{
-			r.addRewriteRule(new RulesSetRewriteRule(rules));
+			r.addRewriteRule(new UsersetRewriteRuleImpl(rules));
 		}
 	}
 

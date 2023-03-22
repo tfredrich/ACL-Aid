@@ -2,12 +2,12 @@ package com.strategicgains.aclaid.domain;
 
 import com.strategicgains.aclaid.NamespaceConfiguration;
 
-public class RulesSetRewriteRule
+public class UsersetRewriteRuleImpl
 implements UsersetRewriteRule
 {
-	private RuleSet rules;
+	private TupleSet rules;
 
-	public RulesSetRewriteRule(RuleSet rules)
+	public UsersetRewriteRuleImpl(TupleSet rules)
 	{
 		super();
 		this.rules = rules;
