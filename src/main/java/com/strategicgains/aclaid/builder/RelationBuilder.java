@@ -4,7 +4,7 @@ import com.strategicgains.aclaid.NamespaceConfiguration;
 import com.strategicgains.aclaid.domain.Relation;
 
 public class RelationBuilder
-extends AbstractChildBuildable
+extends AbstractChildBuildable<NamespaceConfigurationBuilder>
 {
 	private String name;
 	private UsersetRewriteBuilder rewrites;

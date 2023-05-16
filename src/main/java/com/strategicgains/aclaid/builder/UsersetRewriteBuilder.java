@@ -1,107 +1,35 @@
 package com.strategicgains.aclaid.builder;
 
-import java.text.ParseException;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.strategicgains.aclaid.domain.ChildOfRewriteRule;
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.Relation;
-import com.strategicgains.aclaid.domain.ResourceName;
-import com.strategicgains.aclaid.domain.Tuple;
-import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.domain.UsersetRewriteRuleImpl;
-import com.strategicgains.aclaid.exception.InvalidTupleException;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class UsersetRewriteBuilder
+extends AbstractChildBuildable<RelationBuilder>
 {
-	private RelationBuilder parentBuilder;
-	private Set<String> parentRelations;
-	private TupleSet rules;
+	private List<UnionBuilder> unions;
 
 	public UsersetRewriteBuilder(RelationBuilder parent)
 	{
-		super();
-		this.parentBuilder = parent;
+		super(parent);
 	}
 
-	public UsersetRewriteBuilder childOf(String parentRelation)
+	public UnionBuilder union()
 	{
-		if (this.parentRelations == null)
+		UnionBuilder builder = new UnionBuilder(this);
+
+		if (unions == null)
 		{
-			this.parentRelations = new HashSet<>();
+			unions = new ArrayList<>();
 		}
 
-		this.parentRelations.add(parentRelation);
-		return this;
-	}
-
-	public UsersetRewriteBuilder rule(String userset, String relation, String resource)
-	throws ParseException, InvalidTupleException
-	{
-		return rule(UserSet.parse(userset), relation, new ResourceName(resource));
-	}
-
-	public UsersetRewriteBuilder rule(UserSet userset, String relation, ResourceName resource)
-	throws InvalidTupleException
-	{
-		if (rules == null)
-		{
-			rules = new LocalTupleSet();
-		}
-
-		rules.add(new Tuple(userset, relation, resource));
-		return this;
-	}
-
-	public UsersetRewriteBuilder tupleToUserSet(String relation, TUPLE tupleObject)
-	{
-		// TODO Auto-generated method stub
-		return this;
-	}
-
-	public NamespaceConfigurationBuilder namespace(String namespace)
-	{
-		return parentBuilder.namespace(namespace);
-	}
-
-	public RelationBuilder relation(String name)
-	{
-		return parentBuilder.relation(name);
-	}
-
-	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
-	{
-		return parentBuilder.tuple(userset, relation, resource);
+		unions.add(builder);
+		return builder;
 	}
 
 	public void apply(Relation r)
 	{
-		addChildRewriteRules(r);
-		addRuleRewrites(r);
-	}
-
-	private void addChildRewriteRules(Relation r)
-	{
-		if (parentRelations != null)
-		{
-			parentRelations.stream().forEach(p -> r.addRewriteRule(new ChildOfRewriteRule(p)));
-		}
-	}
-
-	private void addRuleRewrites(Relation r)
-	{
-		if (rules != null)
-		{
-			r.addRewriteRule(new UsersetRewriteRuleImpl(rules));
-		}
-	}
-
-	public TupleBuilder tuples()
-	{
-		return parentBuilder.tuples();
+		// TODO Auto-generated method stub		
 	}
 }

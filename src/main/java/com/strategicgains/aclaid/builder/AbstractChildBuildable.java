@@ -7,12 +7,12 @@ import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
-public abstract class AbstractChildBuildable
+public abstract class AbstractChildBuildable<T extends Buildable>
 implements Buildable
 {
-	private NamespaceConfigurationBuilder parent;
+	private T parent;
 
-	protected AbstractChildBuildable(NamespaceConfigurationBuilder parent)
+	protected AbstractChildBuildable(T parent)
 	{
 		super();
 		this.parent = parent;
