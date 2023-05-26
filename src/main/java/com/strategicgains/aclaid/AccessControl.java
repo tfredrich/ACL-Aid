@@ -25,7 +25,7 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  */
 public class AccessControl
 {
-	private Map<String, NamespaceConfiguration> namespaces = new HashMap<>();
+	private Map<String, Namespace> namespaces = new HashMap<>();
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
@@ -63,9 +63,9 @@ public class AccessControl
 	 * @param namespace the name of the namespace.
 	 * @return an existing or new, empty NamespaceConfiguration instance.
 	 */
-	public NamespaceConfiguration namespace(String namespace)
+	public Namespace namespace(String namespace)
 	{
-		return namespaces.computeIfAbsent(namespace, n -> new NamespaceConfiguration(this, namespace));
+		return namespaces.computeIfAbsent(namespace, n -> new Namespace(namespace));
 	}
 
 	/**
@@ -110,7 +110,7 @@ public class AccessControl
 
 	private boolean checkNamespace(String namespace, UserSet userset, String relation, ResourceName resource)
 	{
-		NamespaceConfiguration namespaceConfiguration = namespaces.get(namespace);
+		Namespace namespaceConfiguration = namespaces.get(namespace);
 
 		if (namespaceConfiguration != null && namespaceConfiguration.check(userset, relation, resource)) return true;
 

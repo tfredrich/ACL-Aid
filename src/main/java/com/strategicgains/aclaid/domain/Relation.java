@@ -3,18 +3,14 @@ package com.strategicgains.aclaid.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.strategicgains.aclaid.NamespaceConfiguration;
-
 public class Relation
 {
-	private NamespaceConfiguration namespace;
 	private String name;
-	private List<UsersetRewriteRule> usersetRewriteRules;
+	private List<RewriteRule> rewriteRules;
 
-	public Relation(NamespaceConfiguration namespace, String name)
+	public Relation(String name)
 	{
 		super();
-		this.namespace = namespace;
 		this.name = name;
 	}
 
@@ -33,18 +29,33 @@ public class Relation
 		return String.format("Relation: %s", name);
 	}
 
-	public void addRewriteRule(UsersetRewriteRule rule)
+	public void addRewriteRule(RewriteRule rule)
 	{
-		if (usersetRewriteRules == null)
+		if (rewriteRules == null)
 		{
-			this.usersetRewriteRules = new ArrayList<>();
+			this.rewriteRules = new ArrayList<>();
 		}
 
-		this.usersetRewriteRules.add(rule);
+		this.rewriteRules.add(rule);
 	}
 
-	public boolean checkUsersetRewrites(UserSet userset, String relation, ResourceName resource)
+	public boolean hasRewriteRules()
 	{
-		return (usersetRewriteRules != null ? usersetRewriteRules.stream().anyMatch(r -> r.matches(namespace, userset, relation, resource)) : false);
+		return (rewriteRules != null);
+	}
+
+	public TupleSet rewrite(UserSet userset, String relation, ResourceName resource)
+	{
+		if (!hasRewriteRules()) return null;
+		
+		TupleSet tuples = new LocalTupleSet();
+		rewriteRules.stream().forEach(r -> {
+			Tuple t = r.rewrite(userset, relation, resource);
+			if (t != null)
+			{
+				tuples.add(t);
+			}
+		});
+		return tuples;
 	}
 }

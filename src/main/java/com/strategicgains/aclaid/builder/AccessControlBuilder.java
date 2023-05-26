@@ -9,12 +9,12 @@ import com.strategicgains.aclaid.AccessControl;
 
 public class AccessControlBuilder
 {
-	private Map<String, NamespaceConfigurationBuilder> buildersByNamespace = new HashMap<>();
+	private Map<String, NamespaceBuilder> buildersByNamespace = new HashMap<>();
 	private Set<String> relations = new HashSet<>();
 
-	public NamespaceConfigurationBuilder namespace(String namespace)
+	public NamespaceBuilder namespace(String namespace)
 	{
-		NamespaceConfigurationBuilder current = new NamespaceConfigurationBuilder(this, namespace);
+		NamespaceBuilder current = new NamespaceBuilder(this, namespace);
 		buildersByNamespace.put(namespace, current);
 		relations.clear();
 		return current;

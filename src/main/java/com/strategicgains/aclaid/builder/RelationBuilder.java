@@ -1,15 +1,20 @@
 package com.strategicgains.aclaid.builder;
 
-import com.strategicgains.aclaid.NamespaceConfiguration;
+import java.text.ParseException;
+
+import com.strategicgains.aclaid.Namespace;
+import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.Relation;
+import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.RewriteRuleImpl;
 
 public class RelationBuilder
-extends AbstractChildBuildable<NamespaceConfigurationBuilder>
+extends AbstractChildBuildable<NamespaceBuilder>
 {
 	private String name;
-	private UsersetRewriteBuilder rewrites;
+	private TupleSet rewriteRules = new LocalTupleSet(true);
 
-	public RelationBuilder(String relation, NamespaceConfigurationBuilder parent)
+	public RelationBuilder(String relation, NamespaceBuilder parent)
 	{
 		super(parent);
 		this.name = relation;
@@ -20,26 +25,22 @@ extends AbstractChildBuildable<NamespaceConfigurationBuilder>
 		return name;
 	}
 
-	public UsersetRewriteBuilder usersetRewrite()
-	{
-		this.rewrites = new UsersetRewriteBuilder(this);
-		return this.rewrites;
-	}
-
 	public String toString()
 	{
 		return (String.format("Relation: %s", name));
 	}
 
-	Relation build(NamespaceConfiguration namespace)
+	Relation build(Namespace namespace)
 	{
 		Relation r = new Relation(namespace, name);
-		if (hasRewrites()) rewrites.apply(r);
+		r.addRewriteRule(new RewriteRuleImpl(rewriteRules));
 		return r;
 	}
 
-	private boolean hasRewrites()
+	public RelationBuilder childOf(String relation)
+	throws ParseException
 	{
-		return (rewrites != null);
+		rewriteRules.add("relation:" + relation, "parent", "relation:" + name);
+		return this;
 	}
 }

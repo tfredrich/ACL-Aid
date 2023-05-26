@@ -9,14 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.AccessControl;
-import com.strategicgains.aclaid.NamespaceConfiguration;
+import com.strategicgains.aclaid.Namespace;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
-public class NamespaceConfigurationBuilder
+public class NamespaceBuilder
 implements Buildable
 {
 	private AccessControlBuilder parent;
@@ -25,16 +25,16 @@ implements Buildable
 	private List<TupleBuilder> tupleBuilders = new ArrayList<>();
 	private List<Tuple> tuples = new ArrayList<>();
 
-	public NamespaceConfigurationBuilder(AccessControlBuilder parent, String namespace)
+	public NamespaceBuilder(AccessControlBuilder parent, String namespace)
 	{
 		super();
 		this.namespace = namespace;
 		this.parent = parent;
 	}
 
-	public NamespaceConfiguration buildRelations(AccessControl parent)
+	public Namespace buildRelations(AccessControl parent)
 	{
-		NamespaceConfiguration namespaceConfiguration = parent.namespace(namespace);
+		Namespace namespaceConfiguration = parent.namespace(namespace);
 		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build(namespaceConfiguration)));
 		return namespaceConfiguration;
 	}
@@ -55,7 +55,7 @@ implements Buildable
 		return parent;
 	}
 
-	public NamespaceConfigurationBuilder namespace(String namespace)
+	public NamespaceBuilder namespace(String namespace)
 	{
 		return parent.namespace(namespace);
 	}
@@ -72,13 +72,13 @@ implements Buildable
 		return rb;
 	}
 
-	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
+	public NamespaceBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return tuple(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
-	public NamespaceConfigurationBuilder tuple(UserSet userset, String relation, ResourceName resource)
+	public NamespaceBuilder tuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException, InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
@@ -92,7 +92,7 @@ implements Buildable
 		return parent.containsRelation(relation);
 	}
 
-	public NamespaceConfigurationBuilder tuple(String tuple)
+	public NamespaceBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException
 	{
 		tuples.add(Tuple.parse(tuple));

@@ -19,7 +19,7 @@ implements Buildable
 	}
 
 	@Override
-	public NamespaceConfigurationBuilder namespace(String name)
+	public NamespaceBuilder namespace(String name)
 	{
 		return parent.namespace(name);
 	}
@@ -31,21 +31,21 @@ implements Buildable
 	}
 
 	@Override
-	public NamespaceConfigurationBuilder tuple(String userset, String relation, String resource)
+	public NamespaceBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}
 
 	@Override
-	public NamespaceConfigurationBuilder tuple(UserSet userset, String relation, ResourceName resource)
+	public NamespaceBuilder tuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException, InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}
 
 	@Override
-	public NamespaceConfigurationBuilder tuple(String tuple)
+	public NamespaceBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException
 	{
 		return parent.tuple(tuple);

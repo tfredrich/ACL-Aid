@@ -3,8 +3,8 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
@@ -13,8 +13,11 @@ public class LocalTupleSet
 implements TupleSet
 {
 	boolean allowWildcards = false;
-	private LinkedList<UserSet> usersets = new LinkedList<>();
+
+	// The directional index of resources by user set and relation. 
 	private Map<UserSet, Map<String, Set<ResourceName>>> usersetTree = new HashMap<>();
+
+	// The directional index of user sets by resource and relation.
 	private Map<ResourceName, Map<String, Set<UserSet>>> resourceTree = new HashMap<>();
 
 	public LocalTupleSet()
@@ -33,9 +36,9 @@ implements TupleSet
 		this();
 		if (usersets == null) return;
 
-		usersets.stream().forEach(userset -> {
-			add(userset, relation, resource);
-		});
+		usersets.stream().forEach(userset -> 
+			add(userset, relation, resource)
+		);
 	}
 
 	protected LocalTupleSet(UserSet userset, String relation, Set<ResourceName> resources)
@@ -43,15 +46,15 @@ implements TupleSet
 		this();
 		if (resources == null) return;
 
-		resources.stream().forEach(resource -> {
-			add(userset, relation, resource);
-		});
+		resources.stream().forEach(resource -> 
+			add(userset, relation, resource)
+		);
 	}
 
 	@Override
 	public int size()
 	{
-		return usersets.size();
+		return usersetTree.size();
 	}
 
 	// Read all the usersets having a relation on a resource.
@@ -62,8 +65,8 @@ implements TupleSet
 
 		if (subtree == null) return null;
 
-		Set<UserSet> usersets = subtree.get(relation);
-		return new LocalTupleSet(resource, relation, usersets);
+		Set<UserSet> usersetSubtree = subtree.get(relation);
+		return new LocalTupleSet(resource, relation, usersetSubtree);
 	}
 
 	// Read all the relations a userset has on a resource.
@@ -97,22 +100,22 @@ implements TupleSet
 	@Override
 	public Tuple readOne(UserSet userset, String relation, ResourceName resource)
 	{
-		Map<String, Set<UserSet>> subtree1 = resourceTree.get(resource);
+		Map<String, Set<UserSet>> resourceSubtree = resourceTree.get(resource);
 
-		if (subtree1 == null) return null;
+		if (resourceSubtree == null) return null;
 
 		// these are the usersets with the direct relation.
-		Set<UserSet> usersets = subtree1.get(relation);
+		Set<UserSet> resourceUsersets = resourceSubtree.get(relation);
 
-		if (usersets == null) return null;
-		if (usersets.stream().anyMatch(u -> u.matches(userset)))
+		if (resourceUsersets == null) return null;
+		if (resourceUsersets.stream().anyMatch(u -> u.matches(userset)))
 		{
 			return newDynamicTuple(userset, relation, resource);
 		}
 
 		//Recursively check memberships...
-		if (usersets.stream().filter(set -> set.hasRelation()).map(set -> readOne(userset, set.getRelation(), set.getResource()))
-			.filter(t -> (t != null)).count() > 0)
+		if (resourceUsersets.stream().filter(UserSet::hasRelation).map(set -> readOne(userset, set.getRelation(), set.getResource()))
+			.filter(Objects::nonNull).count() > 0)
 		{
 			return newDynamicTuple(userset, relation, resource);
 		}
@@ -138,7 +141,6 @@ implements TupleSet
 	{
 		writeUsersetTree(tuple);
 		writeResourceTree(tuple);
-		usersets.add(tuple.getUserset());
 		return this;
 	}
 
@@ -176,7 +178,7 @@ implements TupleSet
 
 		if (relationSubtree == null) return;
 
-		Set<ResourceName> resources = relationSubtree.computeIfAbsent(tuple.getRelation(), s -> new HashSet<>());
+		Set<ResourceName> resources = relationSubtree.get(tuple.getRelation());
 
 		if (resources == null) return;
 
@@ -189,7 +191,7 @@ implements TupleSet
 
 		if (relationSubtree == null) return;
 
-		Set<UserSet> usersets = relationSubtree.computeIfAbsent(tuple.getRelation(), s -> new HashSet<>());
+		Set<UserSet> usersets = relationSubtree.get(tuple.getRelation());
 
 		if (usersets == null) return;
 

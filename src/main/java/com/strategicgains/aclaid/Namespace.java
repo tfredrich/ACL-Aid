@@ -9,17 +9,15 @@ import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 
-public class NamespaceConfiguration
+public class Namespace
 {
 	private String name;
-	private AccessControl accessControl;
 	private Map<String, Relation> relations = new HashMap<>();
 	private TupleSet tuples;
 
-	public NamespaceConfiguration(AccessControl parent, String name)
+	public Namespace(String name)
 	{
 		super();
-		this.accessControl = parent;
 		this.name = name;
 	}
 
@@ -41,19 +39,21 @@ public class NamespaceConfiguration
 
 	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
-		if (checkUsersetRewrites(userset, relation, resource)) return true;
+		TupleSet rewrites = rewrite(userset, relation, resource);
+
+		if (rewrites != null && (rewrites.readOne(relation, relation, relation) != null)) return true;
 
 		if (hasTuples())
 		{
-			return tuples.readOne(userset, relation, resource) != null;
+			return (tuples.readOne(userset, relation, resource) != null);
 		}
 
 		return false;
 	}
 
-	private boolean checkUsersetRewrites(UserSet userset, String relation, ResourceName resource)
+	private TupleSet rewrite(UserSet userset, String relation, ResourceName resource)
 	{
-		return relations.values().stream().anyMatch(r -> r.checkUsersetRewrites(userset, relation, resource));
+		return relations.values().stream().flatMap(r -> r.rewrite(userset, relation, resource));
 	}
 
 	public String getName()
