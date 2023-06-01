@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
+import java.util.Date;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
@@ -40,6 +41,7 @@ public class Tuple
 	private ResourceName resource;	// 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
 	private String relation;		// 'owner', 'viewer', 'member'
 	private UserSet userset;		// 'users:user/todd', 'users:group/B#member'
+	private Date expiresAt;
 
 	public Tuple()
 	{
@@ -67,6 +69,21 @@ public class Tuple
 		this(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
 
+	public boolean expires()
+	{
+		return (expiresAt != null);
+	}
+
+	public Date getExpiresAt()
+	{
+		return (expires() ? new Date(expiresAt.getTime()) : null);
+	}
+
+	public void setExpiresAt(Date expiresAt)
+	{
+		this.expiresAt = (expiresAt != null ? new Date(expiresAt.getTime()) : null);
+	}
+
 	public boolean hasResource()
 	{
 		return (resource != null);
@@ -80,7 +97,11 @@ public class Tuple
 	public void setResource(ResourceName resource)
 	throws InvalidTupleException
 	{
-		if (resource.isWildcard()) throw new InvalidTupleException("Wildcard resources not permitted in tuples: " + resource.toString());
+		if (resource.isWildcard())
+		{
+			throw new InvalidTupleException("Wildcard resources not permitted in tuples: " + resource.toString());
+		}
+
 		this.resource = resource;
 	}
 
@@ -185,6 +206,7 @@ public class Tuple
 	@Override
 	public String toString()
 	{
+		if (expires()) return String.format("(%s@%s#%s|%d)", userset, relation, resource, expiresAt.getTime());
 		return String.format("(%s@%s#%s)", userset, relation, resource);
 	}
 

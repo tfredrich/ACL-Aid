@@ -44,6 +44,11 @@ public class UserSet
 		setResource(that.resource);
 	}
 
+	public String getNamespace()
+	{
+		return (hasResource() ? resource.getNamespace() : null);
+	}
+
 	public static UserSet parse(String string)
 	throws ParseException
 	{
@@ -83,6 +88,11 @@ public class UserSet
 	protected boolean isUser()
 	{
 		return !hasRelation();
+	}
+
+	protected boolean hasResource()
+	{
+		return (resource != null);
 	}
 
 	protected void setResource(ResourceName resource)

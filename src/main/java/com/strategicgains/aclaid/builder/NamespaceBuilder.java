@@ -35,7 +35,7 @@ implements Buildable
 	public Namespace buildRelations(AccessControl parent)
 	{
 		Namespace namespaceConfiguration = parent.namespace(namespace);
-		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build(namespaceConfiguration)));
+		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build()));
 		return namespaceConfiguration;
 	}
 

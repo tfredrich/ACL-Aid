@@ -1,18 +1,14 @@
 package com.strategicgains.aclaid.builder;
 
-import java.text.ParseException;
-
-import com.strategicgains.aclaid.Namespace;
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.Relation;
-import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.RewriteRuleImpl;
+import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 
 public class RelationBuilder
 extends AbstractChildBuildable<NamespaceBuilder>
 {
 	private String name;
-	private TupleSet rewriteRules = new LocalTupleSet(true);
+	private UserSet rewrites;
 
 	public RelationBuilder(String relation, NamespaceBuilder parent)
 	{
@@ -30,17 +26,16 @@ extends AbstractChildBuildable<NamespaceBuilder>
 		return (String.format("Relation: %s", name));
 	}
 
-	Relation build(Namespace namespace)
+	Relation build()
 	{
-		Relation r = new Relation(namespace, name);
-		r.addRewriteRule(new RewriteRuleImpl(rewriteRules));
+		Relation r = new Relation(name);
+		r.setRewrite(rewrites);
 		return r;
 	}
 
 	public RelationBuilder childOf(String relation)
-	throws ParseException
 	{
-		rewriteRules.add("relation:" + relation, "parent", "relation:" + name);
+		rewrites = new ComputedUserSet(relation);
 		return this;
 	}
 }

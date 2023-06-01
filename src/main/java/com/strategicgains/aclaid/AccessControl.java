@@ -50,7 +50,6 @@ public class AccessControl
 	}
 
 	public AccessControl removeTuple(UserSet userset, String relation, ResourceName resource)
-	throws RelationNotRegisteredException
 	{
 		tuples.remove(userset, relation, resource);
 		return this;
@@ -104,27 +103,19 @@ public class AccessControl
 	 */
 	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
-		if (checkNamespace(resource.getNamespace(), userset, relation, resource)) return true;
-		return checkNamespace(userset.getResource().getNamespace(), userset, relation, resource);
+		TupleSet rewritten = rewrite(userset, relation, resource);
+		return (rewritten.readOne(userset, relation, resource) != null);
 	}
 
-	private boolean checkNamespace(String namespace, UserSet userset, String relation, ResourceName resource)
+	private TupleSet rewrite(UserSet userset, String relation, ResourceName resource)
 	{
-		Namespace namespaceConfiguration = namespaces.get(namespace);
-
-		if (namespaceConfiguration != null && namespaceConfiguration.check(userset, relation, resource)) return true;
-
-		return checkTuples(userset, relation, resource);
+		Namespace usersetNamespace = namespaces.get(userset.getNamespace());
+		return usersetNamespace.rewrite(tuples, userset, relation, resource);
 	}
 
 	@Override
 	public String toString()
 	{
 		return String.format("namespaces=(%s)", namespaces.keySet().stream().collect(Collectors.joining(", ")));
-	}
-
-	private boolean checkTuples(UserSet userset, String relation, ResourceName resource)
-	{
-		return (tuples.readOne(userset, relation, resource) != null);
 	}
 }

@@ -1,12 +1,9 @@
 package com.strategicgains.aclaid.domain;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Relation
 {
 	private String name;
-	private List<RewriteRule> rewriteRules;
+	private UserSet rewrites;
 
 	public Relation(String name)
 	{
@@ -29,33 +26,13 @@ public class Relation
 		return String.format("Relation: %s", name);
 	}
 
-	public void addRewriteRule(RewriteRule rule)
+	public void setRewrite(UserSet userset)
 	{
-		if (rewriteRules == null)
-		{
-			this.rewriteRules = new ArrayList<>();
-		}
-
-		this.rewriteRules.add(rule);
+		this.rewrites = userset;
 	}
 
-	public boolean hasRewriteRules()
+	public boolean hasRewrites()
 	{
-		return (rewriteRules != null);
-	}
-
-	public TupleSet rewrite(UserSet userset, String relation, ResourceName resource)
-	{
-		if (!hasRewriteRules()) return null;
-		
-		TupleSet tuples = new LocalTupleSet();
-		rewriteRules.stream().forEach(r -> {
-			Tuple t = r.rewrite(userset, relation, resource);
-			if (t != null)
-			{
-				tuples.add(t);
-			}
-		});
-		return tuples;
+		return (rewrites != null);
 	}
 }
