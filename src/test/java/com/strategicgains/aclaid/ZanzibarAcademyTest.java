@@ -237,9 +237,9 @@ public class ZanzibarAcademyTest
 	 *       child { computed_userset { relation: "editor" } }
 	 *       child { tuple_to_userset {
 	 *         tupleset { relation: "parent" }
-	 *         computed_userset {
-	 *           object: $TUPLE_USERSET_OBJECT  # parent folder
-	 *           relation: "viewer" }}}
+	 *           computed_userset {
+	 *             object: $TUPLE_USERSET_OBJECT  # parent folder
+	 *             relation: "viewer" }}}
 	 * }}}
 	 * 
 	 * name: "org"
@@ -273,8 +273,11 @@ public class ZanzibarAcademyTest
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.childOf(OWNER_RELATION)
+					// +owner on parent provides owner on document
 				.relation(VIEWER_RELATION)
 					.childOf(EDITOR_RELATION)
+					.hierarchy("viewer", "parent")
+					// +viewer on parent provides viewer on document
 
 			.namespace(ORGANIZATION_NAMESPACE)
 				.relation(MEMBER_RELATION)

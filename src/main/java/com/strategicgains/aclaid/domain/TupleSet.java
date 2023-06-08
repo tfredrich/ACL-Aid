@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
+import java.util.stream.Stream;
 
 public interface TupleSet
 extends Copyable<TupleSet>
@@ -111,5 +112,5 @@ extends Copyable<TupleSet>
 	 */
 	TupleSet remove(UserSet userset, String relation, ResourceName resource);
 
-	Iterable<Tuple> stream();
+	Stream<Tuple> stream();
 }

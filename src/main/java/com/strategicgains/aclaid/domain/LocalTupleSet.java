@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
@@ -234,7 +235,7 @@ implements TupleSet
 	}
 
 	@Override
-	public Iterable<Tuple> stream()
+	public Stream<Tuple> stream()
 	{
 		Collection<Tuple> tuples = new ArrayList<>();
 		usersetTree.forEach((u, m) -> 
@@ -248,6 +249,6 @@ implements TupleSet
 				})
 			)
 		);
-		return tuples;
+		return tuples.stream();
 	}
 }

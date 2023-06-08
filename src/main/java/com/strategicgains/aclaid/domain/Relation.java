@@ -42,6 +42,6 @@ public class Relation
 	{
 		if (!hasRewriteRules()) return new LocalTupleSet();
 
-		return rewriteRules.rewrite(tuples, userset, name);
+		return rewriteRules.rewrite(tuples, userset);
 	}
 }

@@ -40,7 +40,13 @@ extends AbstractChildBuildable<NamespaceBuilder>
 			rewrites = new RewriteRules();
 		}
 
-		rewrites.add(new ComputedUserSet(relation));
+		rewrites.add(new ComputedUserSet(relation, name));
 		return this;
+	}
+
+	public AccessControlBuilder hierarchy(String string, String string2)
+	{
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
