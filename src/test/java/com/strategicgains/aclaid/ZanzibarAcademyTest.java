@@ -127,7 +127,7 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR_RELATION)
 					.childOf(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
-					.childOf(OWNER_RELATION)
+					.childOf(EDITOR_RELATION)
 
 			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
 			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)

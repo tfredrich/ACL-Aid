@@ -1,6 +1,8 @@
 package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,6 +51,14 @@ implements TupleSet
 		resources.stream().forEach(resource -> 
 			add(userset, relation, resource)
 		);
+	}
+
+	public LocalTupleSet(LocalTupleSet that)
+	{
+		this();
+		this.allowWildcards = that.allowWildcards;
+		this.usersetTree = new HashMap<>(that.usersetTree);
+		this.resourceTree = new HashMap<>(that.resourceTree);
 	}
 
 	@Override
@@ -158,6 +168,12 @@ implements TupleSet
 		return remove(newDynamicTuple(userset, relation, resource));
 	}
 
+	@Override
+	public TupleSet copy()
+	{
+		return new LocalTupleSet(this);
+	}
+
 	private void writeUsersetTree(Tuple tuple)
 	{
 		Map<String, Set<ResourceName>> relationSubtree = usersetTree.computeIfAbsent(tuple.getUserset(), t -> new HashMap<>());
@@ -208,5 +224,30 @@ implements TupleSet
 		{
 			return null;
 		}
+	}
+
+	@Override
+	public TupleSet addAll(TupleSet tupleset)
+	{
+		tupleset.stream().forEach(this::add);
+		return this;
+	}
+
+	@Override
+	public Iterable<Tuple> stream()
+	{
+		Collection<Tuple> tuples = new ArrayList<>();
+		usersetTree.forEach((u, m) -> 
+			m.forEach((r, s) -> 
+				s.stream().forEach(o -> {
+					Tuple t = newDynamicTuple(u, r, o);
+					if (t != null)
+					{
+						tuples.add(t);
+					}
+				})
+			)
+		);
+		return tuples;
 	}
 }

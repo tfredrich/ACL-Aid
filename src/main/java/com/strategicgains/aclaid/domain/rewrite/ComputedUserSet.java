@@ -1,8 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class ComputedUserSet
 extends UserSet
@@ -11,11 +9,5 @@ extends UserSet
 	{
 		super();
 		setRelation(relation);
-	}
-
-	public Tuple compute(Tuple tuple)
-	throws InvalidTupleException
-	{
-		return new Tuple(tuple.getUserset(), getRelation(), tuple.getResource());
 	}
 }

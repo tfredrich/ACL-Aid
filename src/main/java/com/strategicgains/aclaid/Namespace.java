@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.strategicgains.aclaid.domain.Relation;
-import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 
@@ -44,9 +43,10 @@ public class Namespace
 		return relations.get(parent);
 	}
 
-	public TupleSet rewrite(TupleSet tuples, UserSet userset, String relation, ResourceName resource)
+	public TupleSet rewrite(TupleSet tuples, UserSet userset)
 	{
-		// TODO Auto-generated method stub
-		return null;
+		TupleSet copy = tuples.copy();
+		relations.forEach((n, r) -> copy.addAll(r.rewrite(tuples, userset)));
+		return copy;
 	}
 }

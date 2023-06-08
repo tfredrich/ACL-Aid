@@ -2,10 +2,11 @@ package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
 
-public interface TupleSet {
-
+public interface TupleSet
+extends Copyable<TupleSet>
+{
 	int size();
-
+	
 	/**
 	 * Read all the usersets having a relation on a resource.
 	 * 
@@ -63,6 +64,14 @@ public interface TupleSet {
 	TupleSet add(Tuple tuple);
 
 	/**
+	 * Add all the tuples from one tuple set to this one.
+	 * 
+	 * @param tupleset
+	 * @return
+	 */
+	TupleSet addAll(TupleSet tupleset);
+
+	/**
 	 * Create a new tuple using the given resource, relation and userset then add it to the tuple set.
 	 * 
 	 * @param userset
@@ -101,4 +110,6 @@ public interface TupleSet {
 	 * @return
 	 */
 	TupleSet remove(UserSet userset, String relation, ResourceName resource);
+
+	Iterable<Tuple> stream();
 }

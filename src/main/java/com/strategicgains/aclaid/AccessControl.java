@@ -60,7 +60,7 @@ public class AccessControl
 	 * Changes to the instance make changes to this AccessControl.
 	 * 
 	 * @param namespace the name of the namespace.
-	 * @return an existing or new, empty NamespaceConfiguration instance.
+	 * @return an existing or new, empty Namespace instance.
 	 */
 	public Namespace namespace(String namespace)
 	{
@@ -103,14 +103,14 @@ public class AccessControl
 	 */
 	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
-		TupleSet rewritten = rewrite(userset, relation, resource);
+		TupleSet rewritten = usersetRewrite(userset, resource);
 		return (rewritten.readOne(userset, relation, resource) != null);
 	}
 
-	private TupleSet rewrite(UserSet userset, String relation, ResourceName resource)
+	private TupleSet usersetRewrite(UserSet userset, ResourceName resource)
 	{
-		Namespace usersetNamespace = namespaces.get(userset.getNamespace());
-		return usersetNamespace.rewrite(tuples, userset, relation, resource);
+		Namespace resourceNamespace = namespaces.get(resource.getNamespace());
+		return resourceNamespace.rewrite(tuples, userset);
 	}
 
 	@Override

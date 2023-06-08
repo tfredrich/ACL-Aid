@@ -1,9 +1,11 @@
 package com.strategicgains.aclaid.domain;
 
+import com.strategicgains.aclaid.domain.rewrite.RewriteRules;
+
 public class Relation
 {
 	private String name;
-	private UserSet rewrites;
+	private RewriteRules rewriteRules;
 
 	public Relation(String name)
 	{
@@ -26,13 +28,20 @@ public class Relation
 		return String.format("Relation: %s", name);
 	}
 
-	public void setRewrite(UserSet userset)
+	public void setRewriteRules(RewriteRules rewriteRules)
 	{
-		this.rewrites = userset;
+		this.rewriteRules = rewriteRules;
 	}
 
-	public boolean hasRewrites()
+	public boolean hasRewriteRules()
 	{
-		return (rewrites != null);
+		return (rewriteRules != null);
+	}
+
+	public TupleSet rewrite(TupleSet tuples, UserSet userset)
+	{
+		if (!hasRewriteRules()) return new LocalTupleSet();
+
+		return rewriteRules.rewrite(tuples, userset, name);
 	}
 }
