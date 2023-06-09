@@ -51,10 +51,12 @@ public class AccessControlTest
 			.namespace(DOCUMENTS_NAMESPACE)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
+					.childOf(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
+					.childOf(OWNER_RELATION)
 				.relation(ADMINISTRATOR_RELATION)
 //					.usersetRewrite()
-//						.childOf(OWNER_RELATION)
+					.childOf(OWNER_RELATION)
 					// These are tuples that can have wildcards in the resource.
 //					.rule(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS)
 //					.rule(EVERYONE_USERSET, VIEWER_RELATION, ALL_DOCS)
@@ -66,7 +68,7 @@ public class AccessControlTest
 				.relation(MEMBER_RELATION)
 //					.usersetRewrite()
 
-				.tuple(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
+//				.tuple(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
 
 				// DSL-built multiple tuples
 				.tuples()
@@ -76,6 +78,8 @@ public class AccessControlTest
 							.withUserset(BOB)
 							.withUserset(SALLY)
 							.withUserset(BETTY)
+				// Single tuples
+				.tuple(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, DOC_1234)
 			;
 
 		this.acl = builder.build();
@@ -117,7 +121,7 @@ public class AccessControlTest
 		assertTrue(acl.check(TODD, OWNER_RELATION, DOC_1234));
 		assertTrue(acl.check(TODD, VIEWER_RELATION, DOC_1234));
 		assertTrue(acl.check(TODD, ADMINISTRATOR_RELATION, DOC_1234));
-		assertTrue(acl.check(JASMINE, VIEWER_RELATION, DOC_1234));
 		assertFalse(acl.check(JASMINE, OWNER_RELATION, DOC_1234));
+		assertTrue(acl.check(JASMINE, VIEWER_RELATION, DOC_1234));
 	}
 }
