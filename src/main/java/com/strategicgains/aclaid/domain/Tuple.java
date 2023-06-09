@@ -257,4 +257,14 @@ public class Tuple
 
 		return new Tuple(UserSet.parse(rel[1]), rel[0], new ResourceName(obj[0]));
 	}
+
+	public String getUsersetRelation()
+	{
+		return (hasUserset() ? getUserset().getRelation() : null);
+	}
+
+	public ResourceName getUsersetResource()
+	{
+		return (hasUserset() ? getUserset().getResource() : null);
+	}
 }

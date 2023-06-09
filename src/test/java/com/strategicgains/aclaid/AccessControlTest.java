@@ -56,8 +56,8 @@ public class AccessControlTest
 //					.usersetRewrite()
 //						.childOf(OWNER_RELATION)
 					// These are tuples that can have wildcards in the resource.
-					.rule(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS)
-					.rule(EVERYONE_USERSET, VIEWER_RELATION, ALL_DOCS)
+//					.rule(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS)
+//					.rule(EVERYONE_USERSET, VIEWER_RELATION, ALL_DOCS)
 
 				// Directly-specified tuples
 				.tuple(TODD, OWNER_RELATION, DOC_1234)

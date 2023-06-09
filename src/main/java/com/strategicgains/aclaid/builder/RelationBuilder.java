@@ -44,9 +44,9 @@ extends AbstractChildBuildable<NamespaceBuilder>
 		return this;
 	}
 
-	public AccessControlBuilder hierarchy(String string, String string2)
+	public RelationBuilder hierarchy(String string, String string2)
 	{
 		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 }

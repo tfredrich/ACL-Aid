@@ -17,7 +17,11 @@ public class RewriteRules
 
 		computedUserSets.stream().forEach(u -> {
 			TupleSet rewrite = tuples.read(userset, u.getParent());
-			rewrite.stream().forEach(t -> rewrites.add(u.compute(t)));
+
+			if (rewrite != null)
+			{
+				rewrite.stream().forEach(t -> rewrites.add(u.compute(t)));
+			}
 		});
 
 		return rewrites;
