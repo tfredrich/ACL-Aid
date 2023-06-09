@@ -17,6 +17,8 @@ import java.util.Objects;
 **/
 public class UserSet
 {
+	public static final UserSet EMPTY = new UserSet();
+
 	private ResourceName resource;
 	private String relation;
 
