@@ -103,14 +103,14 @@ public class AccessControl
 	 */
 	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
-		TupleSet rewritten = usersetRewrite(userset, resource);
+		TupleSet rewritten = usersetRewrite(userset, relation, resource);
 		return (rewritten.readOne(userset, relation, resource) != null);
 	}
 
-	private TupleSet usersetRewrite(UserSet userset, ResourceName resource)
+	private TupleSet usersetRewrite(UserSet userset, String relation, ResourceName resource)
 	{
 		Namespace resourceNamespace = namespaces.get(resource.getNamespace());
-		return resourceNamespace.rewrite(tuples, userset);
+		return resourceNamespace.rewrite(tuples, new Tuple(userset, relation, resource));
 	}
 
 	@Override

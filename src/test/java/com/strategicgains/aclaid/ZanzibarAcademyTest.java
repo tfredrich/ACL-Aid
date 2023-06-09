@@ -274,10 +274,11 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR_RELATION)
 					.childOf(OWNER_RELATION)
 					// +owner on parent provides owner on document
+					.ownedBy(OWNER_RELATION, PARENT_RELATION)
 				.relation(VIEWER_RELATION)
 					.childOf(EDITOR_RELATION)
-					.hierarchy("viewer", "parent")
 					// +viewer on parent provides viewer on document
+					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
 
 			.namespace(ORGANIZATION_NAMESPACE)
 				.relation(MEMBER_RELATION)

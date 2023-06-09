@@ -4,31 +4,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
 
 public class RewriteRules
+implements RewriteRule
 {
-	private List<ComputedUserSet> computedUserSets = new ArrayList<>();
+	private List<RewriteRule> rules = new ArrayList<>();
 
-	public TupleSet rewrite(TupleSet tuples, UserSet userset)
+	public void add(RewriteRule rule)
+	{
+		rules.add(rule);
+	}
+
+	@Override
+	public TupleSet rewrite(TupleSet set, Tuple tuple)
 	{
 		TupleSet rewrites = new LocalTupleSet();
 
-		computedUserSets.stream().forEach(u -> {
-			TupleSet rewrite = tuples.read(userset, u.getParent());
-
-			if (rewrite != null)
-			{
-				rewrite.stream().forEach(t -> rewrites.add(u.compute(t)));
-			}
-		});
-
+		rules
+			.stream()
+			.map(rule -> rule.rewrite(set, tuple))
+			.forEach(rewrites::addAll);
 		return rewrites;
-	}
-
-	public void add(ComputedUserSet computedUserSet)
-	{
-		computedUserSets.add(computedUserSet);
 	}
 }

@@ -3,14 +3,14 @@ package com.strategicgains.aclaid;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.strategicgains.aclaid.domain.Relation;
+import com.strategicgains.aclaid.domain.RelationDefinition;
+import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
 
 public class Namespace
 {
 	private String name;
-	private Map<String, Relation> relations = new HashMap<>();
+	private Map<String, RelationDefinition> relations = new HashMap<>();
 
 	public Namespace(String name)
 	{
@@ -18,7 +18,7 @@ public class Namespace
 		this.name = name;
 	}
 
-	public void addRelation(Relation relation)
+	public void addRelation(RelationDefinition relation)
 	{
 		relations.put(relation.getName(), relation);
 	}
@@ -38,15 +38,15 @@ public class Namespace
 		return (String.format("namespace: %s", getName()));
 	}
 
-	public Relation relation(String parent)
+	public RelationDefinition relation(String parent)
 	{
 		return relations.get(parent);
 	}
 
-	public TupleSet rewrite(TupleSet tuples, UserSet userset)
+	public TupleSet rewrite(TupleSet tuples, Tuple tuple)
 	{
 		TupleSet copy = tuples.copy();
-		relations.forEach((n, r) -> copy.addAll(r.rewrite(tuples, userset)));
+		relations.values().forEach(relation -> copy.addAll(relation.rewrite(tuples, tuple)));
 		return copy;
 	}
 }

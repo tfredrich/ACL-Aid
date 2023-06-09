@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-public interface Child<T>
-extends Computable<T>
+public interface Child
+extends RewriteRule
 {
-
 }

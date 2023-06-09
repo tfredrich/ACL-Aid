@@ -3,8 +3,6 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 import java.util.Date;
 
-import com.strategicgains.aclaid.exception.InvalidTupleException;
-
 /**
  * This is the Zanzibar Tuple containing an Object, Relation and User[set].
  * 
@@ -49,7 +47,6 @@ public class Tuple
 	}
 
 	public Tuple(UserSet userset, String relation, ResourceName resource)
-	throws InvalidTupleException
 	{
 		this();
 		setResource(resource);
@@ -58,13 +55,12 @@ public class Tuple
 	}
 
 	public Tuple(String userset, String relation, String resource)
-	throws ParseException, InvalidTupleException
+	throws ParseException
 	{
 		this(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	public Tuple(Tuple tuple)
-	throws InvalidTupleException
 	{
 		this(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
@@ -95,12 +91,11 @@ public class Tuple
 	}
 
 	public void setResource(ResourceName resource)
-	throws InvalidTupleException
 	{
-		if (resource.isWildcard())
-		{
-			throw new InvalidTupleException("Wildcard resources not permitted in tuples: " + resource.toString());
-		}
+//		if (resource.isWildcard())
+//		{
+//			throw new InvalidTupleException("Wildcard resources not permitted in tuples: " + resource.toString());
+//		}
 
 		this.resource = resource;
 	}
@@ -116,9 +111,8 @@ public class Tuple
 	}
 
 	public void setUserset(UserSet userset)
-	throws InvalidTupleException
 	{
-		if (userset.getResource().isWildcard()) throw new InvalidTupleException("Wildcard usersets not permitted in tuples: " + userset.toString());
+//		if (userset.getResource().isWildcard()) throw new InvalidTupleException("Wildcard usersets not permitted in tuples: " + userset.toString());
 		this.userset = userset;
 	}
 
@@ -226,7 +220,7 @@ public class Tuple
 	 * User[set]@relation#resource
 	 */
 	public static Tuple parse(String tuple)
-	throws ParseException, InvalidTupleException
+	throws ParseException
 	{
 		String[] obj = tuple.split("@");
 
@@ -245,7 +239,7 @@ public class Tuple
 	 * resource#relation@user[set]
 	 */
 	public static Tuple parseZanzibar(String tuple)
-	throws ParseException, InvalidTupleException
+	throws ParseException
 	{
 		String[] obj = tuple.split("#");
 

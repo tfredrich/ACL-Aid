@@ -1,13 +1,14 @@
 package com.strategicgains.aclaid.domain;
 
+import com.strategicgains.aclaid.domain.rewrite.Child;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRules;
 
-public class Relation
+public class RelationDefinition
 {
 	private String name;
 	private RewriteRules rewriteRules;
 
-	public Relation(String name)
+	public RelationDefinition(String name)
 	{
 		super();
 		this.name = name;
@@ -28,9 +29,14 @@ public class Relation
 		return String.format("Relation: %s", name);
 	}
 
-	public void setRewriteRules(RewriteRules rewriteRules)
+	public void addRewriteRule(Child child)
 	{
-		this.rewriteRules = rewriteRules;
+		if (rewriteRules == null)
+		{
+			rewriteRules = new RewriteRules();
+		}
+	
+		rewriteRules.add(child);
 	}
 
 	public boolean hasRewriteRules()
@@ -38,10 +44,10 @@ public class Relation
 		return (rewriteRules != null);
 	}
 
-	public TupleSet rewrite(TupleSet tuples, UserSet userset)
+	public TupleSet rewrite(TupleSet tuples, Tuple tuple)
 	{
-		if (!hasRewriteRules()) return new LocalTupleSet();
+		if (!hasRewriteRules()) return LocalTupleSet.EMPTY;
 
-		return rewriteRules.rewrite(tuples, userset);
+		return rewriteRules.rewrite(tuples, tuple);
 	}
 }

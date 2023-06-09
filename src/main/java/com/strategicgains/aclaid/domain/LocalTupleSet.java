@@ -9,19 +9,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
-import com.strategicgains.aclaid.exception.InvalidTupleException;
-
 public class LocalTupleSet
 implements TupleSet
 {
+	public static final LocalTupleSet EMPTY = new LocalTupleSet();
+
 	boolean allowWildcards = false;
 
-	// The directional index of resources by user set and relation. 
-//	private Map<UserSet, Map<String, Set<ResourceName>>> usersetTree = new HashMap<>();
+	// The directional index of relation tuples by user set and relation. 
 	private Map<UserSet, Map<String, Set<Tuple>>> usersetTree = new HashMap<>();
 
-	// The directional index of user sets by resource and relation.
-//	private Map<ResourceName, Map<String, Set<UserSet>>> resourceTree = new HashMap<>();
+	// The directional index of relation tuples by resource and relation.
 	private Map<ResourceName, Map<String, Set<Tuple>>> resourceTree = new HashMap<>();
 
 	public LocalTupleSet()
@@ -83,7 +81,8 @@ implements TupleSet
 
 		if (subtree == null) return null;
 
-		return new LocalTupleSet(subtree.get(relation));
+		Set<Tuple> tuples = subtree.get(relation);
+		return (tuples != null ? new LocalTupleSet(tuples) : null);
 	}
 
 	// Read all the relations a userset has on a resource.
@@ -222,14 +221,7 @@ implements TupleSet
 
 	private Tuple newDynamicTuple(UserSet userset, String relation, ResourceName resource)
 	{
-		try
-		{
-			return new Tuple(userset, relation, resource);
-		}
-		catch (InvalidTupleException e)
-		{
-			return null;
-		}
+		return new Tuple(userset, relation, resource);
 	}
 
 	@Override
@@ -245,14 +237,7 @@ implements TupleSet
 		Collection<Tuple> tuples = new ArrayList<>();
 		usersetTree.forEach((u, m) -> 
 			m.forEach((r, s) -> 
-				s.stream().forEach(t -> {
-					try {
-						tuples.add(new Tuple(t));
-					} catch (InvalidTupleException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				})
+				s.stream().forEach(t -> tuples.add(new Tuple(t)))
 			)
 		);
 		return tuples.stream();
