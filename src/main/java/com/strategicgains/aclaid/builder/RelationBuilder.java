@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.builder;
 
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.Child;
-import com.strategicgains.aclaid.domain.rewrite.ComputedUsersetImpl;
+import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 
 public class RelationBuilder
 extends AbstractChildBuildable<NamespaceBuilder>
@@ -32,7 +32,7 @@ extends AbstractChildBuildable<NamespaceBuilder>
 
 	public RelationBuilder childOf(String relation)
 	{
-		return child(new ComputedUsersetImpl(relationDefinition, relation));
+		return child(new ComputedUserSet(relationDefinition, relation));
 	}
 
 	public RelationBuilder ownedBy(String string, String string2)

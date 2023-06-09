@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 public class TupleToUserSet
 {
-	private ComputedUsersetImpl userset;
+	private ComputedUserSet userset;
 
 	public TupleToUserSet()
 	{

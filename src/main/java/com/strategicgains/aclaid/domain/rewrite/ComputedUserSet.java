@@ -5,12 +5,12 @@ import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
-public class ComputedUsersetImpl
+public class ComputedUserSet
 extends AbstractChild
 {
 	private String relation;
 
-	public ComputedUsersetImpl(RelationDefinition parent, String relation)
+	public ComputedUserSet(RelationDefinition parent, String relation)
 	{
 		super(parent);
 		setRelation(relation);
