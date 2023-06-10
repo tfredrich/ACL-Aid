@@ -21,11 +21,14 @@ implements RewriteRule
 	public TupleSet rewrite(TupleSet set, Tuple tuple)
 	{
 		TupleSet rewrites = new LocalTupleSet();
+		TupleSet intermediate = set;
 
-		rules
-			.stream()
-			.map(rule -> rule.rewrite(set, tuple))
-			.forEach(rewrites::addAll);
+		for (RewriteRule rule : rules)
+		{
+			intermediate = rule.rewrite(intermediate, tuple);
+			rewrites.addAll(intermediate);
+		}
+
 		return rewrites;
 	}
 }

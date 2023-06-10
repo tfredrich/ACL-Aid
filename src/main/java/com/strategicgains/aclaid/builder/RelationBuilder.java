@@ -3,6 +3,7 @@ package com.strategicgains.aclaid.builder;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.Child;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
+import com.strategicgains.aclaid.domain.rewrite.Union;
 
 public class RelationBuilder
 extends AbstractChildBuildable<NamespaceBuilder>
@@ -45,5 +46,11 @@ extends AbstractChildBuildable<NamespaceBuilder>
 	{
 		relationDefinition.addRewriteRule(child);
 		return this;
+	}
+
+	public UnionBuilder union() {
+		Union union = new Union(relationDefinition);
+		relationDefinition.addRewriteRule(union);
+		return new UnionBuilder(this, union);
 	}
 }

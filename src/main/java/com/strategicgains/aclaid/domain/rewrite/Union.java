@@ -1,16 +1,21 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class Union
-implements RewriteRule
+extends AbstractChild
 {
+	public Union(RelationDefinition parent)
+	{
+		super(parent);
+	}
+
 	private List<Child> children = new ArrayList<>();
 
 	public Union child(Child child)
@@ -19,24 +24,18 @@ implements RewriteRule
 		return this;
 	}
 
-	private TupleSet union(Child a, Child b)
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	@Override
 	public TupleSet rewrite(TupleSet set, Tuple tuple)
 	{
-		if (children.isEmpty()) return new LocalTupleSet();
+		TupleSet rewrites = new LocalTupleSet();
+		TupleSet intermediate = set;
 
-		Iterator<Child> iterator = children.iterator();
-		Child a = iterator.next();
-		TupleSet result = null;
-		while(iterator.hasNext())
+		for (Child child : children)
 		{
-			result = union(a, iterator.next());
+			intermediate = child.rewrite(intermediate, tuple);
+			rewrites.addAll(intermediate);
 		}
-		return result;
+
+		return rewrites;
 	}
 }

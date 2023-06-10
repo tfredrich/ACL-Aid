@@ -125,7 +125,10 @@ public class ZanzibarAcademyTest
 			.namespace(DOCUMENT_NAMESPACE)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
-					.childOf(OWNER_RELATION)
+					.union()
+						._this()
+						.computedUserSet(OWNER_RELATION)
+//					.childOf(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
 					.childOf(EDITOR_RELATION)
 

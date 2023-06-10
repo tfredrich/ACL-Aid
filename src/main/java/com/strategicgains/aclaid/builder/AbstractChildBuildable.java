@@ -18,6 +18,11 @@ implements Buildable
 		this.parent = parent;
 	}
 
+	protected T getParent()
+	{
+		return parent;
+	}
+
 	@Override
 	public NamespaceBuilder namespace(String name)
 	{
