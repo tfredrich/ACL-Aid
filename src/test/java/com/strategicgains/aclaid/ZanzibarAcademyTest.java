@@ -275,9 +275,13 @@ public class ZanzibarAcademyTest
 				.relation(PARENT_RELATION)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
-					.childOf(OWNER_RELATION)
+					.union()
+						._this()
+						.computedUserSet(OWNER_RELATION)
+						.tupleToUserSet()
+//					.childOf(OWNER_RELATION)
 					// +owner on parent provides owner on document
-					.ownedBy(OWNER_RELATION, PARENT_RELATION)
+//					.ownedBy(OWNER_RELATION, PARENT_RELATION)
 				.relation(VIEWER_RELATION)
 					.childOf(EDITOR_RELATION)
 					// +viewer on parent provides viewer on document

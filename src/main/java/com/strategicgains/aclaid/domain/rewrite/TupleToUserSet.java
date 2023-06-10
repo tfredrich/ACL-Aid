@@ -1,11 +1,23 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-public class TupleToUserSet
-{
-	private ComputedUserSet userset;
+import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.RelationDefinition;
+import com.strategicgains.aclaid.domain.Tuple;
+import com.strategicgains.aclaid.domain.TupleSet;
 
-	public TupleToUserSet()
+public class TupleToUserSet
+extends AbstractChild
+{
+
+	public TupleToUserSet(RelationDefinition parent)
 	{
-		// TODO Auto-generated constructor stub
+		super(parent);
+	}
+
+	@Override
+	public TupleSet rewrite(TupleSet set, Tuple tuple)
+	{
+		// TODO Auto-generated method stub
+		return LocalTupleSet.EMPTY;
 	}
 }

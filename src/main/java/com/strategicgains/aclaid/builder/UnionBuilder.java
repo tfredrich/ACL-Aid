@@ -2,6 +2,7 @@ package com.strategicgains.aclaid.builder;
 
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 import com.strategicgains.aclaid.domain.rewrite.This;
+import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
 import com.strategicgains.aclaid.domain.rewrite.Union;
 
 public class UnionBuilder
@@ -25,5 +26,12 @@ extends AbstractChildBuildable<RelationBuilder>
 	{
 		union.child(new ComputedUserSet(getParent().build(), relation));
 		return this;
+	}
+
+	public TupleToUserSetBuilder tupleToUserSet()
+	{
+		TupleToUserSet set = new TupleToUserSet(getParent().build());
+		union.child(set);
+		return new TupleToUserSetBuilder(this);
 	}
 }
