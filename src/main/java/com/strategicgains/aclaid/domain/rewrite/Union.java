@@ -28,14 +28,10 @@ extends AbstractChild
 	public TupleSet rewrite(TupleSet set, Tuple tuple)
 	{
 		TupleSet rewrites = new LocalTupleSet();
-		TupleSet intermediate = set;
-
-		for (Child child : children)
-		{
-			intermediate = child.rewrite(intermediate, tuple);
-			rewrites.addAll(intermediate);
-		}
-
+		children
+			.stream()
+			.map(r -> r.rewrite(set, tuple))
+			.forEach(rewrites::addAll);
 		return rewrites;
 	}
 }

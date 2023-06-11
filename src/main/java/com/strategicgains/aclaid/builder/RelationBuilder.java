@@ -36,12 +36,6 @@ extends AbstractChildBuildable<NamespaceBuilder>
 		return child(new ComputedUserSet(relationDefinition, relation));
 	}
 
-	public RelationBuilder ownedBy(String string, String string2)
-	{
-		// TODO Auto-generated method stub
-		return this;
-	}
-
 	public RelationBuilder child(Child child)
 	{
 		relationDefinition.addRewriteRule(child);

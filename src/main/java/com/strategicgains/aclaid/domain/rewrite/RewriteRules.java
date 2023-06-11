@@ -20,15 +20,12 @@ implements RewriteRule
 	@Override
 	public TupleSet rewrite(TupleSet set, Tuple tuple)
 	{
+		// TODO: Remove this duplicate code (duplicated in Union.rewrite())
 		TupleSet rewrites = new LocalTupleSet();
-		TupleSet intermediate = set;
-
-		for (RewriteRule rule : rules)
-		{
-			intermediate = rule.rewrite(intermediate, tuple);
-			rewrites.addAll(intermediate);
-		}
-
+		rules
+			.stream()
+			.map(r -> r.rewrite(set, tuple))
+			.forEach(rewrites::addAll);
 		return rewrites;
 	}
 }

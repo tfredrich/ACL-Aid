@@ -285,7 +285,7 @@ public class ZanzibarAcademyTest
 				.relation(VIEWER_RELATION)
 					.childOf(EDITOR_RELATION)
 					// +viewer on parent provides viewer on document
-					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
+//					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
 
 			.namespace(ORGANIZATION_NAMESPACE)
 				.relation(MEMBER_RELATION)
