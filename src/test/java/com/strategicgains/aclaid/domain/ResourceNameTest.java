@@ -144,7 +144,7 @@ public class ResourceNameTest
 	private void assertMultiQrn(QualifiedResourceName qrn, String namespace, String org, String account, String path)
 	{
 		assertQrn(qrn, namespace, path);
-		assertEquals(org, qrn.hasOrganizationId() ? qrn.getOrganizationId().toString() : "");
+		assertEquals(org, qrn.hasTenantId() ? qrn.getTenantId().toString() : "");
 		assertEquals(account, qrn.hasAccountId() ? qrn.getAccountId().toString() : "");
 	}
 

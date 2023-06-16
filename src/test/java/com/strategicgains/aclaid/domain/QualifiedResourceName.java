@@ -6,8 +6,11 @@ import java.util.UUID;
 public class QualifiedResourceName
 extends ResourceName
 {
+	private static final String INVALID_ACCOUNT_ID = "Invalid Account ID: ";
+	private static final String INVALID_TENANT_ID = "Invalid Tenant ID: ";
+
 	private UUID accountId;
-	private UUID organizationId;
+	private UUID tenantId;
 
 	public QualifiedResourceName(String string)
 	throws ParseException
@@ -20,9 +23,9 @@ extends ResourceName
 	{
 		sb.append(SEPARATOR);
 
-		if (hasOrganizationId())
+		if (hasTenantId())
 		{
-			sb.append(organizationId.toString());
+			sb.append(tenantId.toString());
 		}
 
 		sb.append(SEPARATOR);
@@ -43,25 +46,25 @@ extends ResourceName
 		return (accountId != null);
 	}
 
-	public UUID getOrganizationId()
+	public UUID getTenantId()
 	{
-		return organizationId;
+		return tenantId;
 	}
 
-	public boolean hasOrganizationId()
+	public boolean hasTenantId()
 	{
-		return (organizationId != null);
+		return (tenantId != null);
 	}
 
 	@Override
 	protected boolean segmentsMatch(ResourceName other)
 	{
 		QualifiedResourceName that = (QualifiedResourceName) other;
-		boolean orgMatches = (!this.hasOrganizationId() || !that.hasOrganizationId());
+		boolean orgMatches = (!this.hasTenantId() || !that.hasTenantId());
 
 		if (!orgMatches)
 		{
-			orgMatches = this.getOrganizationId().equals(that.getOrganizationId());
+			orgMatches = this.getTenantId().equals(that.getTenantId());
 		}
 
 		if (!orgMatches) return false;
@@ -84,11 +87,11 @@ extends ResourceName
 		{
 			try
 			{
-				organizationId = UUID.fromString(segments[1]);
+				tenantId = UUID.fromString(segments[1]);
 			}
 			catch(IllegalArgumentException e)
 			{
-				throw new ParseException("Invalid Organization ID: " + segments[1], 2);
+				throw new ParseException(INVALID_TENANT_ID + segments[1], 2);
 			}
 		}
 
@@ -100,7 +103,7 @@ extends ResourceName
 			}
 			catch(IllegalArgumentException e)
 			{
-				throw new ParseException("Invalid Account ID: " + segments[2], 3);
+				throw new ParseException(INVALID_ACCOUNT_ID + segments[2], 3);
 			}
 		}
 
