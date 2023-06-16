@@ -103,8 +103,6 @@ public class AccessControl
 	 */
 	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
-//		if (tuples.readOne(userset, relation, resource) != null) return true;
-
 		TupleSet rewritten = usersetRewrite(userset, relation, resource);
 		return (rewritten.readOne(userset, relation, resource) != null);
 	}
