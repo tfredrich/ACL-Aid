@@ -11,7 +11,6 @@ import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
@@ -25,11 +24,11 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  */
 public class AccessControl
 {
-	private Map<String, Namespace> namespaces = new HashMap<>();
+	private Map<String, ObjectDefinition> objectDefinitions = new HashMap<>();
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, RelationNotRegisteredException
 	{
 		return addTuple(new Tuple(userset, relation, resource));
 	}
@@ -62,9 +61,9 @@ public class AccessControl
 	 * @param namespace the name of the namespace.
 	 * @return an existing or new, empty Namespace instance.
 	 */
-	public Namespace namespace(String namespace)
+	public ObjectDefinition namespace(String namespace)
 	{
-		return namespaces.computeIfAbsent(namespace, n -> new Namespace(namespace));
+		return objectDefinitions.computeIfAbsent(namespace, n -> new ObjectDefinition(namespace));
 	}
 
 	/**
@@ -75,7 +74,7 @@ public class AccessControl
 	 */
 	public boolean containsRelation(String relation)
 	{
-		return namespaces.values().stream().anyMatch(n -> n.containsRelation(relation));
+		return objectDefinitions.values().stream().anyMatch(n -> n.containsRelation(relation));
 	}
 
 	/**
@@ -109,13 +108,14 @@ public class AccessControl
 
 	private TupleSet usersetRewrite(UserSet userset, String relation, ResourceName resource)
 	{
-		Namespace resourceNamespace = namespaces.get(resource.getNamespace());
-		return resourceNamespace.rewrite(tuples, new Tuple(userset, relation, resource));
+		ObjectDefinition objectDefinition = objectDefinitions.get(resource.getResourceType());
+		if (objectDefinition == null) return LocalTupleSet.EMPTY;
+		return objectDefinition.rewrite(tuples, new Tuple(userset, relation, resource));
 	}
 
 	@Override
 	public String toString()
 	{
-		return String.format("namespaces=(%s)", namespaces.keySet().stream().collect(Collectors.joining(", ")));
+		return String.format("namespaces=(%s)", objectDefinitions.keySet().stream().collect(Collectors.joining(", ")));
 	}
 }

@@ -9,18 +9,18 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public interface Buildable
 {
-	NamespaceBuilder namespace(String name);
+	ObjectDefinitionBuilder object(String name);
 
 	RelationBuilder relation(String name);
 
 	TupleBuilder tuples();
 
-	NamespaceBuilder tuple(String userset, String relation, String resource)
+	ObjectDefinitionBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException;
 
-	NamespaceBuilder tuple(UserSet userset, String relation, ResourceName resource)
+	ObjectDefinitionBuilder tuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException, InvalidTupleException;
 
-	NamespaceBuilder tuple(String tuple)
+	ObjectDefinitionBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException;
 }

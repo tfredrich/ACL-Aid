@@ -24,9 +24,9 @@ implements Buildable
 	}
 
 	@Override
-	public NamespaceBuilder namespace(String name)
+	public ObjectDefinitionBuilder object(String name)
 	{
-		return parent.namespace(name);
+		return parent.object(name);
 	}
 
 	@Override
@@ -36,21 +36,21 @@ implements Buildable
 	}
 
 	@Override
-	public NamespaceBuilder tuple(String userset, String relation, String resource)
+	public ObjectDefinitionBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}
 
 	@Override
-	public NamespaceBuilder tuple(UserSet userset, String relation, ResourceName resource)
+	public ObjectDefinitionBuilder tuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException, InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}
 
 	@Override
-	public NamespaceBuilder tuple(String tuple)
+	public ObjectDefinitionBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException
 	{
 		return parent.tuple(tuple);

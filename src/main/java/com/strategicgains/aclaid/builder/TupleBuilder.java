@@ -10,12 +10,12 @@ import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class TupleBuilder
-extends AbstractChildBuildable<NamespaceBuilder>
+extends AbstractChildBuildable<ObjectDefinitionBuilder>
 {
 	private List<Tuple> tuples = new ArrayList<>();
 	private Tuple workingTuple;
 
-	public TupleBuilder(NamespaceBuilder parent)
+	public TupleBuilder(ObjectDefinitionBuilder parent)
 	{
 		super(parent);
 	}

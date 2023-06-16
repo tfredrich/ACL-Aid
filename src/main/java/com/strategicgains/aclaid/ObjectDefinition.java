@@ -7,12 +7,12 @@ import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
-public class Namespace
+public class ObjectDefinition
 {
 	private String name;
 	private Map<String, RelationDefinition> relations = new HashMap<>();
 
-	public Namespace(String name)
+	public ObjectDefinition(String name)
 	{
 		super();
 		this.name = name;

@@ -14,15 +14,16 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class AccessControlTest
 {
-	private static final String DOCUMENTS_NAMESPACE = "docs";
-	private static final String GROUPS_NAMESPACE = "groups";
-	private static final String USERS_NAMESPACE = "users";
+	private static final String NAMESPACE = "AccessControlTest:";
+	private static final String DOCUMENT_OBJECT = "doc";
+	private static final String GROUP_OBJECT = "group";
+	private static final String USER_OBJECT = "user";
 
-	private static final String ADMINS_GROUP = GROUPS_NAMESPACE + ":admins";
-	private static final String EVERYONE_GROUP = GROUPS_NAMESPACE + ":everyone";
+	private static final String ADMINS_GROUP = NAMESPACE + GROUP_OBJECT + "/admins";
+	private static final String EVERYONE_GROUP = NAMESPACE + GROUP_OBJECT + "/everyone";
 
-	private static final String ALL_DOCS = DOCUMENTS_NAMESPACE + ":document/*";
-	private static final String DOC_1234 = DOCUMENTS_NAMESPACE + ":document/1234";
+	private static final String ALL_DOCS = NAMESPACE + DOCUMENT_OBJECT + "/*";
+	private static final String DOC_1234 = NAMESPACE + DOCUMENT_OBJECT + "/1234";
 
 	private static final String ADMINISTRATOR_RELATION = "administers";
 	private static final String EDITOR_RELATION = "editor";
@@ -30,15 +31,15 @@ public class AccessControlTest
 	private static final String OWNER_RELATION = "owner";
 	private static final String VIEWER_RELATION = "viewer";
 
-	private static final String EVERY_USER = USERS_NAMESPACE + ":user/*";
+	private static final String EVERY_USER = NAMESPACE + USER_OBJECT + "/*";
 	private static final String ADMINISTRATORS_USERSET = ADMINS_GROUP + "#" + MEMBER_RELATION;
 	private static final String EVERYONE_USERSET = EVERYONE_GROUP + "#" + MEMBER_RELATION;
-	private static final String BETTY = USERS_NAMESPACE + ":user/betty";
-	private static final String BOB = USERS_NAMESPACE + ":user/bob";
-	private static final String SALLY = USERS_NAMESPACE + ":user/sally";
-	private static final String SAM = USERS_NAMESPACE + ":user/sam";
-	private static final String TODD = USERS_NAMESPACE + ":user/todd";
-	private static final String JASMINE = USERS_NAMESPACE + ":user/jasmine";
+	private static final String BETTY = NAMESPACE + USER_OBJECT + "/betty";
+	private static final String BOB = NAMESPACE + USER_OBJECT + "/bob";
+	private static final String SALLY = NAMESPACE + USER_OBJECT + "/sally";
+	private static final String SAM = NAMESPACE + USER_OBJECT + "/sam";
+	private static final String TODD = NAMESPACE + USER_OBJECT + "/todd";
+	private static final String JASMINE = NAMESPACE + USER_OBJECT + "/jasmine";
 
 	private AccessControl acl;
 
@@ -48,7 +49,7 @@ public class AccessControlTest
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
-			.namespace(DOCUMENTS_NAMESPACE)
+			.object(DOCUMENT_OBJECT)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.childOf(OWNER_RELATION)
@@ -64,11 +65,9 @@ public class AccessControlTest
 				// Directly-specified tuples
 				.tuple(TODD, OWNER_RELATION, DOC_1234)
 
-			.namespace(GROUPS_NAMESPACE)
+			.object(GROUP_OBJECT)
 				.relation(MEMBER_RELATION)
 //					.usersetRewrite()
-
-//				.tuple(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
 
 				// DSL-built multiple tuples
 				.tuples()
@@ -80,6 +79,7 @@ public class AccessControlTest
 							.withUserset(BETTY)
 				// Single tuples
 				.tuple(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, DOC_1234)
+				.tuple(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
 			;
 
 		this.acl = builder.build();
@@ -109,8 +109,8 @@ public class AccessControlTest
 		assertTrue(acl.check(SAM, MEMBER_RELATION, ADMINS_GROUP));
 		assertTrue(acl.check(BOB, ADMINISTRATOR_RELATION, DOC_1234));
 		assertTrue(acl.check(SALLY, ADMINISTRATOR_RELATION, DOC_1234));
-		assertFalse(acl.check(BOB, ADMINISTRATOR_RELATION, "docs:video/12345"));
-		assertFalse(acl.check(SALLY, ADMINISTRATOR_RELATION, "docs:video/12345"));
+		assertFalse(acl.check(BOB, ADMINISTRATOR_RELATION, NAMESPACE + "video/12345"));
+		assertFalse(acl.check(SALLY, ADMINISTRATOR_RELATION, NAMESPACE + "video/12345"));
 		assertFalse(acl.check(JASMINE, ADMINISTRATOR_RELATION, DOC_1234));
 	}
 

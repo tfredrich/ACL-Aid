@@ -20,9 +20,11 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  */
 public class ZanzibarAcademyTest
 {
-	private static final String DOCUMENT_NAMESPACE = "doc";
-	private static final String ORGANIZATION_NAMESPACE = "org";
-	private static final String FOLDER_NAMESPACE = "folder";
+	private static final String NAMESPACE = "ZanzibarAcademyTest";
+	private static final String DOCUMENT_OBJECT = "document";
+	private static final String ORGANIZATION_OBJECT = "org";
+	private static final String FOLDER_OBJECT = "folder";
+	private static final String USER_OBJECT = "user";
 
 	// Relations
 	private static final String EDITOR_RELATION = "editor";
@@ -32,20 +34,20 @@ public class ZanzibarAcademyTest
 	private static final String VIEWER_RELATION = "viewer";
 
 	// Groups
-	private static final String CONTOSO = ORGANIZATION_NAMESPACE + ":contoso";
+	private static final String CONTOSO = NAMESPACE + ":" + ORGANIZATION_OBJECT + "/contoso";
 
 	// Users
-	private static final String KIM = DOCUMENT_NAMESPACE + ":user/kim";
-	private static final String BEN = DOCUMENT_NAMESPACE + ":user/ben";
-	private static final String CARL = DOCUMENT_NAMESPACE + ":user/carl";
-	private static final String DANA = DOCUMENT_NAMESPACE + ":user/dana";
+	private static final String KIM = NAMESPACE + ":" + USER_OBJECT + "/kim";
+	private static final String BEN = NAMESPACE + ":" + USER_OBJECT + "/ben";
+	private static final String CARL = NAMESPACE + ":" + USER_OBJECT + "/carl";
+	private static final String DANA = NAMESPACE + ":" + USER_OBJECT + "/dana";
 
 	// Resources
-	private static final String DOC_ROADMAP = DOCUMENT_NAMESPACE + ":document/roadmap";
-	private static final String DOC_README = DOCUMENT_NAMESPACE + ":document/readme";
-	private static final String DOC_SLIDES = DOCUMENT_NAMESPACE + ":document/slides";
-	private static final String FOLDER_PLANNING = FOLDER_NAMESPACE + ":folder/planning";
-	private static final String FOLDER_ENGINEERING = FOLDER_NAMESPACE + ":folder/engineering";
+	private static final String DOC_ROADMAP = NAMESPACE + ":" + DOCUMENT_OBJECT + "/roadmap";
+	private static final String DOC_README = NAMESPACE + ":" + DOCUMENT_OBJECT + "/readme";
+	private static final String DOC_SLIDES = NAMESPACE + ":" + DOCUMENT_OBJECT + "/slides";
+	private static final String FOLDER_PLANNING = NAMESPACE + ":" + FOLDER_OBJECT + "/planning";
+	private static final String FOLDER_ENGINEERING = NAMESPACE + ":" + FOLDER_OBJECT + "/engineering";
 
 	/**
 	 * name: "doc"
@@ -71,7 +73,7 @@ public class ZanzibarAcademyTest
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
-			.namespace(DOCUMENT_NAMESPACE)
+			.object(DOCUMENT_OBJECT)
 				.relation(EDITOR_RELATION)
 				.relation(VIEWER_RELATION)
 				.relation(OWNER_RELATION)
@@ -122,7 +124,7 @@ public class ZanzibarAcademyTest
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
-			.namespace(DOCUMENT_NAMESPACE)
+			.object(DOCUMENT_OBJECT)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.union()
@@ -179,16 +181,16 @@ public class ZanzibarAcademyTest
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
-			.namespace(ORGANIZATION_NAMESPACE)
+			.object(ORGANIZATION_OBJECT)
 				.relation(MEMBER_RELATION)
 
-			.namespace(DOCUMENT_NAMESPACE)
+			.object(DOCUMENT_OBJECT)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.childOf(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
 					.childOf(EDITOR_RELATION)
-			.namespace(DOC_README)
+			.object(DOC_README)
 			.tuple(CARL, MEMBER_RELATION, CONTOSO)
 			.tuple(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES);
 
@@ -263,7 +265,7 @@ public class ZanzibarAcademyTest
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
-			.namespace(FOLDER_NAMESPACE)
+			.object(FOLDER_OBJECT)
 				.relation(PARENT_RELATION)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
@@ -271,7 +273,7 @@ public class ZanzibarAcademyTest
 				.relation(VIEWER_RELATION)
 					.childOf(EDITOR_RELATION)
 		
-			.namespace(DOCUMENT_NAMESPACE)
+			.object(DOCUMENT_OBJECT)
 				.relation(PARENT_RELATION)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
@@ -287,7 +289,7 @@ public class ZanzibarAcademyTest
 					// +viewer on parent provides viewer on document
 //					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
 
-			.namespace(ORGANIZATION_NAMESPACE)
+			.object(ORGANIZATION_OBJECT)
 				.relation(MEMBER_RELATION)
 
 			.tuple(FOLDER_PLANNING, PARENT_RELATION, DOC_README)
