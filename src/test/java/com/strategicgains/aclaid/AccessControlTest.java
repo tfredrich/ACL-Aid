@@ -79,7 +79,12 @@ public class AccessControlTest
 							.withUserset(BETTY)
 				// Single tuples
 				.tuple(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, DOC_1234)
+
+				// Every user is a member of the everyone group.
 				.tuple(EVERY_USER, MEMBER_RELATION, EVERYONE_GROUP)
+
+				// Make the document available to view by the everyone group.
+				.tuple(EVERYONE_USERSET, VIEWER_RELATION, DOC_1234)
 			;
 
 		this.acl = builder.build();
@@ -123,5 +128,12 @@ public class AccessControlTest
 		assertTrue(acl.check(TODD, ADMINISTRATOR_RELATION, DOC_1234));
 		assertFalse(acl.check(JASMINE, OWNER_RELATION, DOC_1234));
 		assertTrue(acl.check(JASMINE, VIEWER_RELATION, DOC_1234));
+	}
+
+	@Test(expected = InvalidTupleException.class)
+	public void testInvalidResourceWithWildcard()
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	{
+		acl.addTuple(EVERYONE_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS);
 	}
 }
