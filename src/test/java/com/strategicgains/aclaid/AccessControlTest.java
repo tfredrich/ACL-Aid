@@ -22,6 +22,7 @@ public class AccessControlTest
 	private static final String ADMINS_GROUP = NAMESPACE + GROUP_OBJECT + "/admins";
 	private static final String EVERYONE_GROUP = NAMESPACE + GROUP_OBJECT + "/everyone";
 
+	// This is for testing wildcards in tuple resources, which aren't allowed.
 	private static final String ALL_DOCS = NAMESPACE + DOCUMENT_OBJECT + "/*";
 	private static final String DOC_1234 = NAMESPACE + DOCUMENT_OBJECT + "/1234";
 
@@ -134,6 +135,7 @@ public class AccessControlTest
 	public void testInvalidResourceWithWildcard()
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
+		// ALL_DOCS contains a wildcard which is not allowed in tuple resources.
 		acl.addTuple(EVERYONE_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS);
 	}
 }
