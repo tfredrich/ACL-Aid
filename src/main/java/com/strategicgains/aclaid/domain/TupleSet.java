@@ -3,6 +3,8 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 import java.util.stream.Stream;
 
+import com.strategicgains.aclaid.exception.InvalidTupleException;
+
 public interface TupleSet
 extends Copyable<TupleSet>
 {
@@ -80,9 +82,10 @@ extends Copyable<TupleSet>
 	 * @param resource
 	 * @return
 	 * @throws ParseException
+	 * @throws InvalidTupleException 
 	 */
 	TupleSet add(String userset, String relation, String resource)
-	throws ParseException;
+	throws ParseException, InvalidTupleException;
 
 	/**
 	 * Create a new tuple using the given resource, relation and userset then add it to the tuple set.
@@ -91,8 +94,9 @@ extends Copyable<TupleSet>
 	 * @param relation
 	 * @param resource
 	 * @return
+	 * @throws InvalidTupleException 
 	 */
-	TupleSet add(UserSet userset, String relation, ResourceName resource);
+	TupleSet add(UserSet userset, String relation, ResourceName resource) throws InvalidTupleException;
 
 	/**
 	 * Remove a tuple from this tuple set.

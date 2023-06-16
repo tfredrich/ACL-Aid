@@ -11,6 +11,7 @@ import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
@@ -28,13 +29,13 @@ public class AccessControl
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException
+	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return addTuple(new Tuple(userset, relation, resource));
 	}
 
 	public AccessControl addTuple(UserSet userset, String relation, ResourceName resource)
-	throws RelationNotRegisteredException
+	throws RelationNotRegisteredException, InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
 
@@ -43,7 +44,7 @@ public class AccessControl
 	}
 
 	public AccessControl addTuple(Tuple tuple)
-	throws RelationNotRegisteredException
+	throws RelationNotRegisteredException, InvalidTupleException
 	{
 		return addTuple(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
@@ -55,19 +56,19 @@ public class AccessControl
 	}
 
 	/**
-	 * Get an existing NamespaceConfiguration by name or create a new, empty one.
+	 * Get an existing ObjectDefinition by name or create a new, empty one.
 	 * Changes to the instance make changes to this AccessControl.
 	 * 
-	 * @param namespace the name of the namespace.
-	 * @return an existing or new, empty Namespace instance.
+	 * @param objectName the name of the object being defined.
+	 * @return an existing or new, empty ObjectDefinition instance.
 	 */
-	public ObjectDefinition namespace(String namespace)
+	public ObjectDefinition object(String objectName)
 	{
-		return objectDefinitions.computeIfAbsent(namespace, n -> new ObjectDefinition(namespace));
+		return objectDefinitions.computeIfAbsent(objectName, n -> new ObjectDefinition(objectName));
 	}
 
 	/**
-	 * Check to see if the given relation name is defined in any of the namespaces.
+	 * Check to see if the given relation name is defined in any of the object definitions.
 	 * 
 	 * @param relation
 	 * @return
@@ -116,6 +117,6 @@ public class AccessControl
 	@Override
 	public String toString()
 	{
-		return String.format("namespaces=(%s)", objectDefinitions.keySet().stream().collect(Collectors.joining(", ")));
+		return String.format("objects=(%s)", objectDefinitions.keySet().stream().collect(Collectors.joining(", ")));
 	}
 }

@@ -9,6 +9,8 @@ import java.text.ParseException;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.strategicgains.aclaid.exception.InvalidTupleException;
+
 public class LocalTupleSetTest
 {
 	private static final String DOCUMENT_NAMESPACE = "doc";
@@ -42,7 +44,7 @@ public class LocalTupleSetTest
 
 	@Before
 	public void initialize()
-	throws ParseException
+	throws ParseException, InvalidTupleException
 	{
 		ts = new LocalTupleSet()
 			.add(KIM, OWNER_RELATION, DOC_ROADMAP)

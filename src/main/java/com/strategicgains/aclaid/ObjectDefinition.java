@@ -35,12 +35,12 @@ public class ObjectDefinition
 
 	public String toString()
 	{
-		return (String.format("namespace: %s", getName()));
+		return (String.format("object: %s", getName()));
 	}
 
-	public RelationDefinition relation(String parent)
+	public RelationDefinition relation(String relation)
 	{
-		return relations.get(parent);
+		return relations.get(relation);
 	}
 
 	public TupleSet rewrite(TupleSet tuples, Tuple tupleKey)

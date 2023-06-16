@@ -9,12 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import com.strategicgains.aclaid.exception.InvalidTupleException;
+
 public class LocalTupleSet
 implements TupleSet
 {
 	public static final LocalTupleSet EMPTY = new LocalTupleSet();
-
-	boolean allowWildcards = false;
 
 	// The directional index of relation tuples by user set and relation. 
 	private Map<UserSet, Map<String, Set<Tuple>>> usersetTree = new HashMap<>();
@@ -27,36 +27,33 @@ implements TupleSet
 		super();
 	}
 
-	public LocalTupleSet(boolean allowWildcards)
-	{
-		super();
-		this.allowWildcards = allowWildcards;
-	}
-
 	protected LocalTupleSet(ResourceName resource, String relation, Set<UserSet> usersets)
+	throws InvalidTupleException
 	{
 		this();
 		if (usersets == null) return;
 
-		usersets.stream().forEach(userset -> 
-			add(userset, relation, resource)
-		);
+		for (UserSet userset : usersets)
+		{
+			add(userset, relation, resource);
+		}
 	}
 
 	protected LocalTupleSet(UserSet userset, String relation, Set<ResourceName> resources)
+	throws InvalidTupleException
 	{
 		this();
 		if (resources == null) return;
 
-		resources.stream().forEach(resource -> 
-			add(userset, relation, resource)
-		);
+		for (ResourceName resource : resources)
+		{
+			add(userset, relation, resource);
+		}
 	}
 
 	public LocalTupleSet(LocalTupleSet that)
 	{
 		this();
-		this.allowWildcards = that.allowWildcards;
 		this.usersetTree = new HashMap<>(that.usersetTree);
 		this.resourceTree = new HashMap<>(that.resourceTree);
 	}
@@ -126,13 +123,13 @@ implements TupleSet
 		if (resourceUsersets == null) return null;
 		if (resourceUsersets.stream().anyMatch(t -> t.matches(userset, relation, resource)))
 		{
-			return newDynamicTuple(userset, relation, resource);
+			return new Tuple(userset, relation, resource);
 		}
 
 		//Recursively check memberships...
 		if (resourceUsersets.stream().filter(t -> t.getUserset().hasRelation()).anyMatch(t -> readOne(userset, t.getUsersetRelation(), t.getUsersetResource()) != null))
 		{
-			return newDynamicTuple(userset, relation, resource);
+			return new Tuple(userset, relation, resource);
 		}
 
 		return null;
@@ -140,13 +137,14 @@ implements TupleSet
 
 	@Override
 	public LocalTupleSet add(String userset, String relation, String resource)
-	throws ParseException
+	throws ParseException, InvalidTupleException
 	{
 		return add(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	@Override
 	public LocalTupleSet add(UserSet userset, String relation, ResourceName resource)
+	throws InvalidTupleException
 	{
 		return add(newDynamicTuple(userset, relation, resource));
 	}
@@ -170,7 +168,7 @@ implements TupleSet
 	@Override
 	public LocalTupleSet remove(UserSet userset, String relation, ResourceName resource)
 	{
-		return remove(newDynamicTuple(userset, relation, resource));
+		return remove(new Tuple(userset, relation, resource));
 	}
 
 	@Override
@@ -220,7 +218,9 @@ implements TupleSet
 	}
 
 	private Tuple newDynamicTuple(UserSet userset, String relation, ResourceName resource)
+	throws InvalidTupleException
 	{
+		if (resource.isWildcard()) throw new InvalidTupleException("Tuple resources cannot contain wildcards: " + resource.toString());
 		return new Tuple(userset, relation, resource);
 	}
 

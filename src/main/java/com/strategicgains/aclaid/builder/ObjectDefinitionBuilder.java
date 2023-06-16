@@ -34,7 +34,7 @@ implements Buildable
 
 	public ObjectDefinition buildRelations(AccessControl parent)
 	{
-		ObjectDefinition namespaceConfiguration = parent.namespace(name);
+		ObjectDefinition namespaceConfiguration = parent.object(name);
 		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build()));
 		return namespaceConfiguration;
 	}
@@ -47,7 +47,7 @@ implements Buildable
 			{
 				parent.addTuple(t);
 			}
-			catch (RelationNotRegisteredException e)
+			catch (RelationNotRegisteredException | InvalidTupleException e)
 			{
 				e.printStackTrace();
 			}
@@ -55,9 +55,9 @@ implements Buildable
 		return parent;
 	}
 
-	public ObjectDefinitionBuilder object(String namespace)
+	public ObjectDefinitionBuilder object(String objectName)
 	{
-		return parent.object(namespace);
+		return parent.object(objectName);
 	}
 
 	public Collection<String> getRelationNames()
