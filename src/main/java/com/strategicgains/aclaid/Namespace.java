@@ -43,10 +43,10 @@ public class Namespace
 		return relations.get(parent);
 	}
 
-	public TupleSet rewrite(TupleSet tuples, Tuple tuple)
+	public TupleSet rewrite(TupleSet tuples, Tuple tupleKey)
 	{
 		TupleSet copy = tuples.copy();
-		relations.values().forEach(relation -> copy.addAll(relation.rewrite(tuples, tuple)));
+		relations.values().forEach(relation -> copy.addAll(relation.rewrite(tuples, tupleKey)));
 		return copy;
 	}
 }
