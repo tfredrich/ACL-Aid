@@ -20,34 +20,34 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  */
 public class ZanzibarAcademyTest
 {
-	private static final String NAMESPACE = "ZanzibarAcademyTest";
-	private static final String DOCUMENT_OBJECT = "document";
+	private static final String NAMESPACE = "ZanzibarAcademyTest:";
+	private static final String DOCUMENT_OBJECT = "doc";
 	private static final String ORGANIZATION_OBJECT = "org";
 	private static final String FOLDER_OBJECT = "folder";
 	private static final String USER_OBJECT = "user";
 
 	// Relations
-	private static final String EDITOR_RELATION = "editor";
-	private static final String MEMBER_RELATION = "member";
-	private static final String OWNER_RELATION = "owner";
-	private static final String PARENT_RELATION = "parent";
-	private static final String VIEWER_RELATION = "viewer";
+	private static final String EDITOR = "editor";
+	private static final String MEMBER = "member";
+	private static final String OWNER = "owner";
+	private static final String PARENT = "parent";
+	private static final String VIEWER = "viewer";
 
 	// Groups
-	private static final String CONTOSO = NAMESPACE + ":" + ORGANIZATION_OBJECT + "/contoso";
+	private static final String CONTOSO = NAMESPACE + ORGANIZATION_OBJECT + "/contoso";
 
 	// Users
-	private static final String KIM = NAMESPACE + ":" + USER_OBJECT + "/kim";
-	private static final String BEN = NAMESPACE + ":" + USER_OBJECT + "/ben";
-	private static final String CARL = NAMESPACE + ":" + USER_OBJECT + "/carl";
-	private static final String DANA = NAMESPACE + ":" + USER_OBJECT + "/dana";
+	private static final String KIM = NAMESPACE + USER_OBJECT + "/kim";
+	private static final String BEN = NAMESPACE + USER_OBJECT + "/ben";
+	private static final String CARL = NAMESPACE + USER_OBJECT + "/carl";
+	private static final String DANA = NAMESPACE + USER_OBJECT + "/dana";
 
 	// Resources
-	private static final String DOC_ROADMAP = NAMESPACE + ":" + DOCUMENT_OBJECT + "/roadmap";
-	private static final String DOC_README = NAMESPACE + ":" + DOCUMENT_OBJECT + "/readme";
-	private static final String DOC_SLIDES = NAMESPACE + ":" + DOCUMENT_OBJECT + "/slides";
-	private static final String FOLDER_PLANNING = NAMESPACE + ":" + FOLDER_OBJECT + "/planning";
-	private static final String FOLDER_ENGINEERING = NAMESPACE + ":" + FOLDER_OBJECT + "/engineering";
+	private static final String DOC_ROADMAP = NAMESPACE + DOCUMENT_OBJECT + "/roadmap";
+	private static final String DOC_README = NAMESPACE + DOCUMENT_OBJECT + "/readme";
+	private static final String DOC_SLIDES = NAMESPACE + DOCUMENT_OBJECT + "/slides";
+	private static final String FOLDER_PLANNING = NAMESPACE + FOLDER_OBJECT + "/planning";
+	private static final String FOLDER_ENGINEERING = NAMESPACE + FOLDER_OBJECT + "/engineering";
 
 	/**
 	 * name: "doc"
@@ -74,25 +74,25 @@ public class ZanzibarAcademyTest
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.object(DOCUMENT_OBJECT)
-				.relation(EDITOR_RELATION)
-				.relation(VIEWER_RELATION)
-				.relation(OWNER_RELATION)
+				.relation(EDITOR)
+				.relation(VIEWER)
+				.relation(OWNER)
 
-			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
-			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)
-			.tuple(CARL, VIEWER_RELATION, DOC_SLIDES);
+			.tuple(KIM, OWNER, DOC_ROADMAP)
+			.tuple(BEN, EDITOR, DOC_ROADMAP)
+			.tuple(CARL, VIEWER, DOC_SLIDES);
 
 		AccessControl acl = builder.build();
 
-		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
-		assertTrue(acl.check(KIM, OWNER_RELATION, DOC_ROADMAP));
-		assertTrue(acl.check(BEN, EDITOR_RELATION, DOC_ROADMAP));
+		assertTrue(acl.check(CARL, VIEWER, DOC_SLIDES));
+		assertTrue(acl.check(KIM, OWNER, DOC_ROADMAP));
+		assertTrue(acl.check(BEN, EDITOR, DOC_ROADMAP));
 
-		assertFalse(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
+		assertFalse(acl.check(KIM, EDITOR, DOC_ROADMAP));
 
 		// Add Kim as editor of the doc:roadmap
-		acl.addTuple(KIM, EDITOR_RELATION, DOC_ROADMAP);
-		assertTrue(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
+		acl.addTuple(KIM, EDITOR, DOC_ROADMAP);
+		assertTrue(acl.check(KIM, EDITOR, DOC_ROADMAP));
 	}
 
 	/**
@@ -125,27 +125,27 @@ public class ZanzibarAcademyTest
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.object(DOCUMENT_OBJECT)
-				.relation(OWNER_RELATION)
-				.relation(EDITOR_RELATION)
+				.relation(OWNER)
+				.relation(EDITOR)
 					.union()
 						._this()
-						.computedUserSet(OWNER_RELATION)
+						.computedUserSet(OWNER)
 //					.childOf(OWNER_RELATION)
-				.relation(VIEWER_RELATION)
-					.childOf(EDITOR_RELATION)
+				.relation(VIEWER)
+					.childOf(EDITOR)
 
-			.tuple(KIM, OWNER_RELATION, DOC_ROADMAP)
-			.tuple(BEN, EDITOR_RELATION, DOC_ROADMAP)
-			.tuple(CARL, VIEWER_RELATION, DOC_SLIDES);
+			.tuple(KIM, OWNER, DOC_ROADMAP)
+			.tuple(BEN, EDITOR, DOC_ROADMAP)
+			.tuple(CARL, VIEWER, DOC_SLIDES);
 
 		AccessControl acl = builder.build();
 
-		assertTrue(acl.check(KIM, OWNER_RELATION, DOC_ROADMAP));
-		assertTrue(acl.check(KIM, EDITOR_RELATION, DOC_ROADMAP));
-		assertTrue(acl.check(KIM, VIEWER_RELATION, DOC_ROADMAP));
-		assertTrue(acl.check(BEN, EDITOR_RELATION, DOC_ROADMAP));
-		assertTrue(acl.check(BEN, VIEWER_RELATION, DOC_ROADMAP));
-		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
+		assertTrue(acl.check(KIM, OWNER, DOC_ROADMAP));
+		assertTrue(acl.check(KIM, EDITOR, DOC_ROADMAP));
+		assertTrue(acl.check(KIM, VIEWER, DOC_ROADMAP));
+		assertTrue(acl.check(BEN, EDITOR, DOC_ROADMAP));
+		assertTrue(acl.check(BEN, VIEWER, DOC_ROADMAP));
+		assertTrue(acl.check(CARL, VIEWER, DOC_SLIDES));
 	}
 
 	/**
@@ -182,22 +182,22 @@ public class ZanzibarAcademyTest
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.object(ORGANIZATION_OBJECT)
-				.relation(MEMBER_RELATION)
+				.relation(MEMBER)
 
 			.object(DOCUMENT_OBJECT)
-				.relation(OWNER_RELATION)
-				.relation(EDITOR_RELATION)
-					.childOf(OWNER_RELATION)
-				.relation(VIEWER_RELATION)
-					.childOf(EDITOR_RELATION)
+				.relation(OWNER)
+				.relation(EDITOR)
+					.childOf(OWNER)
+				.relation(VIEWER)
+					.childOf(EDITOR)
 			.object(DOC_README)
-			.tuple(CARL, MEMBER_RELATION, CONTOSO)
-			.tuple(CONTOSO + "#" + MEMBER_RELATION, VIEWER_RELATION, DOC_SLIDES);
+			.tuple(CARL, MEMBER, CONTOSO)
+			.tuple(CONTOSO + "#" + MEMBER, VIEWER, DOC_SLIDES);
 
 		AccessControl acl = builder.build();
 
-		assertTrue(acl.check(CARL, MEMBER_RELATION, CONTOSO));
-		assertTrue(acl.check(CARL, VIEWER_RELATION, DOC_SLIDES));
+		assertTrue(acl.check(CARL, MEMBER, CONTOSO));
+		assertTrue(acl.check(CARL, VIEWER, DOC_SLIDES));
 	}
 
 	/**
@@ -266,58 +266,58 @@ public class ZanzibarAcademyTest
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
 			.object(FOLDER_OBJECT)
-				.relation(PARENT_RELATION)
-				.relation(OWNER_RELATION)
-				.relation(EDITOR_RELATION)
-					.childOf(OWNER_RELATION)
-				.relation(VIEWER_RELATION)
-					.childOf(EDITOR_RELATION)
+				.relation(PARENT)
+				.relation(OWNER)
+				.relation(EDITOR)
+					.childOf(OWNER)
+				.relation(VIEWER)
+					.childOf(EDITOR)
 		
 			.object(DOCUMENT_OBJECT)
-				.relation(PARENT_RELATION)
-				.relation(OWNER_RELATION)
-				.relation(EDITOR_RELATION)
+				.relation(PARENT)
+				.relation(OWNER)
+				.relation(EDITOR)
 					.union()
 						._this()
-						.computedUserSet(OWNER_RELATION)
+						.computedUserSet(OWNER)
 						.tupleToUserSet()
 //					.childOf(OWNER_RELATION)
 					// +owner on parent provides owner on document
 //					.ownedBy(OWNER_RELATION, PARENT_RELATION)
-				.relation(VIEWER_RELATION)
-					.childOf(EDITOR_RELATION)
+				.relation(VIEWER)
+					.childOf(EDITOR)
 					// +viewer on parent provides viewer on document
 //					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
 
 			.object(ORGANIZATION_OBJECT)
-				.relation(MEMBER_RELATION)
+				.relation(MEMBER)
 
-			.tuple(FOLDER_PLANNING, PARENT_RELATION, DOC_README)
-			.tuple(KIM, VIEWER_RELATION, FOLDER_PLANNING);
+			.tuple(FOLDER_PLANNING, PARENT, DOC_README)
+			.tuple(KIM, VIEWER, FOLDER_PLANNING);
 
 		AccessControl acl = builder.build();
 
-		assertTrue(acl.check(FOLDER_PLANNING, PARENT_RELATION, DOC_README));
-		assertTrue(acl.check(KIM, VIEWER_RELATION, FOLDER_PLANNING));
-		assertTrue(acl.check(KIM, VIEWER_RELATION, DOC_README));
+		assertTrue(acl.check(FOLDER_PLANNING, PARENT, DOC_README));
+		assertTrue(acl.check(KIM, VIEWER, FOLDER_PLANNING));
+		assertTrue(acl.check(KIM, VIEWER, DOC_README));
 
-		assertFalse(acl.check(DANA, MEMBER_RELATION, CONTOSO));
-		assertFalse(acl.check(DANA, EDITOR_RELATION, FOLDER_ENGINEERING));
-		assertFalse(acl.check(DANA, EDITOR_RELATION, FOLDER_PLANNING));
-		assertFalse(acl.check(DANA, EDITOR_RELATION, DOC_README));
-		assertFalse(acl.check(DANA, VIEWER_RELATION, DOC_README));
-		assertFalse(acl.check(CONTOSO + "#" + MEMBER_RELATION, EDITOR_RELATION, FOLDER_ENGINEERING));
-		assertFalse(acl.check(FOLDER_ENGINEERING, PARENT_RELATION, FOLDER_PLANNING));
+		assertFalse(acl.check(DANA, MEMBER, CONTOSO));
+		assertFalse(acl.check(DANA, EDITOR, FOLDER_ENGINEERING));
+		assertFalse(acl.check(DANA, EDITOR, FOLDER_PLANNING));
+		assertFalse(acl.check(DANA, EDITOR, DOC_README));
+		assertFalse(acl.check(DANA, VIEWER, DOC_README));
+		assertFalse(acl.check(CONTOSO + "#" + MEMBER, EDITOR, FOLDER_ENGINEERING));
+		assertFalse(acl.check(FOLDER_ENGINEERING, PARENT, FOLDER_PLANNING));
 
 		// Add Dana to org:contoso, org:contoso#member editor of folder:engineering, folder:engineering parent of folder:planning.
-		acl.addTuple(DANA, MEMBER_RELATION, CONTOSO)
-			.addTuple(CONTOSO + "#" + MEMBER_RELATION, EDITOR_RELATION, FOLDER_ENGINEERING)
-			.addTuple(FOLDER_ENGINEERING, PARENT_RELATION, FOLDER_PLANNING);
+		acl.addTuple(DANA, MEMBER, CONTOSO)
+			.addTuple(CONTOSO + "#" + MEMBER, EDITOR, FOLDER_ENGINEERING)
+			.addTuple(FOLDER_ENGINEERING, PARENT, FOLDER_PLANNING);
 
-		assertTrue(acl.check(DANA, MEMBER_RELATION, CONTOSO));
-		assertTrue(acl.check(DANA, EDITOR_RELATION, FOLDER_ENGINEERING));
-		assertTrue(acl.check(DANA, EDITOR_RELATION, FOLDER_PLANNING));
-		assertTrue(acl.check(DANA, EDITOR_RELATION, DOC_README));
-		assertTrue(acl.check(DANA, VIEWER_RELATION, DOC_README));
+		assertTrue(acl.check(DANA, MEMBER, CONTOSO));
+		assertTrue(acl.check(DANA, EDITOR, FOLDER_ENGINEERING));
+		assertTrue(acl.check(DANA, EDITOR, FOLDER_PLANNING));
+		assertTrue(acl.check(DANA, EDITOR, DOC_README));
+		assertTrue(acl.check(DANA, VIEWER, DOC_README));
 	}
 }
