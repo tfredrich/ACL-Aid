@@ -132,6 +132,9 @@ public class ZanzibarAcademyTest
 						.computedUserSet(OWNER)
 //					.childOf(OWNER_RELATION)
 				.relation(VIEWER)
+//					.union()
+//						._this()
+//						.computedUserSet(EDITOR)
 					.childOf(EDITOR)
 
 			.tuple(KIM, OWNER, DOC_ROADMAP)
@@ -189,7 +192,10 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR)
 					.childOf(OWNER)
 				.relation(VIEWER)
-					.childOf(EDITOR)
+					.union()
+						._this()
+						.computedUserSet(EDITOR)
+//					.childOf(EDITOR)
 			.object(DOC_README)
 			.tuple(CARL, MEMBER, CONTOSO)
 			.tuple(CONTOSO + "#" + MEMBER, VIEWER, DOC_SLIDES);
@@ -286,7 +292,7 @@ public class ZanzibarAcademyTest
 //					.ownedBy(OWNER_RELATION, PARENT_RELATION)
 				.relation(VIEWER)
 					.childOf(EDITOR)
-					// +viewer on parent provides viewer on document
+					// +viewer on parent [folder] provides viewer on document
 //					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
 
 			.object(ORGANIZATION_OBJECT)
