@@ -15,7 +15,7 @@ extends AbstractChild
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet set, Tuple tuple)
+	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
 	{
 		// TODO Auto-generated method stub
 		return LocalTupleSet.EMPTY;

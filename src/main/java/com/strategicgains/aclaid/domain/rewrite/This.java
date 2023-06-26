@@ -8,9 +8,9 @@ public class This
 implements Child
 {
 	@Override
-	public TupleSet rewrite(TupleSet set, Tuple tuple)
+	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
 	{
-		TupleSet tuples = set.read(tuple.getRelation(), tuple.getResource());
+		TupleSet tuples = inputSet.read(tupleKey.getRelation(), tupleKey.getResource());
 
 		if (tuples != null) return tuples;
 		return LocalTupleSet.EMPTY;

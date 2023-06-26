@@ -5,5 +5,5 @@ import com.strategicgains.aclaid.domain.TupleSet;
 
 public interface RewriteRule
 {
-	TupleSet rewrite(TupleSet set, Tuple tuple);
+	TupleSet rewrite(TupleSet inputSet, Tuple tupleKey);
 }

@@ -25,7 +25,7 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  */
 public class AccessControl
 {
-	private Map<String, ObjectDefinition> objectDefinitions = new HashMap<>();
+	private Map<String, ObjectDefinition> resourcesByName = new HashMap<>();
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
@@ -64,7 +64,7 @@ public class AccessControl
 	 */
 	public ObjectDefinition object(String objectName)
 	{
-		return objectDefinitions.computeIfAbsent(objectName, n -> new ObjectDefinition(objectName));
+		return resourcesByName.computeIfAbsent(objectName, n -> new ObjectDefinition(objectName));
 	}
 
 	/**
@@ -75,7 +75,7 @@ public class AccessControl
 	 */
 	public boolean containsRelation(String relation)
 	{
-		return objectDefinitions.values().stream().anyMatch(n -> n.containsRelation(relation));
+		return resourcesByName.values().stream().anyMatch(n -> n.containsRelation(relation));
 	}
 
 	/**
@@ -109,7 +109,7 @@ public class AccessControl
 
 	private TupleSet usersetRewrite(UserSet userset, String relation, ResourceName resource)
 	{
-		ObjectDefinition objectDefinition = objectDefinitions.get(resource.getResourceType());
+		ObjectDefinition objectDefinition = resourcesByName.get(resource.getResourceType());
 		if (objectDefinition == null) return LocalTupleSet.EMPTY;
 		return objectDefinition.rewrite(tuples, new Tuple(userset, relation, resource));
 	}
@@ -117,6 +117,6 @@ public class AccessControl
 	@Override
 	public String toString()
 	{
-		return String.format("objects=(%s)", objectDefinitions.keySet().stream().collect(Collectors.joining(", ")));
+		return String.format("objects=(%s)", resourcesByName.keySet().stream().collect(Collectors.joining(", ")));
 	}
 }

@@ -25,12 +25,12 @@ extends AbstractChild
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet set, Tuple tuple)
+	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
 	{
 		TupleSet rewrites = new LocalTupleSet();
 		children
 			.stream()
-			.map(r -> r.rewrite(set, tuple))
+			.map(r -> r.rewrite(inputSet, tupleKey))
 			.forEach(rewrites::addAll);
 		return rewrites;
 	}

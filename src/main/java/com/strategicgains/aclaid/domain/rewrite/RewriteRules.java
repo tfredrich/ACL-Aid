@@ -18,13 +18,13 @@ implements RewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet set, Tuple tuple)
+	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
 	{
 		// TODO: Remove this duplicate code (duplicated in Union.rewrite())
 		TupleSet rewrites = new LocalTupleSet();
 		rules
 			.stream()
-			.map(r -> r.rewrite(set, tuple))
+			.map(r -> r.rewrite(inputSet, tupleKey))
 			.forEach(rewrites::addAll);
 		return rewrites;
 	}
