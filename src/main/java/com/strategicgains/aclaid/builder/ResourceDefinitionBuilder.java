@@ -9,14 +9,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.AccessControl;
-import com.strategicgains.aclaid.ObjectDefinition;
+import com.strategicgains.aclaid.domain.ResourceDefinition;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
-public class ObjectDefinitionBuilder
+public class ResourceDefinitionBuilder
 implements Buildable
 {
 	private AccessControlBuilder parent;
@@ -25,16 +25,16 @@ implements Buildable
 	private List<TupleBuilder> tupleBuilders = new ArrayList<>();
 	private List<Tuple> tuples = new ArrayList<>();
 
-	public ObjectDefinitionBuilder(AccessControlBuilder parent, String objectName)
+	public ResourceDefinitionBuilder(AccessControlBuilder parent, String objectName)
 	{
 		super();
 		this.name = objectName;
 		this.parent = parent;
 	}
 
-	public ObjectDefinition buildRelations(AccessControl parent)
+	public ResourceDefinition buildRelations(AccessControl parent)
 	{
-		ObjectDefinition namespaceConfiguration = parent.object(name);
+		ResourceDefinition namespaceConfiguration = parent.object(name);
 		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build()));
 		return namespaceConfiguration;
 	}
@@ -55,7 +55,7 @@ implements Buildable
 		return parent;
 	}
 
-	public ObjectDefinitionBuilder object(String objectName)
+	public ResourceDefinitionBuilder object(String objectName)
 	{
 		return parent.object(objectName);
 	}
@@ -72,13 +72,13 @@ implements Buildable
 		return rb;
 	}
 
-	public ObjectDefinitionBuilder tuple(String userset, String relation, String resource)
+	public ResourceDefinitionBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, RelationNotRegisteredException, InvalidTupleException
 	{
 		return tuple(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
-	public ObjectDefinitionBuilder tuple(UserSet userset, String relation, ResourceName resource)
+	public ResourceDefinitionBuilder tuple(UserSet userset, String relation, ResourceName resource)
 	throws RelationNotRegisteredException, InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
@@ -92,7 +92,7 @@ implements Buildable
 		return parent.containsRelation(relation);
 	}
 
-	public ObjectDefinitionBuilder tuple(String tuple)
+	public ResourceDefinitionBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException
 	{
 		tuples.add(Tuple.parse(tuple));

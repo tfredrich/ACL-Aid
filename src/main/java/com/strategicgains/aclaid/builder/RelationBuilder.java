@@ -6,11 +6,11 @@ import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 import com.strategicgains.aclaid.domain.rewrite.Union;
 
 public class RelationBuilder
-extends AbstractChildBuildable<ObjectDefinitionBuilder>
+extends AbstractChildBuildable<ResourceDefinitionBuilder>
 {
 	private RelationDefinition relationDefinition;
 
-	public RelationBuilder(String relation, ObjectDefinitionBuilder parent)
+	public RelationBuilder(String relation, ResourceDefinitionBuilder parent)
 	{
 		super(parent);
 		this.relationDefinition = new RelationDefinition(relation);

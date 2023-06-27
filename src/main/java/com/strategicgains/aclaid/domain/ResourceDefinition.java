@@ -1,18 +1,14 @@
-package com.strategicgains.aclaid;
+package com.strategicgains.aclaid.domain;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import com.strategicgains.aclaid.domain.RelationDefinition;
-import com.strategicgains.aclaid.domain.Tuple;
-import com.strategicgains.aclaid.domain.TupleSet;
-
-public class ObjectDefinition
+public class ResourceDefinition
 {
 	private String name;
 	private Map<String, RelationDefinition> relations = new HashMap<>();
 
-	public ObjectDefinition(String name)
+	public ResourceDefinition(String name)
 	{
 		super();
 		this.name = name;

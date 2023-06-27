@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
 import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.ResourceDefinition;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -25,7 +26,7 @@ import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
  */
 public class AccessControl
 {
-	private Map<String, ObjectDefinition> resourcesByName = new HashMap<>();
+	private Map<String, ResourceDefinition> resourcesByName = new HashMap<>();
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
@@ -62,9 +63,9 @@ public class AccessControl
 	 * @param objectName the name of the object being defined.
 	 * @return an existing or new, empty ObjectDefinition instance.
 	 */
-	public ObjectDefinition object(String objectName)
+	public ResourceDefinition object(String objectName)
 	{
-		return resourcesByName.computeIfAbsent(objectName, n -> new ObjectDefinition(objectName));
+		return resourcesByName.computeIfAbsent(objectName, n -> new ResourceDefinition(objectName));
 	}
 
 	/**
@@ -109,14 +110,14 @@ public class AccessControl
 
 	private TupleSet usersetRewrite(UserSet userset, String relation, ResourceName resource)
 	{
-		ObjectDefinition objectDefinition = resourcesByName.get(resource.getResourceType());
-		if (objectDefinition == null) return LocalTupleSet.EMPTY;
-		return objectDefinition.rewrite(tuples, new Tuple(userset, relation, resource));
+		ResourceDefinition resourceDefinition = resourcesByName.get(resource.getResourceType());
+		if (resourceDefinition == null) return LocalTupleSet.EMPTY;
+		return resourceDefinition.rewrite(tuples, new Tuple(userset, relation, resource));
 	}
 
 	@Override
 	public String toString()
 	{
-		return String.format("objects=(%s)", resourcesByName.keySet().stream().collect(Collectors.joining(", ")));
+		return String.format("resources=(%s)", resourcesByName.keySet().stream().collect(Collectors.joining(", ")));
 	}
 }
