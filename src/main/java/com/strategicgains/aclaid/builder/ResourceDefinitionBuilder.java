@@ -14,7 +14,6 @@ import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class ResourceDefinitionBuilder
 implements Buildable
@@ -34,7 +33,7 @@ implements Buildable
 
 	public ResourceDefinition buildRelations(AccessControl parent)
 	{
-		ResourceDefinition namespaceConfiguration = parent.object(name);
+		ResourceDefinition namespaceConfiguration = parent.resource(name);
 		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build()));
 		return namespaceConfiguration;
 	}
@@ -47,7 +46,7 @@ implements Buildable
 			{
 				parent.addTuple(t);
 			}
-			catch (RelationNotRegisteredException | InvalidTupleException e)
+			catch (InvalidTupleException e)
 			{
 				e.printStackTrace();
 			}
@@ -73,15 +72,15 @@ implements Buildable
 	}
 
 	public ResourceDefinitionBuilder tuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		return tuple(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
 	public ResourceDefinitionBuilder tuple(UserSet userset, String relation, ResourceName resource)
-	throws RelationNotRegisteredException, InvalidTupleException
+	throws InvalidTupleException
 	{
-		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
+		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
 
 		tuples.add(new Tuple(userset, relation, resource));
 		return this;

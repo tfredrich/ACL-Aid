@@ -5,7 +5,6 @@ import java.text.ParseException;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public abstract class AbstractChildBuildable<T extends Buildable>
 implements Buildable
@@ -37,14 +36,14 @@ implements Buildable
 
 	@Override
 	public ResourceDefinitionBuilder tuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}
 
 	@Override
 	public ResourceDefinitionBuilder tuple(UserSet userset, String relation, ResourceName resource)
-	throws RelationNotRegisteredException, InvalidTupleException
+	throws InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}

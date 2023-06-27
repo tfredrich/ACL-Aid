@@ -31,7 +31,7 @@ public class ResourceDefinition
 
 	public String toString()
 	{
-		return (String.format("object: %s", getName()));
+		return (String.format("resource: %s", getName()));
 	}
 
 	public RelationDefinition relation(String relation)

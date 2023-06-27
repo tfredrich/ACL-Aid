@@ -13,7 +13,6 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
  * A collection of NamespaceConfiguration instances that compose the tuples and 
@@ -30,22 +29,23 @@ public class AccessControl
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		return addTuple(new Tuple(userset, relation, resource));
 	}
 
 	public AccessControl addTuple(UserSet userset, String relation, ResourceName resource)
-	throws RelationNotRegisteredException, InvalidTupleException
+	throws InvalidTupleException
 	{
-		if (!containsRelation(relation)) throw new RelationNotRegisteredException(relation);
+		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
+		if (!resourcesByName.containsKey(resource.getResourceType())) throw new InvalidTupleException("Resource not defined: " + resource.getResourceType());
 
 		tuples.add(userset, relation, resource);
 		return this;
 	}
 
 	public AccessControl addTuple(Tuple tuple)
-	throws RelationNotRegisteredException, InvalidTupleException
+	throws InvalidTupleException
 	{
 		return addTuple(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
 	}
@@ -57,15 +57,15 @@ public class AccessControl
 	}
 
 	/**
-	 * Get an existing ObjectDefinition by name or create a new, empty one.
+	 * Get an existing ResourceDefinition by name or create a new, empty one.
 	 * Changes to the instance make changes to this AccessControl.
 	 * 
-	 * @param objectName the name of the object being defined.
-	 * @return an existing or new, empty ObjectDefinition instance.
+	 * @param resourceName the name of the resource being defined.
+	 * @return an existing or new, empty ResourceDefinition instance.
 	 */
-	public ResourceDefinition object(String objectName)
+	public ResourceDefinition resource(String resourceName)
 	{
-		return resourcesByName.computeIfAbsent(objectName, n -> new ResourceDefinition(objectName));
+		return resourcesByName.computeIfAbsent(resourceName, n -> new ResourceDefinition(resourceName));
 	}
 
 	/**

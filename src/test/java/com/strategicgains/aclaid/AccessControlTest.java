@@ -10,7 +10,6 @@ import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 public class AccessControlTest
 {
@@ -46,7 +45,7 @@ public class AccessControlTest
 
 	@Before
 	public void initialize()
-	throws ParseException, InvalidTupleException, RelationNotRegisteredException
+	throws ParseException, InvalidTupleException
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
@@ -133,7 +132,7 @@ public class AccessControlTest
 
 	@Test(expected = InvalidTupleException.class)
 	public void testInvalidResourceWithWildcard()
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		// ALL_DOCS contains a wildcard which is not allowed in tuple resources.
 		acl.addTuple(EVERYONE_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS);

@@ -9,7 +9,6 @@ import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
-import com.strategicgains.aclaid.exception.RelationNotRegisteredException;
 
 /**
  * A unit test that checks ACL-Aid against the Zanzibar-based
@@ -69,7 +68,7 @@ public class ZanzibarAcademyTest
 	 */
 	@Test
 	public void test01Basics()
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
@@ -120,7 +119,7 @@ public class ZanzibarAcademyTest
 	 */
 	@Test
 	public void test02Inheritence()
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
@@ -180,7 +179,7 @@ public class ZanzibarAcademyTest
 	 */
 	@Test
 	public void test03Groups()
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
@@ -267,7 +266,7 @@ public class ZanzibarAcademyTest
 	 */
 	@Test
 	public void test04Folders()
-	throws ParseException, RelationNotRegisteredException, InvalidTupleException
+	throws ParseException, InvalidTupleException
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
