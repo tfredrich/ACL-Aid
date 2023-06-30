@@ -8,11 +8,11 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class RewriteRules
-implements RewriteRule
+implements Rewritable
 {
-	private List<RewriteRule> rules = new ArrayList<>();
+	private List<Rewritable> rules = new ArrayList<>();
 
-	public void add(RewriteRule rule)
+	public void add(Rewritable rule)
 	{
 		rules.add(rule);
 	}
