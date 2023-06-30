@@ -22,10 +22,10 @@ extends AbstractChild
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet tuples, Tuple tuple)
+	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
 	{
 		TupleSet rewrites = new LocalTupleSet();
-		TupleSet subset = tuples.read(relation, tuple.getResource());
+		TupleSet subset = inputSet.read(relation, tupleKey.getResource());
 
 		if (subset != null)
 		{
