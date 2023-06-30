@@ -6,7 +6,7 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class TupleToUserSet
-extends AbstractChild
+extends AbstractRewritable
 {
 
 	public TupleToUserSet(RelationDefinition parent)

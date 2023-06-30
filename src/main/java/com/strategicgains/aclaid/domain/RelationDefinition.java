@@ -1,6 +1,6 @@
 package com.strategicgains.aclaid.domain;
 
-import com.strategicgains.aclaid.domain.rewrite.Child;
+import com.strategicgains.aclaid.domain.rewrite.Rewritable;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRules;
 
 public class RelationDefinition
@@ -29,7 +29,7 @@ public class RelationDefinition
 		return String.format("Relation: %s", name);
 	}
 
-	public void addRewriteRule(Child child)
+	public void addRewriteRule(Rewritable child)
 	{
 		if (rewriteRules == null)
 		{

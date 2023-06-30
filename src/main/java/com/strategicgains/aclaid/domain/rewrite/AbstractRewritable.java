@@ -2,18 +2,18 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.RelationDefinition;
 
-public abstract class AbstractChild
-implements Child
+public abstract class AbstractRewritable
+implements Rewritable
 {
 	private RelationDefinition parent;
 
-	private AbstractChild()
+	private AbstractRewritable()
 	{
 		// Prevents empty instances.
 		super();
 	}
 
-	protected AbstractChild(RelationDefinition parent)
+	protected AbstractRewritable(RelationDefinition parent)
 	{
 		this();
 		this.parent = parent;

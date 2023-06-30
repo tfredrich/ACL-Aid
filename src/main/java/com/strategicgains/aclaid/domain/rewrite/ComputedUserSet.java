@@ -6,7 +6,7 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class ComputedUserSet
-extends AbstractChild
+extends AbstractRewritable
 {
 	private String relation;
 

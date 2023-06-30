@@ -9,16 +9,16 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class Union
-extends AbstractChild
+extends AbstractRewritable
 {
 	public Union(RelationDefinition parent)
 	{
 		super(parent);
 	}
 
-	private List<Child> children = new ArrayList<>();
+	private List<Rewritable> children = new ArrayList<>();
 
-	public Union child(Child child)
+	public Union child(Rewritable child)
 	{
 		children.add(child);
 		return this;

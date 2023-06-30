@@ -1,8 +1,8 @@
 package com.strategicgains.aclaid.builder;
 
 import com.strategicgains.aclaid.domain.RelationDefinition;
-import com.strategicgains.aclaid.domain.rewrite.Child;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
+import com.strategicgains.aclaid.domain.rewrite.Rewritable;
 import com.strategicgains.aclaid.domain.rewrite.Union;
 
 public class RelationBuilder
@@ -36,7 +36,7 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return child(new ComputedUserSet(relationDefinition, relation));
 	}
 
-	public RelationBuilder child(Child child)
+	public RelationBuilder child(Rewritable child)
 	{
 		relationDefinition.addRewriteRule(child);
 		return this;

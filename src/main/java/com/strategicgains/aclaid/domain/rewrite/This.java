@@ -5,7 +5,7 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class This
-implements Child
+implements Rewritable
 {
 	@Override
 	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
