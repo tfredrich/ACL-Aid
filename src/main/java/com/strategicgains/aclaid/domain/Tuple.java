@@ -36,9 +36,28 @@ import java.util.Date;
  */
 public class Tuple
 {
-	private ResourceName resource;	// 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
-	private String relation;		// 'owner', 'viewer', 'member'
-	private UserSet userset;		// 'users:user/todd', 'users:group/B#member'
+	/**
+	 * The resource (or object) on which the UserSet has a relation.
+	 * Examples are: 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
+	 */
+	private ResourceName resource;
+
+	/**
+	 * The relationship being granted, such as 'owner', 'viewer', 'member'
+	 */
+	private String relation;
+
+	/**
+	 * The UserSet being granted the relationship to the resource.
+	 * Examples: 'users:user/todd', 'users:group/B#member'
+	 */
+	private UserSet userset;
+
+	/**
+	 * Optional. If this is a temporal, expiring tuple then this is when the tuple expires or becomes
+	 * ineffectual and is no longer applicable. After the expiration time, the tuple is available for
+	 * garbage collection (or otherwise removal).
+	 */
 	private Date expiresAt;
 
 	public Tuple()
