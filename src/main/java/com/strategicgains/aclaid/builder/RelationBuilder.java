@@ -1,9 +1,10 @@
 package com.strategicgains.aclaid.builder;
 
+import com.strategicgains.aclaid.builder.rewrite.RewriteRuleBuilder;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 import com.strategicgains.aclaid.domain.rewrite.Rewritable;
-import com.strategicgains.aclaid.domain.rewrite.Union;
+import com.strategicgains.aclaid.domain.rewrite.RewriteExpression;
 
 public class RelationBuilder
 extends AbstractChildBuildable<ResourceDefinitionBuilder>
@@ -42,9 +43,10 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return this;
 	}
 
-	public UnionBuilder union() {
-		Union union = new Union(relationDefinition);
-		relationDefinition.addRewriteRule(union);
-		return new UnionBuilder(this, union);
+	public RelationBuilder rewrite(RewriteRuleBuilder rewrite)
+	{
+		RewriteExpression rules = rewrite.build(relationDefinition);
+		relationDefinition.setRewriteRules(rules);
+		return this;
 	}
 }

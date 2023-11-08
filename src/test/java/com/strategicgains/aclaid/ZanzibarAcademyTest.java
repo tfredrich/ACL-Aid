@@ -1,5 +1,6 @@
 package com.strategicgains.aclaid;
 
+import static com.strategicgains.aclaid.builder.rewrite.Rewrites.union;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -8,6 +9,7 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
+import com.strategicgains.aclaid.builder.rewrite.Rewrites;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
@@ -126,15 +128,26 @@ public class ZanzibarAcademyTest
 			.object(DOCUMENT_OBJECT)
 				.relation(OWNER)
 				.relation(EDITOR)
-					.union()
-						._this()
-						.computedUserSet(OWNER)
+					.rewrite(
+						union()
+							._this()
+							.computedUserSet(OWNER)
+//								.relation(OWNER)
+					)
+//					.union()
+//						._this()
+//						.computedUserSet(OWNER)
 //					.childOf(OWNER_RELATION)
 				.relation(VIEWER)
+					.rewrite(
+						union()
+							._this()
+							.computedUserSet(EDITOR)
+					)
 //					.union()
 //						._this()
 //						.computedUserSet(EDITOR)
-					.childOf(EDITOR)
+//					.childOf(EDITOR)
 
 			.tuple(KIM, OWNER, DOC_ROADMAP)
 			.tuple(BEN, EDITOR, DOC_ROADMAP)
@@ -191,9 +204,11 @@ public class ZanzibarAcademyTest
 				.relation(EDITOR)
 					.childOf(OWNER)
 				.relation(VIEWER)
-					.union()
-						._this()
-						.computedUserSet(EDITOR)
+					.rewrite(
+						union()
+							._this()
+							.computedUserSet(EDITOR)
+					)
 //					.childOf(EDITOR)
 			.object(DOC_README)
 			.tuple(CARL, MEMBER, CONTOSO)
@@ -282,10 +297,12 @@ public class ZanzibarAcademyTest
 				.relation(PARENT)
 				.relation(OWNER)
 				.relation(EDITOR)
-					.union()
-						._this()
-						.computedUserSet(OWNER)
-						.tupleToUserSet()
+					.rewrite(
+						union()
+							._this()
+							.computedUserSet(OWNER)
+//							.tupleToUserSet()
+					)
 //					.childOf(OWNER_RELATION)
 					// +owner on parent provides owner on document
 //					.ownedBy(OWNER_RELATION, PARENT_RELATION)

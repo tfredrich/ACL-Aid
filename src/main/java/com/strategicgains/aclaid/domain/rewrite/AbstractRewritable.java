@@ -16,11 +16,16 @@ implements Rewritable
 	protected AbstractRewritable(RelationDefinition parent)
 	{
 		this();
-		this.parent = parent;
+		setParent(parent);
 	}
 
 	protected RelationDefinition getParent()
 	{
 		return parent;
+	}
+
+	protected void setParent(RelationDefinition parent)
+	{
+		this.parent = parent;
 	}
 }
