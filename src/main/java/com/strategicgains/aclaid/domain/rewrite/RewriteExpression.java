@@ -1,31 +1,82 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
 
-public class RewriteExpression 
-implements RewriteFunction
+/**
+union(
+	intersection(
+		relation(inputObj, "owner"),
+		relation(inputObj, "editor")
+	),
+	relation(inputObj, "viewer")
+)
+
+Outputs:
+       +--union--+
+      /           \
+     /             \
+    /               \
+intersection      viewer
+  /       \
+owner    editor
+
+union {
+   child { _this {} }
+   child { computed_userset { relation: "owner" } }
+}
+
+Outputs:
+     union
+    /     \
+_this     computed_userset
+                   \
+               relation: owner
+
+union {
+  child { _this {} }
+  child { computed_userset { relation: "editor" } }
+  child { tuple_to_userset {
+    tupleset { relation: "parent" }
+    computed_userset {
+      object: $TUPLE_USERSET_OBJECT  # parent folder
+      relation: "viewer"
+    }
+ }}
+}
+
+Outputs:
+     +---------------+----------union---------------+
+    /               /                                \
+_this     computed_userset           +-----------tuple_to_userset---------+
+                   /                /                                      \
+          relation: editor     tupleset                             computed_userset
+                                   /                                /               \
+                            relation: parent     object: $TUPLE_USERSET_OBJECT     relation: viewer
+*/
+public class RewriteExpression
+implements RewriteRule
 {
-	private RewriteFunction function;
-	private RewriteExpression[] children;
+	private List<RewriteRule> rules = new ArrayList<>();
 
-	public TupleSet rewrite(TupleSet tuples, Tuple tupleKey)
+	public void add(RewriteRule rule)
 	{
-		// TODO Auto-generated method stub
-		return LocalTupleSet.EMPTY;
-	}
-
-	public RewriteExpression add(Rewritable child)
-	{
-		// TODO implement add()
-		return this;
+		rules.add(rule);
 	}
 
 	@Override
-	public UserSet rewrite(Tuple tupleKey) {
-		// TODO Auto-generated method stub
-		return null;
+	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
+	{
+		// TODO: Remove this duplicate code (duplicated in Union.rewrite())
+		TupleSet rewrites = new LocalTupleSet();
+		rules
+			.stream()
+			.map(r -> r.rewrite(inputSet, tupleKey))
+			.forEach(rewrites::addAll);
+		return rewrites;
 	}
 }

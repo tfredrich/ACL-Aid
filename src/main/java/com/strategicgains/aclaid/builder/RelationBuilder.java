@@ -3,7 +3,7 @@ package com.strategicgains.aclaid.builder;
 import com.strategicgains.aclaid.builder.rewrite.RewriteRuleBuilder;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
-import com.strategicgains.aclaid.domain.rewrite.Rewritable;
+import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.RewriteExpression;
 
 public class RelationBuilder
@@ -37,7 +37,7 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return child(new ComputedUserSet(relationDefinition, relation));
 	}
 
-	public RelationBuilder child(Rewritable child)
+	public RelationBuilder child(RewriteRule child)
 	{
 		relationDefinition.addRewriteRule(child);
 		return this;

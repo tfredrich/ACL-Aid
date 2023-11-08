@@ -5,14 +5,16 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class This
-implements Rewritable
+implements Expression
 {
-	@Override
-	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
+	public This()
 	{
-		TupleSet tuples = inputSet.read(tupleKey.getRelation(), tupleKey.getResource());
+		super();
+	}
 
-		if (tuples != null) return tuples;
+	@Override
+	public TupleSet rewrite(TupleSet input, Tuple key)
+	{
 		return LocalTupleSet.EMPTY;
 	}
 }
