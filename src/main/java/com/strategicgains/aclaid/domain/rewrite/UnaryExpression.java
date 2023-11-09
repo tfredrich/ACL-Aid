@@ -1,16 +1,19 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import com.strategicgains.aclaid.domain.RelationDefinition;
+
 public abstract class UnaryExpression
-implements Expression
+extends AbstractRewriteRule
 {
-	private Expression operand;
+	private RewriteRule operand;
 	
-	protected UnaryExpression(Expression expression)
+	protected UnaryExpression(RelationDefinition parent, RewriteRule expression)
 	{
+		super(parent);
 		this.operand = expression;
 	}
 	
-	protected Expression getOperand()
+	protected RewriteRule getOperand()
 	{
 		return operand;
 	}

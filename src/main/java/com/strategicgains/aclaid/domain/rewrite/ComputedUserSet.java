@@ -1,38 +1,37 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import javax.management.relation.Relation;
-
 import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class ComputedUserSet
-implements Expression
+extends AbstractRewriteRule
 {
-	private Relation relation;
+	private String relation;
 	private ResourceName resource;
 
-	public ComputedUserSet()
+	public ComputedUserSet(RelationDefinition parent)
 	{
-		super();
+		super(parent);
 	}
 
-	public ComputedUserSet(Relation relation)
+	public ComputedUserSet(RelationDefinition parent, String relation)
 	{
-		this();
+		this(parent);
 		setRelation(relation);
 	}
 
-	public ComputedUserSet(ResourceName resource)
+	public ComputedUserSet(RelationDefinition parent, ResourceName resource)
 	{
-		this();
+		this(parent);
 		setResource(resource);
 	}
 
-	public ComputedUserSet(ResourceName resource, Relation relation)
+	public ComputedUserSet(RelationDefinition parent, ResourceName resource, String relation)
 	{
-		this();
+		this(parent);
 		setResource(resource);
 		setRelation(relation);
 	}
@@ -42,7 +41,7 @@ implements Expression
 		this.resource = resource;
 	}
 
-	public void setRelation(Relation relation)
+	public void setRelation(String relation)
 	{
 		this.relation = relation;
 	}

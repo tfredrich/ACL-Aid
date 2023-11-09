@@ -15,11 +15,24 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 	private List<Tuple> tuples = new ArrayList<>();
 	private Tuple workingTuple;
 
+	public TupleBuilder()
+	{
+		super(null);
+	}
+
 	public TupleBuilder(ResourceDefinitionBuilder parent)
 	{
 		super(parent);
 	}
 
+	/**
+	 * Begins building a new Tuple (or several) for the provided resource.
+	 * 
+	 * @param resource
+	 * @return
+	 * @throws ParseException
+	 * @throws InvalidTupleException
+	 */
 	public TupleBuilder forResource(String resource)
 	throws ParseException, InvalidTupleException
 	{
@@ -28,6 +41,14 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return withResource(resource);
 	}
 
+	/**
+	 * Begins building a new Tuple (or several) for the provided userset.
+	 * 
+	 * @param userset
+	 * @return
+	 * @throws ParseException
+	 * @throws InvalidTupleException
+	 */
 	public TupleBuilder forUserset(String userset)
 	throws ParseException, InvalidTupleException
 	{
@@ -36,6 +57,19 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return withUserset(userset);
 	}
 
+	/**
+	 * If the current working tuple already has a resource name, a new
+	 * clone will be created and the resource name on the new clone will
+	 * be set, keeping the previous working tuple in the tuple collection.
+	 * 
+	 * If the current working tuple does not have a resource name it will
+	 * be set.
+	 * 
+	 * @param resource
+	 * @return
+	 * @throws ParseException
+	 * @throws InvalidTupleException
+	 */
 	public TupleBuilder withResource(String resource)
 	throws ParseException, InvalidTupleException
 	{
@@ -48,6 +82,18 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return this;
 	}
 
+	/**
+	 * If the current working tuple already has a relation, a new
+	 * clone will be created and the relation on the new clone will
+	 * be set, keeping the previous working tuple in the tuple collection.
+	 * 
+	 * If the current working tuple does not have a relation it will
+	 * be set.
+	 * 
+	 * @param relation
+	 * @return
+	 * @throws InvalidTupleException
+	 */
 	public TupleBuilder withRelation(String relation)
 	throws InvalidTupleException
 	{
@@ -60,6 +106,19 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return this;
 	}
 
+	/**
+	 * If the current working tuple already has a userset, a new
+	 * clone will be created and the userset on the new clone will
+	 * be set, keeping the previous working tuple in the tuple collection.
+	 * 
+	 * If the current working tuple does not have a userset it will
+	 * be set.
+	 * 
+	 * @param userset
+	 * @return
+	 * @throws ParseException
+	 * @throws InvalidTupleException
+	 */
 	public TupleBuilder withUserset(String userset)
 	throws ParseException, InvalidTupleException
 	{
@@ -72,6 +131,11 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 		return this;
 	}
 
+	/**
+	 * Builds all the tuples.
+	 * 
+	 * @return
+	 */
 	public List<Tuple> build()
 	{
 		return tuples;

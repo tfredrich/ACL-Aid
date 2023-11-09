@@ -1,9 +1,13 @@
 package com.strategicgains.aclaid.builder.rewrite;
 
+import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
+import com.strategicgains.aclaid.domain.rewrite.This;
+import com.strategicgains.aclaid.domain.rewrite.Union;
+
 public class UnionBuilder
 extends RewriteRuleBuilder
 {
-	private Object[] children;
+	private Union union;
 
 	protected UnionBuilder()
 	{
@@ -12,13 +16,13 @@ extends RewriteRuleBuilder
 
 	public UnionBuilder _this()
 	{
-//		child(new This());
+		union.add(new This());
 		return this;
 	}
 
 	public UnionBuilder computedUserSet(String relation)
 	{
-//		child(new ComputedUserSet(getParent().build(), relation));
+		union.add(new ComputedUserSet(getParent().getName(), relation);
 		return this;
 	}
 

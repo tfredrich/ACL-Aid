@@ -1,21 +1,27 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class Union
-extends AggregateExpression
+extends AggregateRewriteRule
 {
-	public Union(Expression... expressions)
+	public Union(RelationDefinition parent)
 	{
-		super(expressions);
+		super(parent);
+	}
+
+	public Union(RelationDefinition parent, RewriteRule... expressions)
+	{
+		super(parent, expressions);
 	}
 
 	@Override
-	public Union add(Expression expression)
+	public Union add(RewriteRule rewriteRule)
 	{
-		super.add(expression);
+		super.add(rewriteRule);
 		return this;
 	}
 
@@ -26,5 +32,6 @@ extends AggregateExpression
 		operands()
 			.map(r -> r.rewrite(input, key))
 			.forEach(rewrites::addAll);
-		return rewrites;	}
+		return rewrites;
+	}
 }

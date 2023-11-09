@@ -28,14 +28,9 @@ public class RelationDefinition
 		return String.format("Relation: %s", name);
 	}
 
-	public void addRewriteRule(RewriteRule child)
+	public void setRewriteRules(RewriteRule expression)
 	{
-		if (rewriteRules == null)
-		{
-			rewriteRules = new RewriteExpression();
-		}
-	
-		rewriteRules.add(child);
+		this.rewriteRules = expression;
 	}
 
 	public boolean hasRewriteRules()
@@ -48,10 +43,5 @@ public class RelationDefinition
 		if (!hasRewriteRules()) return LocalTupleSet.EMPTY;
 
 		return rewriteRules.rewrite(tuples, tuple);
-	}
-
-	public void setRewriteRules(RewriteRule rules)
-	{
-		this.rewriteRules = rules;
 	}
 }

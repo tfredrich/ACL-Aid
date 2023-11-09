@@ -4,7 +4,6 @@ import com.strategicgains.aclaid.builder.rewrite.RewriteRuleBuilder;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
-import com.strategicgains.aclaid.domain.rewrite.RewriteExpression;
 
 public class RelationBuilder
 extends AbstractChildBuildable<ResourceDefinitionBuilder>
@@ -45,7 +44,7 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 
 	public RelationBuilder rewrite(RewriteRuleBuilder rewrite)
 	{
-		RewriteExpression rules = rewrite.build(relationDefinition);
+		RewriteRule rules = rewrite.build(relationDefinition);
 		relationDefinition.setRewriteRules(rules);
 		return this;
 	}

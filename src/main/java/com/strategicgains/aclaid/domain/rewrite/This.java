@@ -1,11 +1,10 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class This
-implements Expression
+implements RewriteRule
 {
 	public This()
 	{
@@ -15,6 +14,6 @@ implements Expression
 	@Override
 	public TupleSet rewrite(TupleSet input, Tuple key)
 	{
-		return LocalTupleSet.EMPTY;
+		return input.read(key.getRelation(), key.getResource());
 	}
 }
