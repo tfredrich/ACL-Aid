@@ -86,7 +86,8 @@ public class RewriteRuleTest
 			.add(new This())
 			.add(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
-		TupleSet viewers = viewer.rewrite(tuples.addAll(editors), new Tuple(KIM, EDITOR, DOC_ROADMAP));
+		TupleSet all = tuples.addAll(editors);
+		TupleSet viewers = viewer.rewrite(all, new Tuple(KIM, EDITOR, DOC_ROADMAP));
 		assertNotNull(viewers.readOne(KIM, VIEWER, DOC_ROADMAP));
 
 		//		assertTrue(union.rewrite(tuples, new Tuple(KIM, OWNER, DOC_ROADMAP)));

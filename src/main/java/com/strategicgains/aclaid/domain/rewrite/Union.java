@@ -1,5 +1,7 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import java.util.List;
+
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.Tuple;
@@ -13,7 +15,7 @@ extends AggregateRewriteRule
 		super(parent);
 	}
 
-	public Union(RelationDefinition parent, RewriteRule... expressions)
+	public Union(RelationDefinition parent, List<RewriteRule> expressions)
 	{
 		super(parent, expressions);
 	}

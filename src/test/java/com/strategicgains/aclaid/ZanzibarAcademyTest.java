@@ -9,7 +9,6 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
-import com.strategicgains.aclaid.builder.rewrite.Rewrites;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
@@ -131,23 +130,16 @@ public class ZanzibarAcademyTest
 					.rewrite(
 						union()
 							._this()
-							.computedUserSet(OWNER)
-//								.relation(OWNER)
+							.computedUserSet()
+								.relation(OWNER)
 					)
-//					.union()
-//						._this()
-//						.computedUserSet(OWNER)
-//					.childOf(OWNER_RELATION)
 				.relation(VIEWER)
 					.rewrite(
 						union()
 							._this()
-							.computedUserSet(EDITOR)
+							.computedUserSet()
+								.relation(EDITOR)
 					)
-//					.union()
-//						._this()
-//						.computedUserSet(EDITOR)
-//					.childOf(EDITOR)
 
 			.tuple(KIM, OWNER, DOC_ROADMAP)
 			.tuple(BEN, EDITOR, DOC_ROADMAP)
@@ -202,14 +194,19 @@ public class ZanzibarAcademyTest
 			.object(DOCUMENT_OBJECT)
 				.relation(OWNER)
 				.relation(EDITOR)
-					.childOf(OWNER)
+					.rewrite(
+						union()
+							._this()
+							.computedUserSet()
+								.relation(OWNER)
+					)
 				.relation(VIEWER)
 					.rewrite(
 						union()
 							._this()
-							.computedUserSet(EDITOR)
+							.computedUserSet()
+								.relation(EDITOR)
 					)
-//					.childOf(EDITOR)
 			.object(DOC_README)
 			.tuple(CARL, MEMBER, CONTOSO)
 			.tuple(CONTOSO + "#" + MEMBER, VIEWER, DOC_SLIDES);
@@ -289,10 +286,19 @@ public class ZanzibarAcademyTest
 				.relation(PARENT)
 				.relation(OWNER)
 				.relation(EDITOR)
-					.childOf(OWNER)
+				.rewrite(
+					union()
+						._this()
+						.computedUserSet()
+							.relation(OWNER)
+				)
 				.relation(VIEWER)
-					.childOf(EDITOR)
-		
+				.rewrite(
+					union()
+						._this()
+						.computedUserSet()
+							.relation(EDITOR)
+				)
 			.object(DOCUMENT_OBJECT)
 				.relation(PARENT)
 				.relation(OWNER)
@@ -300,14 +306,18 @@ public class ZanzibarAcademyTest
 					.rewrite(
 						union()
 							._this()
-							.computedUserSet(OWNER)
-//							.tupleToUserSet()
+							.computedUserSet()
+								.relation(OWNER)
+							.tupleToUserSet()
 					)
-//					.childOf(OWNER_RELATION)
-					// +owner on parent provides owner on document
-//					.ownedBy(OWNER_RELATION, PARENT_RELATION)
 				.relation(VIEWER)
-					.childOf(EDITOR)
+					.rewrite(
+						union()
+							._this()
+							.computedUserSet()
+								.relation(EDITOR)
+					)
+
 					// +viewer on parent [folder] provides viewer on document
 //					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
 

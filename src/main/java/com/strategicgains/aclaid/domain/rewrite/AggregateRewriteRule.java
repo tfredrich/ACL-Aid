@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -17,7 +16,7 @@ extends AbstractRewriteRule
 		super(parent);
 	}
 
-	protected AggregateRewriteRule(RelationDefinition parent, RewriteRule... operands)
+	protected AggregateRewriteRule(RelationDefinition parent, List<RewriteRule> operands)
 	{
 		this(parent);
 		setOperands(operands);
@@ -29,15 +28,15 @@ extends AbstractRewriteRule
 		return this;
 	}
 
-	private void setOperands(RewriteRule[] operands)
+	private void setOperands(List<RewriteRule> operands)
 	{
-		if (operands == null || operands.length == 0)
+		if (operands != null && !operands.isEmpty())
 		{
 			this.operands.clear();
 			return;
 		}
 
-		this.operands = new ArrayList<>(Arrays.asList(operands));
+		this.operands = new ArrayList<>(operands);
 	}
 
 	protected Stream<RewriteRule> operands()
