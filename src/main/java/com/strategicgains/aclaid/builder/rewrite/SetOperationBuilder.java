@@ -6,4 +6,5 @@ extends RewriteRuleBuilder
 	ThisBuilder _this();
 	ComputedUserSetBuilder computedUserSet();
 	TupleToUserSetBuilder tupleToUserSet();
+	SetOperationBuilder end();
 }

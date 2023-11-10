@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid.builder.rewrite;
 
 import com.strategicgains.aclaid.domain.RelationDefinition;
-import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
 
 public class TupleToUserSetBuilder
@@ -19,5 +18,10 @@ implements RewriteRuleBuilder
 	public TupleToUserSet build(RelationDefinition relation)
 	{
 		return new TupleToUserSet(relation);
+	}
+
+	public RewriteRuleBuilder end()
+	{
+		return parent.end();
 	}
 }

@@ -7,7 +7,7 @@ public abstract class Rewrites
 		// prevents instantiation.
 	}
 
-	public static SetOperationBuilder union()
+	public static UnionBuilder union()
 	{
 		return new UnionBuilder();
 	}

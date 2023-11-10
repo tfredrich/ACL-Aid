@@ -22,25 +22,25 @@ extends AbstractRewriteRule
 		setOperands(operands);
 	}
 
-	public AggregateRewriteRule add(RewriteRule operand)
+	protected AggregateRewriteRule add(RewriteRule operand)
 	{
 		this.operands.add(operand);
 		return this;
 	}
 
+	protected Stream<RewriteRule> operands()
+	{
+		return operands.stream();
+	}
+
 	private void setOperands(List<RewriteRule> operands)
 	{
-		if (operands != null && !operands.isEmpty())
+		if (operands == null && !this.operands.isEmpty())
 		{
 			this.operands.clear();
 			return;
 		}
 
 		this.operands = new ArrayList<>(operands);
-	}
-
-	protected Stream<RewriteRule> operands()
-	{
-		return operands.stream();
 	}
 }

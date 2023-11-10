@@ -47,4 +47,10 @@ implements SetOperationBuilder
 		children.add(builder);
 		return builder;
 	}
+
+	@Override
+	public SetOperationBuilder end()
+	{
+		return this;
+	}
 }

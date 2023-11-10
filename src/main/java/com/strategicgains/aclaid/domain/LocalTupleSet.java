@@ -227,7 +227,11 @@ implements TupleSet
 	@Override
 	public TupleSet addAll(TupleSet tupleset)
 	{
-		tupleset.stream().forEach(this::add);
+		if (tupleset != null)
+		{
+			tupleset.stream().forEach(this::add);
+		}
+
 		return this;
 	}
 

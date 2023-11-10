@@ -309,6 +309,7 @@ public class ZanzibarAcademyTest
 							.computedUserSet()
 								.relation(OWNER)
 							.tupleToUserSet()
+						.end()
 					)
 				.relation(VIEWER)
 					.rewrite(
