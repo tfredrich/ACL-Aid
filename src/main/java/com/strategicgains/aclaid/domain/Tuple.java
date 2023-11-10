@@ -36,6 +36,10 @@ import java.util.Date;
  */
 public class Tuple
 {
+	public static final String USERSET_OBJECT = "$TUPLE_USERSET_OBJECT";
+	public static final String USERSET_RELATION = "$TUPLE_USERSET_RELATION";
+	public static final String RELATION = "$TUPLE_RELATION";
+
 	/**
 	 * The resource (or object) on which the UserSet has a relation.
 	 * Examples are: 'documents:document/1', 'videos:video/456', 'bat:foobar/8'

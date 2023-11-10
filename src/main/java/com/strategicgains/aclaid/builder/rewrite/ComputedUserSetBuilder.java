@@ -9,6 +9,7 @@ implements RewriteRuleBuilder
 {
 	private SetOperationBuilder parent;
 	private String relation;
+	private String resourceName;
 
 	public ComputedUserSetBuilder(SetOperationBuilder parent)
 	{
@@ -36,5 +37,11 @@ implements RewriteRuleBuilder
 	public TupleToUserSetBuilder tupleToUserSet()
 	{
 		return parent.tupleToUserSet();
+	}
+
+	public ComputedUserSetBuilder resource(String resourceName)
+	{
+		this.resourceName = resourceName;
+		return this;
 	}
 }

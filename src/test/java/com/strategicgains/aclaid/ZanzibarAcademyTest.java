@@ -9,6 +9,7 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
+import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
@@ -309,6 +310,10 @@ public class ZanzibarAcademyTest
 							.computedUserSet()
 								.relation(OWNER)
 							.tupleToUserSet()
+								.tupleSet(PARENT)
+								.computedUserSet()
+									.relation(VIEWER)
+									.resource(Tuple.USERSET_OBJECT)
 						.end()
 					)
 				.relation(VIEWER)
