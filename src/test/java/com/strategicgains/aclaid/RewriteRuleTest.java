@@ -1,6 +1,8 @@
 package com.strategicgains.aclaid;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
@@ -69,41 +71,91 @@ public class RewriteRuleTest
 	public void testInheritence()
 	throws ParseException
 	{
+		RelationDefinition owner = new RelationDefinition(OWNER);
 		RelationDefinition editor = new RelationDefinition(EDITOR);
 		Union editorRewrite = new Union(editor)
 			.child(new This(editor))
 			.child(new ComputedUserSet(editor, OWNER));
 		editor.setRewriteRules(editorRewrite);
-
-		// kim@owner#doc/roadmap
-		// kim@editor#doc/roadmap
-		// kim@viewer#doc/roadmap
-		TupleSet editors = editor.rewrite(tuples, new Tuple(KIM, OWNER, DOC_ROADMAP));
-		assertNotNull(editors.readOne(KIM, OWNER, DOC_ROADMAP));
-		assertNotNull(editors.readOne(KIM, EDITOR, DOC_ROADMAP));
-
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		Union viewerRewrite = new Union(viewer)
 			.child(new This(viewer))
 			.child(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
-		TupleSet all = tuples.addAll(editors);
-		TupleSet viewers = viewer.rewrite(all, new Tuple(KIM, VIEWER, DOC_ROADMAP));
-		assertNotNull(viewers.readOne(KIM, VIEWER, DOC_ROADMAP));
+		
+		// kim@owner#doc/roadmap
+		// kim@editor#doc/roadmap
+		// kim@viewer#doc/roadmap
+		assertTrue(check(owner, editor, viewer, new Tuple(KIM, OWNER, DOC_ROADMAP)));
+		assertTrue(check(owner, editor, viewer, new Tuple(KIM, EDITOR, DOC_ROADMAP)));
+		assertTrue(check(owner, editor, viewer, new Tuple(KIM, VIEWER, DOC_ROADMAP)));
 
 		// ben@editor#doc/roadmap
 		// ben@viewer#doc/roadmap
-		editors = editor.rewrite(tuples, new Tuple(BEN, EDITOR, DOC_ROADMAP));
-		assertNotNull(editors.readOne(BEN, EDITOR, DOC_ROADMAP));
-		all = tuples.addAll(editors);
-		viewers = viewer.rewrite(all, new Tuple(BEN, VIEWER, DOC_ROADMAP));
-		assertNotNull(viewers.readOne(BEN, VIEWER, DOC_ROADMAP));
+		assertTrue(check(owner, editor, viewer, new Tuple(BEN, EDITOR, DOC_ROADMAP)));
+		assertTrue(check(owner, editor, viewer, new Tuple(BEN, VIEWER, DOC_ROADMAP)));
 
 		// carl@viewer#doc/slides (direct tuple read)
-		editors = editor.rewrite(tuples, new Tuple(CARL, VIEWER, DOC_SLIDES));
-		assertNotNull(editors.readOne(CARL, VIEWER, DOC_SLIDES));
-		all = tuples.addAll(editors);
-		viewers = viewer.rewrite(all, new Tuple(CARL, VIEWER, DOC_SLIDES));
-		assertNotNull(viewers.readOne(CARL, VIEWER, DOC_SLIDES));
+		assertTrue(check(owner, editor, viewer, new Tuple(CARL, VIEWER, DOC_SLIDES)));
+	}
+
+	private boolean check(RelationDefinition owner, RelationDefinition editor, RelationDefinition viewer, Tuple key)
+	{
+		TupleSet t = new LocalTupleSet().addAll(tuples);
+		TupleSet owners = owner.rewrite(t, key);
+		t.addAll(owners);
+		TupleSet editors = editor.rewrite(t, key);
+		t.addAll(owners).addAll(editors);
+		TupleSet viewers = viewer.rewrite(t, key);
+		t.addAll(owners).addAll(editors).addAll(viewers);
+		return (t.readOne(key.getUserset(), key.getRelation(), key.getResource()) != null);
+	}
+
+	@Test
+	public void testRewriteTupleSets()
+	throws ParseException
+	{
+		RelationDefinition owner = new RelationDefinition(OWNER);
+		RelationDefinition editor = new RelationDefinition(EDITOR);
+		Union editorRewrite = new Union(editor)
+			.child(new This(editor))
+			.child(new ComputedUserSet(editor, OWNER));
+		editor.setRewriteRules(editorRewrite);
+		RelationDefinition viewer = new RelationDefinition(VIEWER);
+		Union viewerRewrite = new Union(viewer)
+			.child(new This(viewer))
+			.child(new ComputedUserSet(viewer, EDITOR));
+		viewer.setRewriteRules(viewerRewrite);
+
+		TupleSet owners = owner.rewrite(tuples, new Tuple(KIM, OWNER, DOC_ROADMAP));
+		assertEquals(1, owners.size());
+		TupleSet editors = editor.rewrite(tuples, new Tuple(KIM, EDITOR, DOC_ROADMAP));
+		assertEquals(2, editors.size());
+		TupleSet viewers = editor.rewrite(tuples, new Tuple(KIM, VIEWER, DOC_ROADMAP));
+		assertEquals(1, viewers.size());
+
+		owners = owner.rewrite(tuples, new Tuple(BEN, OWNER, DOC_ROADMAP));
+		assertEquals(1, owners.size());
+		editors = editor.rewrite(tuples, new Tuple(BEN, EDITOR, DOC_ROADMAP));
+		assertEquals(2, editors.size());
+		viewers = editor.rewrite(tuples, new Tuple(BEN, VIEWER, DOC_ROADMAP));
+		assertEquals(1, viewers.size());
+
+		editors = editor.rewrite(tuples, new Tuple(CARL, EDITOR, DOC_SLIDES));
+		assertEquals(0, editors.size());
+		viewers = editor.rewrite(tuples, new Tuple(CARL, VIEWER, DOC_SLIDES));
+		assertEquals(1, viewers.size());
+
+	}
+
+	@Test
+	public void testParentFolder()
+	throws ParseException
+	{
+		RelationDefinition parent = new RelationDefinition(PARENT);
+		RelationDefinition owner = new RelationDefinition(OWNER);
+		RelationDefinition editor = new RelationDefinition(EDITOR);
+		RelationDefinition viewer = new RelationDefinition(VIEWER);
+
 	}
 }
