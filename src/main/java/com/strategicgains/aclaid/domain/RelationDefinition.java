@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.domain;
 
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
+import com.strategicgains.aclaid.domain.rewrite.This;
 
 public class RelationDefinition
 {
@@ -40,7 +41,7 @@ public class RelationDefinition
 
 	public TupleSet rewrite(TupleSet tuples, Tuple tuple)
 	{
-		if (!hasRewriteRules()) return LocalTupleSet.EMPTY;
+		if (!hasRewriteRules()) return new This(this).rewrite(tuples, tuple);
 
 		return rewriteRules.rewrite(tuples, tuple);
 	}
