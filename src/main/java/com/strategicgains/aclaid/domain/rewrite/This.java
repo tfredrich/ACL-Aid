@@ -1,14 +1,15 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class This
-implements RewriteRule
+extends AbstractRewriteRule
 {
-	public This()
+	public This(RelationDefinition relation)
 	{
-		super();
+		super(relation);
 	}
 
 	@Override

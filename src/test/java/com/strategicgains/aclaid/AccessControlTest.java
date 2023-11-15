@@ -56,18 +56,13 @@ public class AccessControlTest
 				.relation(VIEWER_RELATION)
 					.childOf(OWNER_RELATION)
 				.relation(ADMINISTRATOR_RELATION)
-//					.usersetRewrite()
 					.childOf(OWNER_RELATION)
-					// These are tuples that can have wildcards in the resource.
-//					.rule(ADMINISTRATORS_USERSET, ADMINISTRATOR_RELATION, ALL_DOCS)
-//					.rule(EVERYONE_USERSET, VIEWER_RELATION, ALL_DOCS)
 
 				// Directly-specified tuples
 				.tuple(TODD, OWNER_RELATION, DOC_1234)
 
 			.object(GROUP_OBJECT)
 				.relation(MEMBER_RELATION)
-//					.usersetRewrite()
 
 				// DSL-built multiple tuples
 				.tuples()

@@ -1,8 +1,6 @@
 package com.strategicgains.aclaid;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 import java.text.ParseException;
 
@@ -73,7 +71,7 @@ public class RewriteRuleTest
 	{
 		RelationDefinition editor = new RelationDefinition(EDITOR);
 		Union editorRewrite = new Union(editor)
-			.child(new This())
+			.child(new This(editor))
 			.child(new ComputedUserSet(editor, OWNER));
 		editor.setRewriteRules(editorRewrite);
 
@@ -86,7 +84,7 @@ public class RewriteRuleTest
 
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		Union viewerRewrite = new Union(viewer)
-			.child(new This())
+			.child(new This(viewer))
 			.child(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
 		TupleSet all = tuples.addAll(editors);

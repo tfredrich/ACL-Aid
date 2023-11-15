@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.builder.rewrite;
 
-import com.strategicgains.aclaid.builder.ResourceDefinitionBuilder;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
 
@@ -35,7 +34,7 @@ implements RewriteRuleBuilder
 
 	public ComputedUserSetBuilder computedUserSet()
 	{
-		this.computedUserSetBuilder = new ComputedUserSetBuilder(this);
+		this.computedUserSetBuilder = new ComputedUserSetBuilder(parent);
 		return computedUserSetBuilder;
 	}
 }
