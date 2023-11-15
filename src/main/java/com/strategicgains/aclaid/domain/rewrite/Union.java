@@ -36,9 +36,9 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public Union add(RewriteRule rewriteRule)
+	public Union child(RewriteRule rewriteRule)
 	{
-		super.add(rewriteRule);
+		super.child(rewriteRule);
 		return this;
 	}
 

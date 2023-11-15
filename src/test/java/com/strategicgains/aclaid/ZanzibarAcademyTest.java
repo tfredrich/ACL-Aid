@@ -288,6 +288,7 @@ public class ZanzibarAcademyTest
 				.relation(OWNER)
 				.relation(EDITOR)
 				.rewrite(
+				// TODO Should NOT compile...
 					union()
 						._this()
 						.computedUserSet()
@@ -295,6 +296,7 @@ public class ZanzibarAcademyTest
 				)
 				.relation(VIEWER)
 				.rewrite(
+				// TODO Should NOT compile...
 					union()
 						._this()
 						.computedUserSet()
@@ -314,10 +316,11 @@ public class ZanzibarAcademyTest
 								.computedUserSet()
 									.relation(VIEWER)
 									.resource(Tuple.USERSET_OBJECT)
-						.end()
+//						.end()
 					)
 				.relation(VIEWER)
 					.rewrite(
+					// TODO Should NOT compile...
 						union()
 							._this()
 							.computedUserSet()

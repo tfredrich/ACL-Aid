@@ -22,7 +22,7 @@ extends AbstractRewriteRule
 		setOperands(operands);
 	}
 
-	protected AggregateRewriteRule add(RewriteRule operand)
+	protected AggregateRewriteRule child(RewriteRule operand)
 	{
 		this.operands.add(operand);
 		return this;

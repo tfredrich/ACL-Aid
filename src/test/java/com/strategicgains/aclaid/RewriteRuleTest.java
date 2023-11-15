@@ -73,28 +73,39 @@ public class RewriteRuleTest
 	{
 		RelationDefinition editor = new RelationDefinition(EDITOR);
 		Union editorRewrite = new Union(editor)
-			.add(new This())
-			.add(new ComputedUserSet(editor, OWNER));
+			.child(new This())
+			.child(new ComputedUserSet(editor, OWNER));
 		editor.setRewriteRules(editorRewrite);
 
+		// kim@owner#doc/roadmap
+		// kim@editor#doc/roadmap
+		// kim@viewer#doc/roadmap
 		TupleSet editors = editor.rewrite(tuples, new Tuple(KIM, OWNER, DOC_ROADMAP));
 		assertNotNull(editors.readOne(KIM, OWNER, DOC_ROADMAP));
 		assertNotNull(editors.readOne(KIM, EDITOR, DOC_ROADMAP));
 
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		Union viewerRewrite = new Union(viewer)
-			.add(new This())
-			.add(new ComputedUserSet(viewer, EDITOR));
+			.child(new This())
+			.child(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
 		TupleSet all = tuples.addAll(editors);
-		TupleSet viewers = viewer.rewrite(all, new Tuple(KIM, EDITOR, DOC_ROADMAP));
+		TupleSet viewers = viewer.rewrite(all, new Tuple(KIM, VIEWER, DOC_ROADMAP));
 		assertNotNull(viewers.readOne(KIM, VIEWER, DOC_ROADMAP));
 
-		//		assertTrue(union.rewrite(tuples, new Tuple(KIM, OWNER, DOC_ROADMAP)));
-//		assertTrue(union.rewrite(tuples, new Tuple(KIM, EDITOR, DOC_ROADMAP)));
-//		assertTrue(union.rewrite(tuples, new Tuple(KIM, VIEWER, DOC_ROADMAP)));
-//		assertTrue(union.rewrite(tuples, new Tuple(BEN, EDITOR, DOC_ROADMAP)));
-//		assertTrue(union.rewrite(tuples, new Tuple(BEN, VIEWER, DOC_ROADMAP)));
-//		assertTrue(union.rewrite(tuples, new Tuple(CARL, VIEWER, DOC_SLIDES)));
+		// ben@editor#doc/roadmap
+		// ben@viewer#doc/roadmap
+		editors = editor.rewrite(tuples, new Tuple(BEN, EDITOR, DOC_ROADMAP));
+		assertNotNull(editors.readOne(BEN, EDITOR, DOC_ROADMAP));
+		all = tuples.addAll(editors);
+		viewers = viewer.rewrite(all, new Tuple(BEN, VIEWER, DOC_ROADMAP));
+		assertNotNull(viewers.readOne(BEN, VIEWER, DOC_ROADMAP));
+
+		// carl@viewer#doc/slides (direct tuple read)
+		editors = editor.rewrite(tuples, new Tuple(CARL, VIEWER, DOC_SLIDES));
+		assertNotNull(editors.readOne(CARL, VIEWER, DOC_SLIDES));
+		all = tuples.addAll(editors);
+		viewers = viewer.rewrite(all, new Tuple(CARL, VIEWER, DOC_SLIDES));
+		assertNotNull(viewers.readOne(CARL, VIEWER, DOC_SLIDES));
 	}
 }
