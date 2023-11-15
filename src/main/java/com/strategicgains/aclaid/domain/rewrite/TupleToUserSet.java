@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.RelationDefinition;
-import com.strategicgains.aclaid.domain.Tuple;
+import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public class TupleToUserSet
@@ -14,7 +14,7 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, Tuple key)
+	public TupleSet rewrite(TupleSet input, ResourceName key)
 	{
 		return LocalTupleSet.EMPTY;
 	}

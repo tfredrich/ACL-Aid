@@ -11,6 +11,7 @@ import org.junit.Test;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.RelationDefinition;
+import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
@@ -99,18 +100,6 @@ public class RewriteRuleTest
 		assertTrue(check(owner, editor, viewer, new Tuple(CARL, VIEWER, DOC_SLIDES)));
 	}
 
-	private boolean check(RelationDefinition owner, RelationDefinition editor, RelationDefinition viewer, Tuple key)
-	{
-		TupleSet t = new LocalTupleSet().addAll(tuples);
-		TupleSet owners = owner.rewrite(t, key);
-		t.addAll(owners);
-		TupleSet editors = editor.rewrite(t, key);
-		t.addAll(owners).addAll(editors);
-		TupleSet viewers = viewer.rewrite(t, key);
-		t.addAll(owners).addAll(editors).addAll(viewers);
-		return (t.readOne(key.getUserset(), key.getRelation(), key.getResource()) != null);
-	}
-
 	@Test
 	public void testRewriteTupleSets()
 	throws ParseException
@@ -127,23 +116,18 @@ public class RewriteRuleTest
 			.child(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
 
-		TupleSet owners = owner.rewrite(tuples, new Tuple(KIM, OWNER, DOC_ROADMAP));
+		TupleSet owners = owner.rewrite(tuples, new ResourceName(DOC_ROADMAP));
 		assertEquals(1, owners.size());
-		TupleSet editors = editor.rewrite(tuples, new Tuple(KIM, EDITOR, DOC_ROADMAP));
+		TupleSet editors = editor.rewrite(tuples, new ResourceName(DOC_ROADMAP));
 		assertEquals(2, editors.size());
-		TupleSet viewers = editor.rewrite(tuples, new Tuple(KIM, VIEWER, DOC_ROADMAP));
-		assertEquals(1, viewers.size());
+		TupleSet viewers = editor.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		assertEquals(2, viewers.size());
 
-		owners = owner.rewrite(tuples, new Tuple(BEN, OWNER, DOC_ROADMAP));
-		assertEquals(1, owners.size());
-		editors = editor.rewrite(tuples, new Tuple(BEN, EDITOR, DOC_ROADMAP));
-		assertEquals(2, editors.size());
-		viewers = editor.rewrite(tuples, new Tuple(BEN, VIEWER, DOC_ROADMAP));
-		assertEquals(1, viewers.size());
-
-		editors = editor.rewrite(tuples, new Tuple(CARL, EDITOR, DOC_SLIDES));
+//		owners = owner.rewrite(tuples, new ResourceName(DOC_SLIDES));
+//		assertEquals(0, owners.size());
+		editors = editor.rewrite(tuples, new ResourceName(DOC_SLIDES));
 		assertEquals(0, editors.size());
-		viewers = editor.rewrite(tuples, new Tuple(CARL, VIEWER, DOC_SLIDES));
+		viewers = viewer.rewrite(tuples, new ResourceName(DOC_SLIDES));
 		assertEquals(1, viewers.size());
 
 	}
@@ -155,7 +139,40 @@ public class RewriteRuleTest
 		RelationDefinition parent = new RelationDefinition(PARENT);
 		RelationDefinition owner = new RelationDefinition(OWNER);
 		RelationDefinition editor = new RelationDefinition(EDITOR);
+		Union editorRewrite = new Union(editor)
+			.child(new This(editor))
+			.child(new ComputedUserSet(editor, OWNER));
+		editor.setRewriteRules(editorRewrite);
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
+		Union viewerRewrite = new Union(viewer)
+			.child(new This(viewer))
+			.child(new ComputedUserSet(viewer, EDITOR));
+		viewer.setRewriteRules(viewerRewrite);
+	}
 
+	private boolean check(RelationDefinition owner, RelationDefinition editor, RelationDefinition viewer, Tuple key)
+	{
+		TupleSet t = new LocalTupleSet().addAll(tuples);
+		TupleSet owners = owner.rewrite(t, key.getResource());
+		t.addAll(owners);
+		TupleSet editors = editor.rewrite(t, key.getResource());
+		t.addAll(owners).addAll(editors);
+		TupleSet viewers = viewer.rewrite(t, key.getResource());
+		t.addAll(owners).addAll(editors).addAll(viewers);
+		return (t.readOne(key.getUserset(), key.getRelation(), key.getResource()) != null);
+	}
+
+	private boolean check(RelationDefinition parent, RelationDefinition owner, RelationDefinition editor, RelationDefinition viewer, Tuple key)
+	{
+		TupleSet t = new LocalTupleSet().addAll(tuples);
+		TupleSet parents = parent.rewrite(t, key.getResource());
+		t.addAll(parents);
+		TupleSet owners = owner.rewrite(t, key.getResource());
+		t.addAll(owners);
+		TupleSet editors = editor.rewrite(t, key.getResource());
+		t.addAll(owners).addAll(editors);
+		TupleSet viewers = viewer.rewrite(t, key.getResource());
+		t.addAll(owners).addAll(editors).addAll(viewers);
+		return (t.readOne(key.getUserset(), key.getRelation(), key.getResource()) != null);
 	}
 }

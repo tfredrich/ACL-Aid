@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.RelationDefinition;
-import com.strategicgains.aclaid.domain.Tuple;
+import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 /**
@@ -43,11 +43,11 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, Tuple key)
+	public TupleSet rewrite(TupleSet input, ResourceName resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
 		operands()
-			.map(r -> r.rewrite(input, key))
+			.map(r -> r.rewrite(input, resource))
 			.forEach(rewrites::addAll);
 		return rewrites;
 	}

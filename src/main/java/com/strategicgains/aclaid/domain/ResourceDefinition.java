@@ -39,10 +39,10 @@ public class ResourceDefinition
 		return relations.get(relation);
 	}
 
-	public TupleSet rewrite(TupleSet tuples, Tuple tupleKey)
+	public TupleSet rewrite(TupleSet tuples, ResourceName resource)
 	{
 		TupleSet copy = tuples.copy();
-		relations.values().forEach(relation -> copy.addAll(relation.rewrite(tuples, tupleKey)));
+		relations.values().forEach(relation -> copy.addAll(relation.rewrite(tuples, resource)));
 		return copy;
 	}
 }

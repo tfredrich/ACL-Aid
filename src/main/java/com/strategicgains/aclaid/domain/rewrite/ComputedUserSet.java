@@ -47,10 +47,10 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet inputSet, Tuple tupleKey)
+	public TupleSet rewrite(TupleSet inputSet, ResourceName resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
-		TupleSet subset = inputSet.read(relation, tupleKey.getResource());
+		TupleSet subset = inputSet.read(relation, resource);
 
 		if (subset != null)
 		{

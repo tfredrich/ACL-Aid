@@ -104,15 +104,15 @@ public class AccessControl
 	 */
 	public boolean check(UserSet userset, String relation, ResourceName resource)
 	{
-		TupleSet rewritten = usersetRewrite(userset, relation, resource);
+		TupleSet rewritten = usersetRewrite(resource);
 		return (rewritten.readOne(userset, relation, resource) != null);
 	}
 
-	private TupleSet usersetRewrite(UserSet userset, String relation, ResourceName resource)
+	private TupleSet usersetRewrite(ResourceName resource)
 	{
 		ResourceDefinition resourceDefinition = resourcesByName.get(resource.getResourceType());
 		if (resourceDefinition == null) return LocalTupleSet.EMPTY;
-		return resourceDefinition.rewrite(tuples, new Tuple(userset, relation, resource));
+		return resourceDefinition.rewrite(tuples, resource);
 	}
 
 	@Override
