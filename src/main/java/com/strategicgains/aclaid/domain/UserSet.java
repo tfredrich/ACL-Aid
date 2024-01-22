@@ -82,7 +82,7 @@ public class UserSet
 		return relation != null;
 	}
 
-	protected void setRelation(String relation)
+	public void setRelation(String relation)
 	{
 		this.relation = relation;
 	}
@@ -97,7 +97,7 @@ public class UserSet
 		return (resource != null);
 	}
 
-	protected void setResource(ResourceName resource)
+	public void setResource(ResourceName resource)
 	{
 		this.resource = resource;
 	}

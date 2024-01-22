@@ -7,29 +7,26 @@ public class TupleToUserSetBuilder
 implements RewriteRuleBuilder
 {
 	private SetOperationBuilder parent;
+	private String relation;
 	private ComputedUserSetBuilder computedUserSetBuilder;
 
-	public TupleToUserSetBuilder(SetOperationBuilder parent)
+	public TupleToUserSetBuilder(SetOperationBuilder parent, String relation, ComputedUserSetBuilder computedUserSetBuilder)
 	{
 		super();
 		this.parent = parent;
+		this.relation = relation;
+		this.computedUserSetBuilder = computedUserSetBuilder;
 	}
 
 	@Override
-	public TupleToUserSet build(RelationDefinition relation)
+	public TupleToUserSet build(RelationDefinition parent)
 	{
-		return new TupleToUserSet(relation);
+		return new TupleToUserSet(parent, relation, computedUserSetBuilder.build(parent));
 	}
 
 	public RewriteRuleBuilder end()
 	{
 		return parent.end();
-	}
-
-	public TupleToUserSetBuilder tupleSet(String relation)
-	{
-		// TODO Auto-generated method stub
-		return this;
 	}
 
 	public ComputedUserSetBuilder computedUserSet()

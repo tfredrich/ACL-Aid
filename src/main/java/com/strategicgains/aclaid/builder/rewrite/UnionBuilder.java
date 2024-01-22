@@ -41,9 +41,9 @@ implements SetOperationBuilder
 	}
 
 	@Override
-	public TupleToUserSetBuilder tupleToUserSet()
+	public TupleToUserSetBuilder tupleToUserSet(String relation, ComputedUserSetBuilder computedUserSetBuilder)
 	{
-		TupleToUserSetBuilder builder = new TupleToUserSetBuilder(this);
+		TupleToUserSetBuilder builder = new TupleToUserSetBuilder(this, relation, computedUserSetBuilder);
 		children.add(builder);
 		return builder;
 	}

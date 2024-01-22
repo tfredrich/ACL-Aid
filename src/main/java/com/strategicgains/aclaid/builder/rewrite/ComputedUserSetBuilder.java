@@ -2,7 +2,6 @@ package com.strategicgains.aclaid.builder.rewrite;
 
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
-import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 
 public class ComputedUserSetBuilder
 implements RewriteRuleBuilder
@@ -23,10 +22,16 @@ implements RewriteRuleBuilder
 		return this;
 	}
 
-	@Override
-	public RewriteRule build(RelationDefinition parent)
+	public ComputedUserSetBuilder resource(String resourceName)
 	{
-		return new ComputedUserSet(parent, relation);
+		this.resourceName = resourceName;
+		return this;
+	}
+
+	@Override
+	public ComputedUserSet build(RelationDefinition parent)
+	{
+		return new ComputedUserSet(parent, resourceName, relation);
 	}
 
 	public ThisBuilder _this()
@@ -34,14 +39,8 @@ implements RewriteRuleBuilder
 		return parent._this();
 	}
 
-	public TupleToUserSetBuilder tupleToUserSet()
+	public TupleToUserSetBuilder tupleToUserSet(String relation, ComputedUserSetBuilder computedUserSetBuilder)
 	{
-		return parent.tupleToUserSet();
-	}
-
-	public ComputedUserSetBuilder resource(String resourceName)
-	{
-		this.resourceName = resourceName;
-		return this;
+		return parent.tupleToUserSet(relation, computedUserSetBuilder);
 	}
 }

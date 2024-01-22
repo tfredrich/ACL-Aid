@@ -11,7 +11,7 @@ public class ComputedUserSet
 extends AbstractRewriteRule
 {
 	private String relation;
-	private ResourceName resource;
+	private String resourceToken;
 
 	public ComputedUserSet(RelationDefinition parent)
 	{
@@ -24,25 +24,34 @@ extends AbstractRewriteRule
 		setRelation(relation);
 	}
 
-	public ComputedUserSet(RelationDefinition parent, ResourceName resource)
-	{
-		this(parent);
-		setResource(resource);
-	}
-
-	public ComputedUserSet(RelationDefinition parent, ResourceName resource, String relation)
+	public ComputedUserSet(RelationDefinition parent, String resource, String relation)
 	{
 		this(parent);
 		setResource(resource);
 		setRelation(relation);
 	}
 
-	public void setResource(ResourceName resource)
+	protected String getResource()
 	{
-		this.resource = resource;
+		return resourceToken;
 	}
 
-	public void setRelation(String relation)
+	public boolean hasResource()
+	{
+		return (resourceToken != null);
+	}
+
+	protected void setResource(String resource)
+	{
+		this.resourceToken = resource;
+	}
+
+	public boolean hasRelation()
+	{
+		return (relation != null);
+	}
+
+	protected void setRelation(String relation)
 	{
 		this.relation = relation;
 	}
@@ -54,10 +63,30 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName resource)
+	public TupleSet rewrite(TupleSet input, ResourceName resourceName)
 	{
+		ResourceName resource = new ResourceName(resourceName);
 		UserSet rewrite = new UserSet(resource, relation);
-		Tuple t = new Tuple(rewrite, getParent().getName(), resource);
+		
+		if (hasResource() && getResource().startsWith("$"))
+		{
+			switch(getResource())
+			{
+				case Tuple.USERSET_OBJECT:
+					System.out.println(Tuple.USERSET_OBJECT + " of " + rewrite + " / " + resource);
+					break;
+				case Tuple.USERSET_RELATION:
+					System.out.println(Tuple.USERSET_RELATION + " of " + rewrite);
+					break;
+				case Tuple.RELATION:
+					System.out.println(Tuple.RELATION + " of " + rewrite);
+					break;
+				default:
+					System.out.println(getResource() + " of " + rewrite);
+			}
+		}
+
+		Tuple t = new Tuple(rewrite, getParent().getName(), resourceName);
 		return new LocalTupleSet().add(t);
 	}
 }

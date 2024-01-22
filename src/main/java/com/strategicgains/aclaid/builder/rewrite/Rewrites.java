@@ -11,4 +11,9 @@ public abstract class Rewrites
 	{
 		return new UnionBuilder();
 	}
+
+	public static ComputedUserSetBuilder computedUserSet()
+	{
+		return new ComputedUserSetBuilder(null);
+	}
 }

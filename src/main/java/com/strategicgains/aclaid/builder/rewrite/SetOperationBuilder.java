@@ -5,6 +5,6 @@ extends RewriteRuleBuilder
 {
 	ThisBuilder _this();
 	ComputedUserSetBuilder computedUserSet();
-	TupleToUserSetBuilder tupleToUserSet();
+	TupleToUserSetBuilder tupleToUserSet(String relation, ComputedUserSetBuilder computedUserSetBuilder);
 	SetOperationBuilder end();
 }

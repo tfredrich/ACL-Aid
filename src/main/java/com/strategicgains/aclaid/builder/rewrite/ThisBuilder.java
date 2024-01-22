@@ -26,8 +26,8 @@ implements RewriteRuleBuilder
 		return parent.computedUserSet();
 	}
 
-	public TupleToUserSetBuilder tupleToUserSet()
+	public TupleToUserSetBuilder tupleToUserSet(String relation, ComputedUserSetBuilder computedUserSetBuilder)
 	{
-		return parent.tupleToUserSet();
+		return parent.tupleToUserSet(relation, computedUserSetBuilder);
 	}
 }

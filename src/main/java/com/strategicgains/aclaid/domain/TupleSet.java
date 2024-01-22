@@ -46,7 +46,8 @@ extends Copyable<TupleSet>
 	 * @return
 	 * @throws ParseException
 	 */
-	Tuple readOne(String userset, String relation, String resource) throws ParseException;
+	Tuple readOne(String userset, String relation, String resource)
+	throws ParseException;
 
 	/**
 	 * Read a single tuple.
@@ -96,7 +97,8 @@ extends Copyable<TupleSet>
 	 * @return
 	 * @throws InvalidTupleException 
 	 */
-	TupleSet add(UserSet userset, String relation, ResourceName resource) throws InvalidTupleException;
+	TupleSet add(UserSet userset, String relation, ResourceName resource)
+	throws InvalidTupleException;
 
 	/**
 	 * Remove a tuple from this tuple set.
@@ -116,5 +118,10 @@ extends Copyable<TupleSet>
 	 */
 	TupleSet remove(UserSet userset, String relation, ResourceName resource);
 
+	/**
+	 * Stream the Tuples in this TupleSet.
+	 * 
+	 * @return Stream<Tuple>. Never null.
+	 */
 	Stream<Tuple> stream();
 }

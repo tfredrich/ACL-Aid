@@ -8,14 +8,22 @@ import com.strategicgains.aclaid.domain.TupleSet;
 public class TupleToUserSet
 extends AbstractRewriteRule
 {
-	public TupleToUserSet(RelationDefinition relation)
+	private String relation;
+	private ComputedUserSet computedUserSet;
+
+	public TupleToUserSet(RelationDefinition parent, String relation, ComputedUserSet computedUserSet)
 	{
-		super(relation);
+		super(parent);
+		this.relation = relation;
+		this.computedUserSet = computedUserSet;
 	}
 
 	@Override
 	public TupleSet rewrite(TupleSet input, ResourceName key)
 	{
-		return LocalTupleSet.EMPTY;
+		TupleSet read = input.read(relation, key);
+		TupleSet rewrites = new LocalTupleSet();
+		read.stream().forEach(t -> rewrites.addAll(computedUserSet.rewrite(input, t.getResource())));
+		return rewrites;
 	}
 }

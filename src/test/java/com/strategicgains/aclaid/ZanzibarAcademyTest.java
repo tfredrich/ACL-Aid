@@ -1,5 +1,6 @@
 package com.strategicgains.aclaid;
 
+import static com.strategicgains.aclaid.builder.rewrite.Rewrites.computedUserSet;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.union;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -9,6 +10,7 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
+import com.strategicgains.aclaid.builder.rewrite.Rewrites;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
@@ -283,6 +285,8 @@ public class ZanzibarAcademyTest
 	{
 		AccessControlBuilder builder = new AccessControlBuilder();
 		builder
+			.object(ORGANIZATION_OBJECT)
+				.relation(MEMBER)
 			.object(FOLDER_OBJECT)
 				.relation(PARENT)
 				.relation(OWNER)
@@ -309,16 +313,15 @@ public class ZanzibarAcademyTest
 							._this()
 							.computedUserSet()
 								.relation(OWNER)
-							.tupleToUserSet()
-								.tupleSet(PARENT)
-								.computedUserSet()
+							.tupleToUserSet(
+								PARENT,
+								computedUserSet()
 									.relation(VIEWER)
 									.resource(Tuple.USERSET_OBJECT)
-//						.end()
+							)
 					)
 				.relation(VIEWER)
 					.rewrite(
-					// TODO Should NOT compile...
 						union()
 							._this()
 							.computedUserSet()
@@ -327,9 +330,6 @@ public class ZanzibarAcademyTest
 
 					// +viewer on parent [folder] provides viewer on document
 //					.ownedBy(VIEWER_RELATION, PARENT_RELATION)
-
-			.object(ORGANIZATION_OBJECT)
-				.relation(MEMBER)
 
 			.tuple(FOLDER_PLANNING, PARENT, DOC_README)
 			.tuple(KIM, VIEWER, FOLDER_PLANNING);
