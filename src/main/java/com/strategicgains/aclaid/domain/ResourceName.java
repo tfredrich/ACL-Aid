@@ -47,6 +47,11 @@ public class ResourceName
 		setResourcePath(resourcePath);
 	}
 
+	public ResourceName(ResourceName that)
+	{
+		this(that.getNamespace(), that.getResourcePath());
+	}
+
 	public String getResourceType()
 	{
 		return (hasResourcePath() ? getResourcePath().getResourceType() : null);
@@ -211,5 +216,11 @@ public class ResourceName
 	{
 		setNamespace(segments[0].isEmpty() ? null : segments[0]);
 		setResourcePath(ResourcePath.parse(segments[segments.length - 1]));
+	}
+
+	public void get(String descriptor)
+	{
+		// TODO Auto-generated method stub
+		
 	}
 }
