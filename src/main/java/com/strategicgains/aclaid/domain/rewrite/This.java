@@ -14,9 +14,9 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName resource)
+	public TupleSet rewrite(TupleSet input, ResourceName objectId)
 	{
-		TupleSet ts = input.read(getParent().getName(), resource);
+		TupleSet ts = input.read(getParent().getName(), objectId);
 
 		if (ts == null) return LocalTupleSet.EMPTY;
 		return ts;

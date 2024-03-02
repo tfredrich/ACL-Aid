@@ -9,38 +9,38 @@ import com.strategicgains.aclaid.domain.RelationDefinition;
 public abstract class AggregateRewriteRule
 extends AbstractRewriteRule
 {
-	private List<RewriteRule> operands = new ArrayList<>();
+	private List<RewriteRule> children = new ArrayList<>();
 
 	protected AggregateRewriteRule(RelationDefinition parent)
 	{
 		super(parent);
 	}
 
-	protected AggregateRewriteRule(RelationDefinition parent, List<RewriteRule> operands)
+	protected AggregateRewriteRule(RelationDefinition parent, List<RewriteRule> children)
 	{
 		this(parent);
-		setOperands(operands);
+		setChildren(children);
 	}
 
-	protected AggregateRewriteRule child(RewriteRule operand)
+	protected AggregateRewriteRule child(RewriteRule child)
 	{
-		this.operands.add(operand);
+		this.children.add(child);
 		return this;
 	}
 
-	protected Stream<RewriteRule> operands()
+	protected Stream<RewriteRule> stream()
 	{
-		return operands.stream();
+		return children.stream();
 	}
 
-	private void setOperands(List<RewriteRule> operands)
+	private void setChildren(List<RewriteRule> children)
 	{
-		if (operands == null && !this.operands.isEmpty())
+		if (children == null && !this.children.isEmpty())
 		{
-			this.operands.clear();
+			this.children.clear();
 			return;
 		}
 
-		this.operands = new ArrayList<>(operands);
+		this.children = new ArrayList<>(children);
 	}
 }

@@ -20,14 +20,14 @@ import java.util.Date;
  * One feature worth noting is that a ⟨userset⟩ allows ACLs to refer to groups and thus supports representing nested group membership.
  * 
  * We redefine subtly here to use the following vocabulary instead:
- * ⟨tuple⟩   ::= ⟨resource⟩‘#’⟨relation⟩‘@’⟨user⟩
+ * ⟨tuple⟩   ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
  * (relation)::= (relation name)
  * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
- * (user id) ::= (resource)
- * ⟨userset⟩ ::= ⟨resource⟩‘#’⟨relation⟩
- * ⟨resource⟩  ::= ⟨namespace⟩‘:’⟨resource id⟩
+ * (user id) ::= (object)
+ * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩
+ * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨id⟩
  * 
- * Where 'object' becomes 'resource' and a user ID is also a namespaced, fully-qualified resource.
+ * Where 'object' and a user ID is a namespaced, fully-qualified resource.
  * 
  * Would like to be able to answer as many "resource has relation on userset" questions as possible from memory.
  * With small footprint and high performance.
@@ -36,15 +36,26 @@ import java.util.Date;
  */
 public class Tuple
 {
+	/**
+	 * The objectId on the tuple userset.
+	 */
 	public static final String USERSET_OBJECT = "$TUPLE_USERSET_OBJECT";
+
+	/**
+	 * The relation on the tuple userset.
+	 */
 	public static final String USERSET_RELATION = "$TUPLE_USERSET_RELATION";
+
+	/**
+	 * The relation on the tuple (as opposed to the relation on the tuple userset).
+	 */
 	public static final String RELATION = "$TUPLE_RELATION";
 
 	/**
 	 * The resource (or object) on which the UserSet has a relation.
 	 * Examples are: 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
 	 */
-	private ResourceName resource;
+	private ResourceName objectId;
 
 	/**
 	 * The relationship being granted, such as 'owner', 'viewer', 'member'
@@ -72,7 +83,7 @@ public class Tuple
 	public Tuple(UserSet userset, String relation, ResourceName resource)
 	{
 		this();
-		setResource(resource);
+		setObjectId(resource);
 		setRelation(relation);
 		setUserset(userset);
 	}
@@ -85,7 +96,7 @@ public class Tuple
 
 	public Tuple(Tuple tuple)
 	{
-		this(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
+		this(tuple.getUserset(), tuple.getRelation(), tuple.getObjectId());
 	}
 
 	public boolean expires()
@@ -103,24 +114,24 @@ public class Tuple
 		this.expiresAt = (expiresAt != null ? new Date(expiresAt.getTime()) : null);
 	}
 
-	public boolean hasResource()
+	public boolean hasObjectId()
 	{
-		return (resource != null);
+		return (objectId != null);
 	}
 
-	public ResourceName getResource()
+	public ResourceName getObjectId()
 	{
-		return resource;
+		return objectId;
 	}
 
-	public void setResource(ResourceName resource)
+	public void setObjectId(ResourceName objectId)
 	{
 //		if (resource.isWildcard())
 //		{
 //			throw new InvalidTupleException("Wildcard resources not permitted in tuples: " + resource.toString());
 //		}
 
-		this.resource = resource;
+		this.objectId = objectId;
 	}
 
 	public boolean hasUserset()
@@ -156,25 +167,25 @@ public class Tuple
 
 	public boolean matches(Tuple that)
 	{
-		return matches(that.getUserset(), that.getRelation(), that.getResource());
+		return matches(that.getUserset(), that.getRelation(), that.getObjectId());
 	}
 
 	public boolean matches(UserSet userset, String relation, ResourceName object)
 	{
 		return (this.relation.equals(relation)
-			&& this.resource.matches(object)
+			&& this.objectId.matches(object)
 			&& this.userset.matches(userset));
 	}
 
 	public boolean applies(ResourceName resource)
 	{
-		return this.resource.matches(resource);
+		return this.objectId.matches(resource);
 	}
 
 	public boolean applies(ResourceName resource, String relation)
 	{
 		return (this.relation.equals(relation)
-			&& this.resource.matches(resource));
+			&& this.objectId.matches(resource));
 	}
 
 	@Override
@@ -182,7 +193,7 @@ public class Tuple
 	{
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((resource == null) ? 0 : resource.hashCode());
+		result = prime * result + ((objectId == null) ? 0 : objectId.hashCode());
 		result = prime * result + ((relation == null) ? 0 : relation.hashCode());
 		result = prime * result + ((userset == null) ? 0 : userset.hashCode());
 		return result;
@@ -199,11 +210,11 @@ public class Tuple
 
 		Tuple other = (Tuple) obj;
 
-		if (resource == null)
+		if (objectId == null)
 		{
-			if (other.resource != null) return false;
+			if (other.objectId != null) return false;
 		}
-		else if (!resource.equals(other.resource)) return false;
+		else if (!objectId.equals(other.objectId)) return false;
 
 		if (relation == null)
 		{
@@ -223,18 +234,18 @@ public class Tuple
 	@Override
 	public String toString()
 	{
-		if (expires()) return String.format("(%s@%s#%s|%d)", userset, relation, resource, expiresAt.getTime());
-		return String.format("(%s@%s#%s)", userset, relation, resource);
+		if (expires()) return String.format("(%s@%s#%s|%d)", userset, relation, objectId, expiresAt.getTime());
+		return String.format("(%s@%s#%s)", userset, relation, objectId);
 	}
 
 	public String toZanzibar()
 	{
-		return String.format("(%s#%s@%s)", resource, relation, userset);
+		return String.format("(%s#%s@%s)", objectId, relation, userset);
 	}
 
 	public boolean isValid()
 	{
-		return hasResource() && hasUserset() && hasRelation();
+		return hasObjectId() && hasUserset() && hasRelation();
 	}
 
 	/*

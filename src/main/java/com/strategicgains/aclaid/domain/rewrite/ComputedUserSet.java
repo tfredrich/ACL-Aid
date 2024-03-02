@@ -63,17 +63,17 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName resourceName)
+	public TupleSet rewrite(TupleSet input, ResourceName objectId)
 	{
-		ResourceName resource = new ResourceName(resourceName);
-		UserSet rewrite = new UserSet(resource, relation);
+		UserSet rewrite = new UserSet(objectId, relation);
 		
 		if (hasResource() && getResource().startsWith("$"))
 		{
 			switch(getResource())
 			{
 				case Tuple.USERSET_OBJECT:
-					System.out.println(Tuple.USERSET_OBJECT + " of " + rewrite + " / " + resource);
+					System.out.println(Tuple.USERSET_OBJECT + " of " + rewrite + " / " + objectId);
+					input.stream().findFirst().ifPresent(t -> rewrite.setResource(t.getUsersetResource()));
 					break;
 				case Tuple.USERSET_RELATION:
 					System.out.println(Tuple.USERSET_RELATION + " of " + rewrite);
@@ -86,7 +86,7 @@ extends AbstractRewriteRule
 			}
 		}
 
-		Tuple t = new Tuple(rewrite, getParent().getName(), resourceName);
-		return new LocalTupleSet().add(t);
+		return new LocalTupleSet()
+			.add(new Tuple(rewrite, getParent().getName(), objectId));
 	}
 }

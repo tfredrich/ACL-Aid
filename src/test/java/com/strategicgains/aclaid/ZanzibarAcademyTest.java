@@ -10,7 +10,6 @@ import java.text.ParseException;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
-import com.strategicgains.aclaid.builder.rewrite.Rewrites;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
@@ -316,7 +315,7 @@ public class ZanzibarAcademyTest
 							.tupleToUserSet(
 								PARENT,
 								computedUserSet()
-									.relation(VIEWER)
+									.relation(EDITOR)
 									.resource(Tuple.USERSET_OBJECT)
 							)
 					)
@@ -325,7 +324,13 @@ public class ZanzibarAcademyTest
 						union()
 							._this()
 							.computedUserSet()
-								.relation(EDITOR)
+								.relation(VIEWER)
+							.tupleToUserSet(
+								PARENT,
+								computedUserSet()
+									.relation(VIEWER)
+									.resource(Tuple.USERSET_OBJECT)
+							)
 					)
 
 					// +viewer on parent [folder] provides viewer on document

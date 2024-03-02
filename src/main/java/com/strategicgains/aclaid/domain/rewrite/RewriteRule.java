@@ -5,5 +5,5 @@ import com.strategicgains.aclaid.domain.TupleSet;
 
 public interface RewriteRule
 {
-	TupleSet rewrite(TupleSet input, ResourceName resource);
+	TupleSet rewrite(TupleSet input, ResourceName objectId);
 }

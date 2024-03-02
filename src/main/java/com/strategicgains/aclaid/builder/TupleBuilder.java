@@ -73,12 +73,12 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 	public TupleBuilder withResource(String resource)
 	throws ParseException, InvalidTupleException
 	{
-		if (workingTuple.hasResource())
+		if (workingTuple.hasObjectId())
 		{
 			workingTuple = cloneCurrent();
 		}
 
-		workingTuple.setResource(new ResourceName(resource));
+		workingTuple.setObjectId(new ResourceName(resource));
 		return this;
 	}
 

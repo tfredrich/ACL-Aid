@@ -46,7 +46,7 @@ extends AggregateRewriteRule
 	public TupleSet rewrite(TupleSet input, ResourceName resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
-		operands()
+		stream()
 			.map(r -> r.rewrite(input, resource))
 			.forEach(rewrites::addAll);
 		return rewrites;

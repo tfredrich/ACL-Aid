@@ -19,11 +19,11 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName key)
+	public TupleSet rewrite(TupleSet input, ResourceName objectId)
 	{
-		TupleSet read = input.read(relation, key);
+		TupleSet read = input.read(relation, objectId);
 		TupleSet rewrites = new LocalTupleSet();
-		read.stream().forEach(t -> rewrites.addAll(computedUserSet.rewrite(input, t.getResource())));
+		read.stream().forEach(t -> rewrites.addAll(computedUserSet.rewrite(read, t.getObjectId())));
 		return rewrites;
 	}
 }

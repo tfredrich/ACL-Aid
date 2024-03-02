@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid.domain;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,18 +15,22 @@ implements TupleSet
 {
 	public static final LocalTupleSet EMPTY = new LocalTupleSet();
 
-	// The directional index of relation tuples by user set and relation. 
+	/**
+	 * The directional index of relation tuples by user set and relation. 
+	 */
 	private Map<UserSet, Map<String, Set<Tuple>>> usersetTree = new HashMap<>();
 
-	// The directional index of relation tuples by resource and relation.
-	private Map<ResourceName, Map<String, Set<Tuple>>> resourceTree = new HashMap<>();
+	/**
+	 * The directional index of relation tuples by resource and relation.
+	 */
+	private Map<ResourceName, Map<String, Set<Tuple>>> objectTree = new HashMap<>();
 
 	public LocalTupleSet()
 	{
 		super();
 	}
 
-	protected LocalTupleSet(ResourceName resource, String relation, Set<UserSet> usersets)
+	public LocalTupleSet(ResourceName objectId, String relation, Set<UserSet> usersets)
 	throws InvalidTupleException
 	{
 		this();
@@ -35,17 +38,17 @@ implements TupleSet
 
 		for (UserSet userset : usersets)
 		{
-			add(userset, relation, resource);
+			add(userset, relation, objectId);
 		}
 	}
 
-	protected LocalTupleSet(UserSet userset, String relation, Set<ResourceName> resources)
+	public LocalTupleSet(UserSet userset, String relation, Set<ResourceName> objectIds)
 	throws InvalidTupleException
 	{
 		this();
-		if (resources == null) return;
+		if (objectIds == null) return;
 
-		for (ResourceName resource : resources)
+		for (ResourceName resource : objectIds)
 		{
 			add(userset, relation, resource);
 		}
@@ -55,7 +58,7 @@ implements TupleSet
 	{
 		this();
 		this.usersetTree = new HashMap<>(that.usersetTree);
-		this.resourceTree = new HashMap<>(that.resourceTree);
+		this.objectTree = new HashMap<>(that.objectTree);
 	}
 
 	public LocalTupleSet(Collection<Tuple> tuples)
@@ -70,38 +73,50 @@ implements TupleSet
 		return usersetTree.size();
 	}
 
-	// Read all the usersets having a relation on a resource.
+	/**
+	 * Read all the usersets having a relation on an object ID.
+	 */
 	@Override
-	public LocalTupleSet read(String relation, ResourceName resource)
+	public LocalTupleSet read(String relation, ResourceName objectId)
 	{
-		Map<String, Set<Tuple>> subtree = resourceTree.get(resource);
+		Map<String, Set<Tuple>> subtree = objectTree.get(objectId);
 
 		if (subtree == null) return null;
 
 		Set<Tuple> tuples = subtree.get(relation);
-		return (tuples != null ? new LocalTupleSet(tuples) : null);
+		if (tuples == null) return null;
+		LocalTupleSet results = new LocalTupleSet(tuples);
+		
+		//Recursively add tuples for usersets with a relation on this resource.
+		tuples.stream().filter(t -> t.getUserset().hasRelation()).forEach(t -> results.addAll(read(t.getUsersetRelation(), t.getUsersetResource())));
+		return results;
 	}
 
-	// Read all the relations a userset has on a resource.
+	/**
+	 * Read all the relations a userset has on a resource.
+	 */
 	@Override
 	public LocalTupleSet read(UserSet userset, ResourceName resource)
 	{
 		return null;
 	}
 
-	// Read all the resources a userset has with this relation.
+	/**
+	 * Read all the tuples for objects a userset has with this relation directly.
+	 */
 	@Override
 	public LocalTupleSet read(UserSet userset, String relation)
 	{
 		Map<String, Set<Tuple>> subtree = usersetTree.get(userset);
-
 		if (subtree == null) return null;
 
 		Set<Tuple> tuples = subtree.get(relation);
 		return (tuples != null ? new LocalTupleSet(tuples) : null);
 	}
 
-	// Read a single tuple.
+	/**
+	 * Read a single tuple, navigating the user set tree.
+	 */
 	@Override
 	public Tuple readOne(String userset, String relation, String resource)
 	throws ParseException
@@ -109,11 +124,13 @@ implements TupleSet
 		return readOne(UserSet.parse(userset), relation, new ResourceName(resource));
 	}
 
-	// Read a single tuple.
+	/**
+	 * Read a single tuple, navigating the user set tree.
+	 */
 	@Override
 	public Tuple readOne(UserSet userset, String relation, ResourceName resource)
 	{
-		Map<String, Set<Tuple>> resourceSubtree = resourceTree.get(resource);
+		Map<String, Set<Tuple>> resourceSubtree = objectTree.get(resource);
 
 		if (resourceSubtree == null) return null;
 
@@ -121,12 +138,14 @@ implements TupleSet
 		Set<Tuple> resourceUsersets = resourceSubtree.get(relation);
 
 		if (resourceUsersets == null) return null;
+
+		//Check for direct membership...
 		if (resourceUsersets.stream().anyMatch(t -> t.matches(userset, relation, resource)))
 		{
 			return new Tuple(userset, relation, resource);
 		}
 
-		//Recursively check memberships...
+		//Recursively check indirect memberships...
 		if (resourceUsersets.stream().filter(t -> t.getUserset().hasRelation()).anyMatch(t -> readOne(userset, t.getUsersetRelation(), t.getUsersetResource()) != null))
 		{
 			return new Tuple(userset, relation, resource);
@@ -186,7 +205,7 @@ implements TupleSet
 
 	private void writeResourceTree(Tuple tuple)
 	{
-		Map<String, Set<Tuple>> relationSubtree = resourceTree.computeIfAbsent(tuple.getResource(), t -> new HashMap<>());
+		Map<String, Set<Tuple>> relationSubtree = objectTree.computeIfAbsent(tuple.getObjectId(), t -> new HashMap<>());
 		Set<Tuple> usersets = relationSubtree.computeIfAbsent(tuple.getRelation(), s -> new HashSet<>());
 		usersets.add(tuple);
 	}
@@ -206,7 +225,7 @@ implements TupleSet
 
 	private void removeResourceTree(Tuple tuple)
 	{
-		Map<String, Set<Tuple>> relationSubtree = resourceTree.get(tuple.getResource());
+		Map<String, Set<Tuple>> relationSubtree = objectTree.get(tuple.getObjectId());
 
 		if (relationSubtree == null) return;
 
@@ -238,12 +257,9 @@ implements TupleSet
 	@Override
 	public Stream<Tuple> stream()
 	{
-		Collection<Tuple> tuples = new ArrayList<>();
-		usersetTree.forEach((u, m) -> 
-			m.forEach((r, s) -> 
-				s.stream().forEach(t -> tuples.add(new Tuple(t)))
-			)
-		);
-		return tuples.stream();
+		return usersetTree.values().stream()
+			.flatMap(m -> m.values().stream())
+			.flatMap(Collection::stream)
+			.map(Tuple::new);
 	}
 }

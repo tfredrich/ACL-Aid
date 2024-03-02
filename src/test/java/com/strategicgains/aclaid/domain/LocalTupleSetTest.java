@@ -73,7 +73,7 @@ public class LocalTupleSetTest
 	{
 		Tuple tuple = ts.readOne(KIM, OWNER_RELATION, DOC_ROADMAP);
 		assertNotNull(tuple);
-		assertEquals(DOC_ROADMAP, tuple.getResource().toString());
+		assertEquals(DOC_ROADMAP, tuple.getObjectId().toString());
 		assertEquals(OWNER_RELATION, tuple.getRelation());
 		assertEquals(KIM, tuple.getUserset().toString());
 	}
@@ -84,7 +84,7 @@ public class LocalTupleSetTest
 	{
 		Tuple tuple = ts.readOne(KIM, EDITOR_RELATION, DOC_ROADMAP);
 		assertNotNull(tuple);
-		assertEquals(DOC_ROADMAP, tuple.getResource().toString());
+		assertEquals(DOC_ROADMAP, tuple.getObjectId().toString());
 		assertEquals(EDITOR_RELATION, tuple.getRelation());
 		assertEquals(KIM, tuple.getUserset().toString());
 	}
@@ -104,7 +104,7 @@ public class LocalTupleSetTest
 	{
 		Tuple tuple = ts.readOne(CARL, VIEWER_RELATION, DOC_SLIDES);
 		assertNotNull(tuple);
-		assertEquals(DOC_SLIDES, tuple.getResource().toString());
+		assertEquals(DOC_SLIDES, tuple.getObjectId().toString());
 		assertEquals(VIEWER_RELATION, tuple.getRelation());
 		assertEquals(CARL, tuple.getUserset().toString());
 	}
@@ -115,7 +115,7 @@ public class LocalTupleSetTest
 	{
 		Tuple tuple = ts.readOne(DANA, EDITOR_RELATION, FOLDER_ENGINEERING);
 		assertNotNull(tuple);
-		assertEquals(FOLDER_ENGINEERING, tuple.getResource().toString());
+		assertEquals(FOLDER_ENGINEERING, tuple.getObjectId().toString());
 		assertEquals(EDITOR_RELATION, tuple.getRelation());
 		assertEquals(DANA, tuple.getUserset().toString());
 	}

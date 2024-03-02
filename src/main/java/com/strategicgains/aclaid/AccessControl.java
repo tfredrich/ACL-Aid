@@ -47,7 +47,7 @@ public class AccessControl
 	public AccessControl addTuple(Tuple tuple)
 	throws InvalidTupleException
 	{
-		return addTuple(tuple.getUserset(), tuple.getRelation(), tuple.getResource());
+		return addTuple(tuple.getUserset(), tuple.getRelation(), tuple.getObjectId());
 	}
 
 	public AccessControl removeTuple(UserSet userset, String relation, ResourceName resource)
@@ -84,14 +84,14 @@ public class AccessControl
 	 * 
 	 * @param userset
 	 * @param relation
-	 * @param resource
+	 * @param objectId
 	 * @return
 	 * @throws ParseException
 	 */
-	public boolean check(String userset, String relation, String resource)
+	public boolean check(String userset, String relation, String objectId)
 	throws ParseException
 	{
-		return check(UserSet.parse(userset), relation, new ResourceName(resource));
+		return check(UserSet.parse(userset), relation, new ResourceName(objectId));
 	}
 
 	/**
@@ -99,20 +99,20 @@ public class AccessControl
 	 * 
 	 * @param userset
 	 * @param relation
-	 * @param resource
+	 * @param objectId
 	 * @return
 	 */
-	public boolean check(UserSet userset, String relation, ResourceName resource)
+	public boolean check(UserSet userset, String relation, ResourceName objectId)
 	{
-		TupleSet rewritten = usersetRewrite(resource);
-		return (rewritten.readOne(userset, relation, resource) != null);
+		TupleSet rewritten = usersetRewrite(objectId);
+		return (rewritten.readOne(userset, relation, objectId) != null);
 	}
 
-	private TupleSet usersetRewrite(ResourceName resource)
+	private TupleSet usersetRewrite(ResourceName objectId)
 	{
-		ResourceDefinition resourceDefinition = resourcesByName.get(resource.getResourceType());
+		ResourceDefinition resourceDefinition = resourcesByName.get(objectId.getResourceType());
 		if (resourceDefinition == null) return LocalTupleSet.EMPTY;
-		return resourceDefinition.rewrite(tuples, resource);
+		return resourceDefinition.rewrite(tuples, objectId);
 	}
 
 	@Override
