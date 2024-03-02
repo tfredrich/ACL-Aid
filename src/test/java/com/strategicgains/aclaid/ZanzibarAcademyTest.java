@@ -1,5 +1,6 @@
 package com.strategicgains.aclaid;
 
+import static com.strategicgains.aclaid.builder.rewrite.Rewrites._this;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.computedUserSet;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.union;
 import static org.junit.Assert.assertFalse;

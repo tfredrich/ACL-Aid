@@ -16,4 +16,9 @@ public abstract class Rewrites
 	{
 		return new ComputedUserSetBuilder(null);
 	}
+
+	public static ThisBuilder _this()
+	{
+		return new ThisBuilder(null);
+	}
 }

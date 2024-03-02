@@ -30,9 +30,9 @@ extends AggregateRewriteRule
 		super(parent);
 	}
 
-	public Union(RelationDefinition parent, List<RewriteRule> expressions)
+	public Union(RelationDefinition parent, List<RewriteRule> children)
 	{
-		super(parent, expressions);
+		super(parent, children);
 	}
 
 	@Override
