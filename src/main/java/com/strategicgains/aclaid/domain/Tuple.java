@@ -293,6 +293,6 @@ public class Tuple
 
 	public ResourceName getUsersetResource()
 	{
-		return (hasUserset() ? getUserset().getResource() : null);
+		return (hasUserset() ? getUserset().getUserId() : null);
 	}
 }

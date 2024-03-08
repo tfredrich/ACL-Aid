@@ -73,7 +73,7 @@ extends AbstractRewriteRule
 			{
 				case Tuple.USERSET_OBJECT:
 					System.out.println(Tuple.USERSET_OBJECT + " of " + rewrite + " / " + objectId);
-					input.stream().findFirst().ifPresent(t -> rewrite.setResource(t.getUsersetResource()));
+					input.stream().findFirst().ifPresent(t -> rewrite.setUserId(t.getUsersetResource()));
 					break;
 				case Tuple.USERSET_RELATION:
 					System.out.println(Tuple.USERSET_RELATION + " of " + rewrite);

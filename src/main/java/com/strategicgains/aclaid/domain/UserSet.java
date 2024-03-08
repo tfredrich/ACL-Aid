@@ -19,7 +19,7 @@ public class UserSet
 {
 	public static final UserSet EMPTY = new UserSet();
 
-	private ResourceName resource;
+	private ResourceName userId;
 	private String relation;
 
 	public UserSet()
@@ -32,23 +32,23 @@ public class UserSet
 		this(resource, null);
 	}
 
-	public UserSet(ResourceName resource, String relation)
+	public UserSet(ResourceName userId, String relation)
 	{
 		this();
 		setRelation(relation);
-		setResource(resource);
+		setUserId(userId);
 	}
 
 	public UserSet(UserSet that)
 	{
 		this();
 		setRelation(that.relation);
-		setResource(that.resource);
+		setUserId(that.userId);
 	}
 
 	public String getNamespace()
 	{
-		return (hasResource() ? resource.getNamespace() : null);
+		return (hasUserId() ? userId.getNamespace() : null);
 	}
 
 	public static UserSet parse(String string)
@@ -62,7 +62,7 @@ public class UserSet
 
 		
 		UserSet userset = new UserSet();
-		userset.setResource(new ResourceName(segments[0]));
+		userset.setUserId(new ResourceName(segments[0]));
 
 		if (segments.length == 2)
 		{
@@ -92,25 +92,25 @@ public class UserSet
 		return !hasRelation();
 	}
 
-	protected boolean hasResource()
+	protected boolean hasUserId()
 	{
-		return (resource != null);
+		return (userId != null);
 	}
 
-	public void setResource(ResourceName resource)
+	public void setUserId(ResourceName userId)
 	{
-		this.resource = resource;
+		this.userId = userId;
 	}
 
-	public ResourceName getResource()
+	public ResourceName getUserId()
 	{
-		return resource;
+		return userId;
 	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder s = new StringBuilder(resource.toString());
+		StringBuilder s = new StringBuilder(userId.toString());
 
 		if (hasRelation())
 		{
@@ -124,7 +124,7 @@ public class UserSet
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(relation, resource);
+		return Objects.hash(relation, userId);
 	}
 
 	@Override
@@ -137,12 +137,12 @@ public class UserSet
 		if (getClass() != obj.getClass())
 			return false;
 		UserSet other = (UserSet) obj;
-		return Objects.equals(relation, other.relation) && Objects.equals(resource, other.resource);
+		return Objects.equals(relation, other.relation) && Objects.equals(userId, other.userId);
 	}
 
 	public boolean matches(UserSet that)
 	{
-		if (this.resource.matches(that.resource))
+		if (this.userId.matches(that.userId))
 		{
 			if (hasRelation())
 			{
