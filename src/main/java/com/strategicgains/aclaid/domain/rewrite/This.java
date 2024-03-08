@@ -8,17 +8,16 @@ import com.strategicgains.aclaid.domain.TupleSet;
 public class This
 extends AbstractRewriteRule
 {
-	public This(RelationDefinition relation)
+	public This(RelationDefinition parent)
 	{
-		super(relation);
+		super(parent);
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName objectId)
+	public TupleSet rewrite(TupleSet relationTuples, ResourceName objectId)
 	{
-		TupleSet ts = input.read(getParent().getName(), objectId);
+		TupleSet ts = relationTuples.read(getParentRelationDefinition().getName(), objectId);
 
-		if (ts == null) return LocalTupleSet.EMPTY;
-		return ts;
+		return (ts != null) ? ts : LocalTupleSet.EMPTY_SET;
 	}
 }

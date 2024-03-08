@@ -111,7 +111,7 @@ public class AccessControl
 	private TupleSet usersetRewrite(ResourceName objectId)
 	{
 		ResourceDefinition resourceDefinition = resourcesByName.get(objectId.getResourceType());
-		if (resourceDefinition == null) return LocalTupleSet.EMPTY;
+		if (resourceDefinition == null) return LocalTupleSet.EMPTY_SET;
 		return resourceDefinition.rewrite(tuples, objectId);
 	}
 

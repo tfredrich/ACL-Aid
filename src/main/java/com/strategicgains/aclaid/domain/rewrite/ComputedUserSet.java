@@ -87,6 +87,6 @@ extends AbstractRewriteRule
 		}
 
 		return new LocalTupleSet()
-			.add(new Tuple(rewrite, getParent().getName(), objectId));
+			.add(new Tuple(rewrite, getParentRelationDefinition().getName(), objectId));
 	}
 }

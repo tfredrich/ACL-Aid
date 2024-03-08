@@ -13,7 +13,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
 public class LocalTupleSet
 implements TupleSet
 {
-	public static final LocalTupleSet EMPTY = new LocalTupleSet();
+	public static final LocalTupleSet EMPTY_SET = new LocalTupleSet();
 
 	/**
 	 * The directional index of relation tuples by user set and relation. 

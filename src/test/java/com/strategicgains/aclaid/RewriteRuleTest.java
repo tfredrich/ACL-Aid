@@ -144,13 +144,13 @@ public class RewriteRuleTest
 		RelationDefinition owner = new RelationDefinition(OWNER);
 		RelationDefinition editor = new RelationDefinition(EDITOR);
 		Union editorRewrite = new Union(editor)
-			.child(new This(editor))
-			.child(new ComputedUserSet(editor, OWNER));
+			.addChild(new This(editor))
+			.addChild(new ComputedUserSet(editor, OWNER));
 		editor.setRewriteRules(editorRewrite);
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		Union viewerRewrite = new Union(viewer)
-			.child(new This(viewer))
-			.child(new ComputedUserSet(viewer, EDITOR));
+			.addChild(new This(viewer))
+			.addChild(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
 		
 		// kim@owner#doc/roadmap
@@ -176,13 +176,13 @@ public class RewriteRuleTest
 		RelationDefinition owner = new RelationDefinition(OWNER);
 		RelationDefinition editor = new RelationDefinition(EDITOR);
 		Union editorRewrite = new Union(editor)
-			.child(new This(editor))
-			.child(new ComputedUserSet(editor, OWNER));
+			.addChild(new This(editor))
+			.addChild(new ComputedUserSet(editor, OWNER));
 		editor.setRewriteRules(editorRewrite);
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		Union viewerRewrite = new Union(viewer)
-			.child(new This(viewer))
-			.child(new ComputedUserSet(viewer, EDITOR));
+			.addChild(new This(viewer))
+			.addChild(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
 
 		TupleSet owners = owner.rewrite(tuples, new ResourceName(DOC_ROADMAP));
@@ -208,13 +208,13 @@ public class RewriteRuleTest
 		RelationDefinition owner = new RelationDefinition(OWNER);
 		RelationDefinition editor = new RelationDefinition(EDITOR);
 		Union editorRewrite = new Union(editor)
-			.child(new This(editor))
-			.child(new ComputedUserSet(editor, OWNER));
+			.addChild(new This(editor))
+			.addChild(new ComputedUserSet(editor, OWNER));
 		editor.setRewriteRules(editorRewrite);
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		Union viewerRewrite = new Union(viewer)
-			.child(new This(viewer))
-			.child(new ComputedUserSet(viewer, EDITOR));
+			.addChild(new This(viewer))
+			.addChild(new ComputedUserSet(viewer, EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
 	}
 

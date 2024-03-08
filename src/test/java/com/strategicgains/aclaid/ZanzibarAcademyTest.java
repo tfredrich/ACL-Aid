@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid;
 
-import static com.strategicgains.aclaid.builder.rewrite.Rewrites._this;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.computedUserSet;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.union;
 import static org.junit.Assert.assertFalse;
@@ -135,6 +134,7 @@ public class ZanzibarAcademyTest
 							._this()
 							.computedUserSet()
 								.relation(OWNER)
+						.end()
 					)
 				.relation(VIEWER)
 					.rewrite(
@@ -142,6 +142,7 @@ public class ZanzibarAcademyTest
 							._this()
 							.computedUserSet()
 								.relation(EDITOR)
+						.end()
 					)
 
 			.tuple(KIM, OWNER, DOC_ROADMAP)
@@ -202,6 +203,7 @@ public class ZanzibarAcademyTest
 							._this()
 							.computedUserSet()
 								.relation(OWNER)
+						.end()
 					)
 				.relation(VIEWER)
 					.rewrite(
@@ -209,6 +211,7 @@ public class ZanzibarAcademyTest
 							._this()
 							.computedUserSet()
 								.relation(EDITOR)
+						.end()
 					)
 			.object(DOC_README)
 			.tuple(CARL, MEMBER, CONTOSO)
@@ -296,6 +299,7 @@ public class ZanzibarAcademyTest
 						._this()
 						.computedUserSet()
 							.relation(OWNER)
+					.end()
 				)
 				.relation(VIEWER)
 				.rewrite(
@@ -303,6 +307,7 @@ public class ZanzibarAcademyTest
 						._this()
 						.computedUserSet()
 							.relation(EDITOR)
+					.end()
 				)
 			.object(DOCUMENT_OBJECT)
 				.relation(PARENT)
@@ -319,6 +324,7 @@ public class ZanzibarAcademyTest
 									.relation(EDITOR)
 									.resource(Tuple.USERSET_OBJECT)
 							)
+						.end()
 					)
 				.relation(VIEWER)
 					.rewrite(
@@ -332,6 +338,7 @@ public class ZanzibarAcademyTest
 									.relation(VIEWER)
 									.resource(Tuple.USERSET_OBJECT)
 							)
+						.end()
 					)
 
 					// +viewer on parent [folder] provides viewer on document

@@ -36,18 +36,18 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public Union child(RewriteRule rewriteRule)
+	public Union addChild(RewriteRule rewriteRule)
 	{
-		super.child(rewriteRule);
+		super.addChild(rewriteRule);
 		return this;
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName resource)
+	public TupleSet rewrite(TupleSet relationTuples, ResourceName resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
 		stream()
-			.map(r -> r.rewrite(input, resource))
+			.map(r -> r.rewrite(relationTuples, resource))
 			.forEach(rewrites::addAll);
 		return rewrites;
 	}

@@ -56,7 +56,7 @@ _this     computed_userset           +-----------tuple_to_userset---------+
 public abstract class AbstractRewriteRule
 implements RewriteRule
 {
-	private RelationDefinition parent;
+	private RelationDefinition parentRelationDefinition;
 
 	private AbstractRewriteRule()
 	{
@@ -67,16 +67,16 @@ implements RewriteRule
 	protected AbstractRewriteRule(RelationDefinition parent)
 	{
 		this();
-		setParent(parent);
+		setParentRelationDefinition(parent);
 	}
 
-	protected RelationDefinition getParent()
+	protected RelationDefinition getParentRelationDefinition()
 	{
-		return parent;
+		return parentRelationDefinition;
 	}
 
-	protected void setParent(RelationDefinition parent)
+	protected void setParentRelationDefinition(RelationDefinition parent)
 	{
-		this.parent = parent;
+		this.parentRelationDefinition = parent;
 	}
 }

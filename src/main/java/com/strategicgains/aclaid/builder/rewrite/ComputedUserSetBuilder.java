@@ -43,4 +43,9 @@ implements RewriteRuleBuilder
 	{
 		return parent.tupleToUserSet(relation, computedUserSetBuilder);
 	}
+
+	public RewriteRuleBuilder end()
+	{
+		return parent.end();
+	}
 }
