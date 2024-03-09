@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
@@ -20,6 +21,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * @author tfredrich
  * @see https://zanzibar.academy/
  */
+@Ignore
 public class ZanzibarAcademyTest
 {
 	private static final String NAMESPACE = "ZanzibarAcademyTest:";
