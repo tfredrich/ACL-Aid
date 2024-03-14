@@ -15,11 +15,17 @@ import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
- * A collection of NamespaceConfiguration instances that compose the tuples and 
- * userset rewrite rules, including Relations and Policies for Access Control
+ * This AccessControl class is equivalent to the Namespace Configuration in the Zanzibar paper.
+ * 
+ * It specifies its relations as well as contains the relation tuples for the namespace.
+ * 
+ * Each relation has a name, which is a client-defined string such as viewer or editor, and a relation configuration,
+ * such as rewrite rules, which are used to determine the set of tuples that apply to a given object at runtime.
+ * 
+ * Therefore, AccessControl maintains configuration and tuples for a namespace, and it is used to check authorization
  * within an application.
  * 
- * @author tfredrich
+ * @author Todd Fredrich
  * @since Mar 18, 2022
  * @see AccessControlBuilder
  */
@@ -38,7 +44,7 @@ public class AccessControl
 	throws InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
-		if (!resourcesByName.containsKey(resource.getResourceType())) throw new InvalidTupleException("Resource not defined: " + resource.getResourceType());
+		if (!resourcesByName.containsKey(resource.getType())) throw new InvalidTupleException("Resource not defined: " + resource.getType());
 
 		tuples.add(userset, relation, resource);
 		return this;
@@ -97,6 +103,19 @@ public class AccessControl
 	/**
 	 * Make an authorization check.
 	 * 
+	 * Zanzibar evaluates ACL checks by converting check requests to boolean expressions. In a simple case, when there are no userset
+	 * rewrite rules, checking a user U against a userset ⟨object#relation⟩ can be expressed as
+	 * 
+	 * CHECK(U,⟨object#relation⟩) =
+	 * 		∃ tuple ⟨object#relation@U⟩
+	 * 		∨∃ tuple ⟨object#relation@U′⟩, where
+	 * 			U′ = ⟨object′#relation′⟩ s.t. CHECK(U,U′).
+	 * 
+	 * Finding a valid U′ = ⟨object′ #relation′ ⟩ involves evaluating membership on all indirect ACLs or groups, recursively. This kind
+	 * of “pointer chasing” works well for most types of ACLs and groups, but can be expensive when indirect ACLs or groups are deep or wide.
+	 * 
+	 * Userset rewrite rules are also translated to boolean expressions as part of check evaluation. Evaluation of leaf nodes usually involves reading relation tuples from databases.
+	 * 
 	 * @param userset
 	 * @param relation
 	 * @param objectId
@@ -110,7 +129,7 @@ public class AccessControl
 
 	private TupleSet usersetRewrite(ObjectId objectId)
 	{
-		ResourceDefinition resourceDefinition = resourcesByName.get(objectId.getResourceType());
+		ResourceDefinition resourceDefinition = resourcesByName.get(objectId.getType());
 		if (resourceDefinition == null) return LocalTupleSet.EMPTY_SET;
 		return resourceDefinition.rewrite(tuples, objectId);
 	}

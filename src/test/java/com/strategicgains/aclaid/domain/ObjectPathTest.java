@@ -8,23 +8,23 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-public class ResourcePathTest
+public class ObjectPathTest
 {
 	@Test
 	public void shouldParseStrings()
 	throws ParseException
 	{
-		ObjectPath rp = ObjectPath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		assertResourcePath(rp, "directories", "d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectPath path = ObjectPath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		assertPath(path, "directories", "d79e866b-a24c-4a27-906c-5985dbc6e377");
 
-		rp = ObjectPath.parse("directories/*");
-		assertResourcePath(rp, "directories", "*");
+		path = ObjectPath.parse("directories/*");
+		assertPath(path, "directories", "*");
 
-		rp = ObjectPath.parse("*/*");
-		assertResourcePath(rp, "*", "*");
+		path = ObjectPath.parse("*/*");
+		assertPath(path, "*", "*");
 
-		rp = ObjectPath.parse("*");
-		assertResourcePath(rp, "*", null);
+		path = ObjectPath.parse("*");
+		assertPath(path, "*", null);
 	}
 
 	@Test
@@ -71,9 +71,9 @@ public class ResourcePathTest
 		assertFalse(b.matches(a));		
 	}
 
-	private void assertResourcePath(ObjectPath rp, String resourceType, String value)
+	private void assertPath(ObjectPath rp, String type, String id)
 	{
-		assertEquals(resourceType, rp.getType());
-		assertEquals(value, rp.getIdentifier());
+		assertEquals(type, rp.getType());
+		assertEquals(id, rp.getIdentifier());
 	}
 }

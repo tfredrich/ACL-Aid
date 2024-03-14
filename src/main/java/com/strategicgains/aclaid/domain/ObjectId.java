@@ -9,30 +9,30 @@ public class ObjectId
 	protected static final int DEFAULT_SEGMENT_COUNT = 2;
 
 	private String namespace;
-	private ObjectPath objectPath;
+	private ObjectPath path;
 
 	public ObjectId()
 	{
 		super();
 	}
 
-	public ObjectId(String resourceName)
+	public ObjectId(String objectId)
 	throws ParseException
 	{
-		this(resourceName, DEFAULT_SEGMENT_COUNT);
+		this(objectId, DEFAULT_SEGMENT_COUNT);
 	}
 
-	protected ObjectId(String resourceName, int segmentCount)
+	protected ObjectId(String objectId, int segmentCount)
 	throws ParseException
 	{
 		this();
-		String[] segments = parseSegments(resourceName, segmentCount);		
+		String[] segments = parseSegments(objectId, segmentCount);		
 		setSegments(segments);
 	}
 
-	public ObjectId(String namespace, String resourceType)
+	public ObjectId(String namespace, String type)
 	{
-		this(namespace, new ObjectPath(resourceType));
+		this(namespace, new ObjectPath(type));
 	}
 
 	public ObjectId(String namespace, String resourceType, String identifier)
@@ -40,21 +40,21 @@ public class ObjectId
 		this(namespace, new ObjectPath(resourceType, identifier));
 	}
 
-	public ObjectId(String namespace, ObjectPath resourcePath)
+	public ObjectId(String namespace, ObjectPath path)
 	{
 		this();
 		setNamespace(namespace);
-		setObjectPath(resourcePath);
+		setPath(path);
 	}
 
 	public ObjectId(ObjectId that)
 	{
-		this(that.getNamespace(), that.getObjectPath());
+		this(that.getNamespace(), that.getPath());
 	}
 
-	public String getResourceType()
+	public String getType()
 	{
-		return (hasResourcePath() ? getObjectPath().getType() : null);
+		return (hasPath() ? getPath().getType() : null);
 	}
 
 	public String getNamespace()
@@ -72,34 +72,34 @@ public class ObjectId
 		this.namespace = namespace;
 	}
 
-	public ObjectPath getObjectPath()
+	public ObjectPath getPath()
 	{
-		return objectPath;
+		return path;
 	}
 
-	public boolean hasResourcePath()
+	public boolean hasPath()
 	{
-		return objectPath != null;
+		return path != null;
 	}
 
-	public void setObjectPath(ObjectPath resource)
+	public void setPath(ObjectPath path)
 	{
-		this.objectPath = resource;
+		this.path = path;
 	}
 
-	public boolean isObjectTypeWildcard()
+	public boolean isTypeWildcard()
 	{
-		return (hasResourcePath() && objectPath.isTypeWildcard());
+		return (hasPath() && path.isTypeWildcard());
 	}
 
 	public boolean isIdentifierWildcard()
 	{
-		return (hasResourcePath() && objectPath.isIdentifierWildcard());
+		return (hasPath() && path.isIdentifierWildcard());
 	}
 
 	public boolean isWildcard()
 	{
-		return (isObjectTypeWildcard() || isIdentifierWildcard());
+		return (isTypeWildcard() || isIdentifierWildcard());
 	}
 
 	@Override
@@ -117,13 +117,13 @@ public class ObjectId
 	{
 		if (!this.getNamespace().equals(that.getNamespace())) return false;
 
-		return (!Objects.equals(this.getObjectPath(), that.getObjectPath()));
+		return (!Objects.equals(this.getPath(), that.getPath()));
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getNamespace(), getObjectPath());
+		return Objects.hash(getNamespace(), getPath());
 	}
 
 	public String toString()
@@ -131,30 +131,30 @@ public class ObjectId
 		StringBuilder sb = new StringBuilder(getNamespace());
 		appendSegments(sb);
 
-		if (hasResourcePath())
+		if (hasPath())
 		{
 			sb.append(SEPARATOR);
-			sb.append(getObjectPath().toString());
+			sb.append(getPath().toString());
 		}
 
 		return sb.toString();
 	}
 
 	/**
-	 * Determines if this ResourceName matches another ResourceName (by String), allowing for wildcards.
+	 * Determines if this ObjectId matches another Object (by String), allowing for wildcards.
 	 * 
-	 * @param resourceName
+	 * @param objectId
 	 * @return
 	 * @throws ParseException
 	 */
-	public boolean matches(String resourceName)
+	public boolean matches(String objectId)
 	throws ParseException
 	{
-		return matches(new ObjectId(resourceName));
+		return matches(new ObjectId(objectId));
 	}
 
 	/**
-	 * Determines if this ResourceName matches another ResourceName, allowing for wildcards.
+	 * Determines if this ObjectId matches another ObjectId instance, allowing for wildcards.
 	 * 
 	 * @param that
 	 * @return
@@ -170,7 +170,7 @@ public class ObjectId
 			namespaceMatches = this.getNamespace().equals(that.getNamespace());
 		}
 
-		return (namespaceMatches && segmentsMatch(that) && this.getObjectPath().matches(that.getObjectPath()));
+		return (namespaceMatches && segmentsMatch(that) && this.getPath().matches(that.getPath()));
 	}
 
 	/**
@@ -196,16 +196,16 @@ public class ObjectId
 		return true;
 	}
 
-	protected String[] parseSegments(String resourceName, int segmentCount)
+	protected String[] parseSegments(String objectId, int segmentCount)
 	throws ParseException
 	{
-		if (resourceName == null) throw new ParseException("Resource names cannot be null", 0);
+		if (objectId == null) throw new ParseException("Object IDs cannot be null", 0);
 
-		String[] segments = resourceName.split(SEPARATOR);
+		String[] segments = objectId.split(SEPARATOR);
 
 		if (segments.length != segmentCount)
 		{
-			throw new ParseException(String.format("Resource names have %d segments, beginning with a namespace", segmentCount), resourceName.lastIndexOf(':'));
+			throw new ParseException(String.format("Object IDs have %d segments, beginning with a namespace", segmentCount), objectId.lastIndexOf(':'));
 		}
 
 		return segments;
@@ -215,12 +215,6 @@ public class ObjectId
 	throws ParseException
 	{
 		setNamespace(segments[0].isEmpty() ? null : segments[0]);
-		setObjectPath(ObjectPath.parse(segments[segments.length - 1]));
-	}
-
-	public void get(String descriptor)
-	{
-		// TODO Auto-generated method stub
-		
+		setPath(ObjectPath.parse(segments[segments.length - 1]));
 	}
 }

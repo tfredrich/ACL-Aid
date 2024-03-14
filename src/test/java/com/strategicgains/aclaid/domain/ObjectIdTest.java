@@ -8,30 +8,30 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-public class ResourceNameTest
+public class ObjectIdTest
 {
 	@Test
 	public void shouldParseUuid()
 	throws ParseException
 	{
-		ObjectId qrn = new ObjectId("test:directories/*");
-		assertQrn(qrn, "test", "directories/*");
+		ObjectId objectId = new ObjectId("test:directories/*");
+		assertobjectId(objectId, "test", "directories/*");
 	}
 
 	@Test
 	public void shouldParseStrings()
 	throws ParseException
 	{
-		ObjectId qrn = new ObjectId("test:directories/*");
-		assertQrn(qrn, "test", "directories/*");
-		qrn = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
-		assertQrn(qrn, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
-		qrn = new ObjectId(":directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		assertQrn(qrn, null, "directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		qrn = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
-		assertQrn(qrn, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
-		qrn = new ObjectId("test:*");
-		assertQrn(qrn, "test", "*");
+		ObjectId objectId = new ObjectId("test:directories/*");
+		assertobjectId(objectId, "test", "directories/*");
+		objectId = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
+		assertobjectId(objectId, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
+		objectId = new ObjectId(":directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		assertobjectId(objectId, null, "directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		objectId = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
+		assertobjectId(objectId, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
+		objectId = new ObjectId("test:*");
+		assertobjectId(objectId, "test", "*");
 	}
 
 	@Test
@@ -112,13 +112,13 @@ public class ResourceNameTest
 	throws ParseException
 	{
 		QualifiedResourceName a = new QualifiedResourceName("namespace:::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
-		assertMultiQrn(a, "namespace", "", "", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		assertMultiobjectId(a, "namespace", "", "", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		QualifiedResourceName b = new QualifiedResourceName("namespace:::directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
-		assertMultiQrn(b, "namespace", "", "", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		assertMultiobjectId(b, "namespace", "", "", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		QualifiedResourceName c = new QualifiedResourceName("namespace:b17544eb-f533-4c92-a4be-1a6391600ec5:d79e866b-a24c-4a27-906c-5985dbc6e378:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
-		assertMultiQrn(c, "namespace", "b17544eb-f533-4c92-a4be-1a6391600ec5", "d79e866b-a24c-4a27-906c-5985dbc6e378", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		assertMultiobjectId(c, "namespace", "b17544eb-f533-4c92-a4be-1a6391600ec5", "d79e866b-a24c-4a27-906c-5985dbc6e378", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		QualifiedResourceName d = new QualifiedResourceName("namespace:b17544eb-f533-4c92-a4be-1a6391600ec5:d79e866b-a24c-4a27-906c-5985dbc6e378:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
-		assertMultiQrn(d, "namespace", "b17544eb-f533-4c92-a4be-1a6391600ec5", "d79e866b-a24c-4a27-906c-5985dbc6e378", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		assertMultiobjectId(d, "namespace", "b17544eb-f533-4c92-a4be-1a6391600ec5", "d79e866b-a24c-4a27-906c-5985dbc6e378", "directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
@@ -141,16 +141,16 @@ public class ResourceNameTest
 		assertEquals(bString, b.toString());
 	}
 
-	private void assertMultiQrn(QualifiedResourceName qrn, String namespace, String org, String account, String path)
+	private void assertMultiobjectId(QualifiedResourceName objectId, String namespace, String org, String account, String path)
 	{
-		assertQrn(qrn, namespace, path);
-		assertEquals(org, qrn.hasTenantId() ? qrn.getTenantId().toString() : "");
-		assertEquals(account, qrn.hasAccountId() ? qrn.getAccountId().toString() : "");
+		assertobjectId(objectId, namespace, path);
+		assertEquals(org, objectId.hasTenantId() ? objectId.getTenantId().toString() : "");
+		assertEquals(account, objectId.hasAccountId() ? objectId.getAccountId().toString() : "");
 	}
 
-	private void assertQrn(ObjectId qrn, String namespace, String path)
+	private void assertobjectId(ObjectId objectId, String namespace, String path)
 	{
-		assertEquals(namespace, qrn.getNamespace());
-		assertEquals(path, qrn.getObjectPath().toString());
+		assertEquals(namespace, objectId.getNamespace());
+		assertEquals(path, objectId.getPath().toString());
 	}
 }

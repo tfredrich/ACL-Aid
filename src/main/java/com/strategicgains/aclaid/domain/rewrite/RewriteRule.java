@@ -6,6 +6,8 @@ import com.strategicgains.aclaid.domain.TupleSet;
 /**
  * In Zanzibar, Userset rewrite rules are defined per relation in a namespace. Each rule specifies
  * a function that takes an object ID as input and outputs a userset expression tree.
+ * 
+ * Userset rewrite rules are translated to boolean expressions as part of check evaluation.
  *
  * For example, the following rule specifies that the userset for a relation is the intersection
  * of the "owner" and "editor" relations unioned with the "viewer" relation:
