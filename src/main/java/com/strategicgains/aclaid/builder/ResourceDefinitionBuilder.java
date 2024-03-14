@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.AccessControl;
-import com.strategicgains.aclaid.domain.ResourceDefinition;
+import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -31,9 +31,9 @@ implements Buildable
 		this.parent = parent;
 	}
 
-	public ResourceDefinition buildRelations(AccessControl parent)
+	public ObjectDefinition buildRelations(AccessControl parent)
 	{
-		ResourceDefinition namespaceConfiguration = parent.resource(name);
+		ObjectDefinition namespaceConfiguration = parent.object(name);
 		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build()));
 		return namespaceConfiguration;
 	}

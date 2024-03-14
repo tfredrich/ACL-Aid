@@ -3,12 +3,12 @@ package com.strategicgains.aclaid.domain;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ResourceDefinition
+public class ObjectDefinition
 {
 	private String name;
 	private Map<String, RelationDefinition> relations = new HashMap<>();
 
-	public ResourceDefinition(String name)
+	public ObjectDefinition(String name)
 	{
 		super();
 		this.name = name;
@@ -44,5 +44,10 @@ public class ResourceDefinition
 		TupleSet copy = tuples.copy();
 		relations.values().forEach(relation -> copy.addAll(relation.rewrite(tuples, objectId)));
 		return copy;
+	}
+
+	public boolean check(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)
+	{
+		return relations.values().stream().anyMatch(r -> r.rewrite(tuples, userset, relation, objectId));
 	}
 }

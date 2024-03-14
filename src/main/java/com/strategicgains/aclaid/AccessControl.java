@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
 import com.strategicgains.aclaid.domain.LocalTupleSet;
-import com.strategicgains.aclaid.domain.ResourceDefinition;
+import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -31,7 +31,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  */
 public class AccessControl
 {
-	private Map<String, ResourceDefinition> resourcesByName = new HashMap<>();
+	private Map<String, ObjectDefinition> objectsByName = new HashMap<>();
 	private TupleSet tuples = new LocalTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
@@ -44,7 +44,7 @@ public class AccessControl
 	throws InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
-		if (!resourcesByName.containsKey(resource.getType())) throw new InvalidTupleException("Resource not defined: " + resource.getType());
+		if (!objectsByName.containsKey(resource.getType())) throw new InvalidTupleException("Resource not defined: " + resource.getType());
 
 		tuples.add(userset, relation, resource);
 		return this;
@@ -63,15 +63,15 @@ public class AccessControl
 	}
 
 	/**
-	 * Get an existing ResourceDefinition by name or create a new, empty one.
+	 * Get an existing ObjectDefinition by name or create a new, empty one.
 	 * Changes to the instance make changes to this AccessControl.
 	 * 
 	 * @param resourceName the name of the resource being defined.
-	 * @return an existing or new, empty ResourceDefinition instance.
+	 * @return an existing or new, empty ObjectDefinition instance.
 	 */
-	public ResourceDefinition resource(String resourceName)
+	public ObjectDefinition object(String resourceName)
 	{
-		return resourcesByName.computeIfAbsent(resourceName, n -> new ResourceDefinition(resourceName));
+		return objectsByName.computeIfAbsent(resourceName, n -> new ObjectDefinition(resourceName));
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class AccessControl
 	 */
 	public boolean containsRelation(String relation)
 	{
-		return resourcesByName.values().stream().anyMatch(n -> n.containsRelation(relation));
+		return objectsByName.values().stream().anyMatch(n -> n.containsRelation(relation));
 	}
 
 	/**
@@ -123,20 +123,14 @@ public class AccessControl
 	 */
 	public boolean check(UserSet userset, String relation, ObjectId objectId)
 	{
-		TupleSet rewritten = usersetRewrite(objectId);
-		return (rewritten.readOne(userset, relation, objectId) != null);
-	}
-
-	private TupleSet usersetRewrite(ObjectId objectId)
-	{
-		ResourceDefinition resourceDefinition = resourcesByName.get(objectId.getType());
-		if (resourceDefinition == null) return LocalTupleSet.EMPTY_SET;
-		return resourceDefinition.rewrite(tuples, objectId);
+		ObjectDefinition objectDefinition = objectsByName.get(objectId.getType());
+		if (objectDefinition == null) return false;
+		return objectDefinition.check(tuples, userset, relation, objectId);
 	}
 
 	@Override
 	public String toString()
 	{
-		return String.format("resources=(%s)", resourcesByName.keySet().stream().collect(Collectors.joining(", ")));
+		return String.format("resources=(%s)", objectsByName.keySet().stream().collect(Collectors.joining(", ")));
 	}
 }

@@ -45,4 +45,11 @@ public class RelationDefinition
 
 		return new This().expand(relationTuples, name, objectId);
 	}
+
+	public boolean rewrite(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)
+	{
+		if (hasRewriteRules()) return rewriteRules.check(tuples, userset, relation, objectId);
+
+		return new This().check(tuples, userset, relation, objectId);
+	}
 }
