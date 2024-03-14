@@ -20,19 +20,13 @@ import java.util.Date;
  * One feature worth noting is that a ⟨userset⟩ allows ACLs to refer to groups and thus supports representing nested group membership.
  * 
  * We redefine subtly here to use the following vocabulary instead:
- * ⟨tuple⟩   ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
- * (relation)::= (relation name)
- * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
- * (user id) ::= (object)
- * ⟨userset⟩ ::= ⟨object⟩‘#’⟨relation⟩
- * ⟨object⟩  ::= ⟨namespace⟩‘:’⟨id⟩
+ * ⟨tuple⟩     ::= ⟨object⟩‘#’⟨relation⟩‘@’⟨user⟩
+ * ⟨object⟩    ::= ⟨namespace⟩‘:’⟨object id⟩
+ * ⟨user⟩      ::= ⟨object⟩ | ⟨userset⟩
+ * ⟨userset⟩   ::= ⟨object⟩‘#’⟨relation⟩
+ * (object id) ::= (string)
  * 
- * Where 'object' and a user ID is a namespaced, fully-qualified resource.
- * 
- * Would like to be able to answer as many "resource has relation on userset" questions as possible from memory.
- * With small footprint and high performance.
- * 
- * @author tfredrich
+ * @author Todd Fredrich
  */
 public class Tuple
 {
@@ -55,7 +49,7 @@ public class Tuple
 	 * The resource (or object) on which the UserSet has a relation.
 	 * Examples are: 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
 	 */
-	private ResourceName objectId;
+	private ObjectId objectId;
 
 	/**
 	 * The relationship being granted, such as 'owner', 'viewer', 'member'
@@ -80,10 +74,10 @@ public class Tuple
 		super();
 	}
 
-	public Tuple(UserSet userset, String relation, ResourceName resource)
+	public Tuple(UserSet userset, String relation, ObjectId objectId)
 	{
 		this();
-		setObjectId(resource);
+		setObjectId(objectId);
 		setRelation(relation);
 		setUserset(userset);
 	}
@@ -91,7 +85,7 @@ public class Tuple
 	public Tuple(String userset, String relation, String resource)
 	throws ParseException
 	{
-		this(UserSet.parse(userset), relation, new ResourceName(resource));
+		this(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
 	public Tuple(Tuple tuple)
@@ -119,12 +113,12 @@ public class Tuple
 		return (objectId != null);
 	}
 
-	public ResourceName getObjectId()
+	public ObjectId getObjectId()
 	{
 		return objectId;
 	}
 
-	public void setObjectId(ResourceName objectId)
+	public void setObjectId(ObjectId objectId)
 	{
 //		if (resource.isWildcard())
 //		{
@@ -146,7 +140,11 @@ public class Tuple
 
 	public void setUserset(UserSet userset)
 	{
-//		if (userset.getResource().isWildcard()) throw new InvalidTupleException("Wildcard usersets not permitted in tuples: " + userset.toString());
+//		if (userset.getUserId().isWildcard())
+//		{
+//			throw new InvalidTupleException("Wildcard usersets not permitted in tuples: " + userset.toString());
+//		}
+
 		this.userset = userset;
 	}
 
@@ -170,22 +168,22 @@ public class Tuple
 		return matches(that.getUserset(), that.getRelation(), that.getObjectId());
 	}
 
-	public boolean matches(UserSet userset, String relation, ResourceName object)
+	public boolean matches(UserSet userset, String relation, ObjectId objectId)
 	{
 		return (this.relation.equals(relation)
-			&& this.objectId.matches(object)
+			&& this.objectId.matches(objectId)
 			&& this.userset.matches(userset));
 	}
 
-	public boolean applies(ResourceName resource)
+	public boolean appliesTo(ObjectId objectId)
 	{
-		return this.objectId.matches(resource);
+		return this.objectId.matches(objectId);
 	}
 
-	public boolean applies(ResourceName resource, String relation)
+	public boolean appliesTo(ObjectId objectId, String relation)
 	{
 		return (this.relation.equals(relation)
-			&& this.objectId.matches(resource));
+			&& this.objectId.matches(objectId));
 	}
 
 	@Override
@@ -264,7 +262,7 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation#resource: " + tuple, 0);
 
-		return new Tuple(UserSet.parse(obj[0]), rel[0], new ResourceName(rel[1]));
+		return new Tuple(UserSet.parse(obj[0]), rel[0], new ObjectId(rel[1]));
 	}
 
 	/*
@@ -283,7 +281,7 @@ public class Tuple
 
 		if (rel.length < 2) throw new ParseException("Invalid tuple relation@userset: " + tuple, 0);
 
-		return new Tuple(UserSet.parse(rel[1]), rel[0], new ResourceName(obj[0]));
+		return new Tuple(UserSet.parse(rel[1]), rel[0], new ObjectId(obj[0]));
 	}
 
 	public String getUsersetRelation()
@@ -291,7 +289,7 @@ public class Tuple
 		return (hasUserset() ? getUserset().getRelation() : null);
 	}
 
-	public ResourceName getUsersetResource()
+	public ObjectId getUsersetResource()
 	{
 		return (hasUserset() ? getUserset().getUserId() : null);
 	}

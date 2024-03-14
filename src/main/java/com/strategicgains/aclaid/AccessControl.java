@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ResourceDefinition;
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -34,7 +34,7 @@ public class AccessControl
 		return addTuple(new Tuple(userset, relation, resource));
 	}
 
-	public AccessControl addTuple(UserSet userset, String relation, ResourceName resource)
+	public AccessControl addTuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
@@ -50,7 +50,7 @@ public class AccessControl
 		return addTuple(tuple.getUserset(), tuple.getRelation(), tuple.getObjectId());
 	}
 
-	public AccessControl removeTuple(UserSet userset, String relation, ResourceName resource)
+	public AccessControl removeTuple(UserSet userset, String relation, ObjectId resource)
 	{
 		tuples.remove(userset, relation, resource);
 		return this;
@@ -91,7 +91,7 @@ public class AccessControl
 	public boolean check(String userset, String relation, String objectId)
 	throws ParseException
 	{
-		return check(UserSet.parse(userset), relation, new ResourceName(objectId));
+		return check(UserSet.parse(userset), relation, new ObjectId(objectId));
 	}
 
 	/**
@@ -102,13 +102,13 @@ public class AccessControl
 	 * @param objectId
 	 * @return
 	 */
-	public boolean check(UserSet userset, String relation, ResourceName objectId)
+	public boolean check(UserSet userset, String relation, ObjectId objectId)
 	{
 		TupleSet rewritten = usersetRewrite(objectId);
 		return (rewritten.readOne(userset, relation, objectId) != null);
 	}
 
-	private TupleSet usersetRewrite(ResourceName objectId)
+	private TupleSet usersetRewrite(ObjectId objectId)
 	{
 		ResourceDefinition resourceDefinition = resourcesByName.get(objectId.getResourceType());
 		if (resourceDefinition == null) return LocalTupleSet.EMPTY_SET;

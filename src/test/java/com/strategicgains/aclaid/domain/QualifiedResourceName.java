@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.UUID;
 
 public class QualifiedResourceName
-extends ResourceName
+extends ObjectId
 {
 	private static final String INVALID_ACCOUNT_ID = "Invalid Account ID: ";
 	private static final String INVALID_TENANT_ID = "Invalid Tenant ID: ";
@@ -57,7 +57,7 @@ extends ResourceName
 	}
 
 	@Override
-	protected boolean segmentsMatch(ResourceName other)
+	protected boolean segmentsMatch(ObjectId other)
 	{
 		QualifiedResourceName that = (QualifiedResourceName) other;
 		boolean orgMatches = (!this.hasTenantId() || !that.hasTenantId());

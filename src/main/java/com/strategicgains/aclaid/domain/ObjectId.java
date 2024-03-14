@@ -3,26 +3,26 @@ package com.strategicgains.aclaid.domain;
 import java.text.ParseException;
 import java.util.Objects;
 
-public class ResourceName
+public class ObjectId
 {
 	public static final String SEPARATOR = ":";
 	protected static final int DEFAULT_SEGMENT_COUNT = 2;
 
 	private String namespace;
-	private ResourcePath resourcePath;
+	private ObjectPath objectPath;
 
-	public ResourceName()
+	public ObjectId()
 	{
 		super();
 	}
 
-	public ResourceName(String resourceName)
+	public ObjectId(String resourceName)
 	throws ParseException
 	{
 		this(resourceName, DEFAULT_SEGMENT_COUNT);
 	}
 
-	protected ResourceName(String resourceName, int segmentCount)
+	protected ObjectId(String resourceName, int segmentCount)
 	throws ParseException
 	{
 		this();
@@ -30,31 +30,31 @@ public class ResourceName
 		setSegments(segments);
 	}
 
-	public ResourceName(String namespace, String resourceType)
+	public ObjectId(String namespace, String resourceType)
 	{
-		this(namespace, new ResourcePath(resourceType));
+		this(namespace, new ObjectPath(resourceType));
 	}
 
-	public ResourceName(String namespace, String resourceType, String identifier)
+	public ObjectId(String namespace, String resourceType, String identifier)
 	{
-		this(namespace, new ResourcePath(resourceType, identifier));
+		this(namespace, new ObjectPath(resourceType, identifier));
 	}
 
-	public ResourceName(String namespace, ResourcePath resourcePath)
+	public ObjectId(String namespace, ObjectPath resourcePath)
 	{
 		this();
 		setNamespace(namespace);
-		setResourcePath(resourcePath);
+		setObjectPath(resourcePath);
 	}
 
-	public ResourceName(ResourceName that)
+	public ObjectId(ObjectId that)
 	{
-		this(that.getNamespace(), that.getResourcePath());
+		this(that.getNamespace(), that.getObjectPath());
 	}
 
 	public String getResourceType()
 	{
-		return (hasResourcePath() ? getResourcePath().getResourceType() : null);
+		return (hasResourcePath() ? getObjectPath().getType() : null);
 	}
 
 	public String getNamespace()
@@ -72,34 +72,34 @@ public class ResourceName
 		this.namespace = namespace;
 	}
 
-	public ResourcePath getResourcePath()
+	public ObjectPath getObjectPath()
 	{
-		return resourcePath;
+		return objectPath;
 	}
 
 	public boolean hasResourcePath()
 	{
-		return resourcePath != null;
+		return objectPath != null;
 	}
 
-	public void setResourcePath(ResourcePath resource)
+	public void setObjectPath(ObjectPath resource)
 	{
-		this.resourcePath = resource;
+		this.objectPath = resource;
 	}
 
-	public boolean isResourceTypeWildcard()
+	public boolean isObjectTypeWildcard()
 	{
-		return (hasResourcePath() && resourcePath.isResourceTypeWildcard());
+		return (hasResourcePath() && objectPath.isTypeWildcard());
 	}
 
 	public boolean isIdentifierWildcard()
 	{
-		return (hasResourcePath() && resourcePath.isIdentifierWildcard());
+		return (hasResourcePath() && objectPath.isIdentifierWildcard());
 	}
 
 	public boolean isWildcard()
 	{
-		return (isResourceTypeWildcard() || isIdentifierWildcard());
+		return (isObjectTypeWildcard() || isIdentifierWildcard());
 	}
 
 	@Override
@@ -107,23 +107,23 @@ public class ResourceName
 	public boolean equals(Object that)
 	{
 		if (this == that) return true;
-		if (!(that instanceof ResourceName)) return false;
+		if (!(that instanceof ObjectId)) return false;
 
-		return equals((ResourceName) that);
+		return equals((ObjectId) that);
 	}
 
 	//TODO: What about additional segments?
-	public boolean equals(ResourceName that)
+	public boolean equals(ObjectId that)
 	{
 		if (!this.getNamespace().equals(that.getNamespace())) return false;
 
-		return (!Objects.equals(this.getResourcePath(), that.getResourcePath()));
+		return (!Objects.equals(this.getObjectPath(), that.getObjectPath()));
 	}
 
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(getNamespace(), getResourcePath());
+		return Objects.hash(getNamespace(), getObjectPath());
 	}
 
 	public String toString()
@@ -134,7 +134,7 @@ public class ResourceName
 		if (hasResourcePath())
 		{
 			sb.append(SEPARATOR);
-			sb.append(getResourcePath().toString());
+			sb.append(getObjectPath().toString());
 		}
 
 		return sb.toString();
@@ -150,7 +150,7 @@ public class ResourceName
 	public boolean matches(String resourceName)
 	throws ParseException
 	{
-		return matches(new ResourceName(resourceName));
+		return matches(new ObjectId(resourceName));
 	}
 
 	/**
@@ -159,7 +159,7 @@ public class ResourceName
 	 * @param that
 	 * @return
 	 */
-	public boolean matches(ResourceName that)
+	public boolean matches(ObjectId that)
 	{
 		if (that == null) return false;
 
@@ -170,7 +170,7 @@ public class ResourceName
 			namespaceMatches = this.getNamespace().equals(that.getNamespace());
 		}
 
-		return (namespaceMatches && segmentsMatch(that) && this.getResourcePath().matches(that.getResourcePath()));
+		return (namespaceMatches && segmentsMatch(that) && this.getObjectPath().matches(that.getObjectPath()));
 	}
 
 	/**
@@ -190,7 +190,7 @@ public class ResourceName
 	 * @param that
 	 * @return
 	 */
-	protected boolean segmentsMatch(ResourceName that)
+	protected boolean segmentsMatch(ObjectId that)
 	{
 		// No additional segments to match.
 		return true;
@@ -215,7 +215,7 @@ public class ResourceName
 	throws ParseException
 	{
 		setNamespace(segments[0].isEmpty() ? null : segments[0]);
-		setResourcePath(ResourcePath.parse(segments[segments.length - 1]));
+		setObjectPath(ObjectPath.parse(segments[segments.length - 1]));
 	}
 
 	public void get(String descriptor)

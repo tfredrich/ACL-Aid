@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.AccessControl;
 import com.strategicgains.aclaid.domain.ResourceDefinition;
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
@@ -74,10 +74,10 @@ implements Buildable
 	public ResourceDefinitionBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
-		return tuple(UserSet.parse(userset), relation, new ResourceName(resource));
+		return tuple(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
-	public ResourceDefinitionBuilder tuple(UserSet userset, String relation, ResourceName resource)
+	public ResourceDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);

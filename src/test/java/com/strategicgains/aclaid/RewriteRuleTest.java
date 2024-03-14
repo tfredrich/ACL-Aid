@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.RelationDefinition;
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -77,7 +77,7 @@ public class RewriteRuleTest
 	{
 		RelationDefinition relation = new RelationDefinition(VIEWER);
 		relation.setRewriteRules(new This());
-		TupleSet result = relation.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet result = relation.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertEquals(0, result.size());
 	}
 
@@ -87,7 +87,7 @@ public class RewriteRuleTest
 	{
 		RelationDefinition relation = new RelationDefinition(EDITOR);
 		relation.setRewriteRules(new This());
-		TupleSet result = relation.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet result = relation.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertEquals(1, result.size());
 		Tuple t = result.stream().findFirst().get();
 		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
@@ -101,7 +101,7 @@ public class RewriteRuleTest
 	{
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		RewriteRule rule = new ComputedUserSet().withRelation(OWNER);
-		TupleSet result = rule.rewrite(tuples, viewer.getName(), new ResourceName(DOC_ROADMAP));
+		TupleSet result = rule.rewrite(tuples, viewer.getName(), new ObjectId(DOC_ROADMAP));
 		assertEquals(1, result.size());
 		Tuple t = result.stream().findFirst().get();
 		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
@@ -116,17 +116,17 @@ public class RewriteRuleTest
 		TupleSet local = new LocalTupleSet().addAll(tuples);
 
 		RelationDefinition owner = new RelationDefinition(OWNER);
-		TupleSet ownerRewrite = owner.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet ownerRewrite = owner.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		System.out.println(ownerRewrite);
 
 		RelationDefinition editor = new RelationDefinition(EDITOR);
 		editor.setRewriteRules(new ComputedUserSet().withRelation(OWNER));
-		TupleSet editorRewrite = editor.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet editorRewrite = editor.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		local.addAll(editorRewrite);
 
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		viewer.setRewriteRules(new ComputedUserSet().withRelation(EDITOR));
-		TupleSet viewerRewrite = viewer.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet viewerRewrite = viewer.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		local.addAll(viewerRewrite);
 
 		Tuple t = local.readOne(KIM, VIEWER, DOC_ROADMAP);
@@ -185,18 +185,18 @@ public class RewriteRuleTest
 			.addChild(new ComputedUserSet(EDITOR));
 		viewer.setRewriteRules(viewerRewrite);
 
-		TupleSet owners = owner.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet owners = owner.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertEquals(1, owners.size());
-		TupleSet editors = editor.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet editors = editor.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertEquals(2, editors.size());
-		TupleSet viewers = editor.rewrite(tuples, new ResourceName(DOC_ROADMAP));
+		TupleSet viewers = editor.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertEquals(2, viewers.size());
 
 //		owners = owner.rewrite(tuples, new ResourceName(DOC_SLIDES));
 //		assertEquals(0, owners.size());
-		editors = editor.rewrite(tuples, new ResourceName(DOC_SLIDES));
+		editors = editor.rewrite(tuples, new ObjectId(DOC_SLIDES));
 		assertEquals(1, editors.size());
-		viewers = viewer.rewrite(tuples, new ResourceName(DOC_SLIDES));
+		viewers = viewer.rewrite(tuples, new ObjectId(DOC_SLIDES));
 		assertEquals(2, viewers.size());
 	}
 

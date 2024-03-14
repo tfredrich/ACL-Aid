@@ -19,7 +19,7 @@ public class UserSet
 {
 	public static final UserSet EMPTY = new UserSet();
 
-	private ResourceName userId;
+	private ObjectId userId;
 	private String relation;
 
 	public UserSet()
@@ -27,12 +27,12 @@ public class UserSet
 		super();
 	}
 
-	public UserSet(ResourceName resource)
+	public UserSet(ObjectId resource)
 	{
 		this(resource, null);
 	}
 
-	public UserSet(ResourceName userId, String relation)
+	public UserSet(ObjectId userId, String relation)
 	{
 		this();
 		setRelation(relation);
@@ -62,7 +62,7 @@ public class UserSet
 
 		
 		UserSet userset = new UserSet();
-		userset.setUserId(new ResourceName(segments[0]));
+		userset.setUserId(new ObjectId(segments[0]));
 
 		if (segments.length == 2)
 		{
@@ -97,12 +97,12 @@ public class UserSet
 		return (userId != null);
 	}
 
-	public void setUserId(ResourceName userId)
+	public void setUserId(ObjectId userId)
 	{
 		this.userId = userId;
 	}
 
-	public ResourceName getUserId()
+	public ObjectId getUserId()
 	{
 		return userId;
 	}

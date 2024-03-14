@@ -14,7 +14,7 @@ public class ResourceNameTest
 	public void shouldParseUuid()
 	throws ParseException
 	{
-		ResourceName qrn = new ResourceName("test:directories/*");
+		ObjectId qrn = new ObjectId("test:directories/*");
 		assertQrn(qrn, "test", "directories/*");
 	}
 
@@ -22,15 +22,15 @@ public class ResourceNameTest
 	public void shouldParseStrings()
 	throws ParseException
 	{
-		ResourceName qrn = new ResourceName("test:directories/*");
+		ObjectId qrn = new ObjectId("test:directories/*");
 		assertQrn(qrn, "test", "directories/*");
-		qrn = new ResourceName("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
+		qrn = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
 		assertQrn(qrn, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
-		qrn = new ResourceName(":directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		qrn = new ObjectId(":directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertQrn(qrn, null, "directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		qrn = new ResourceName("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
+		qrn = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/*");
 		assertQrn(qrn, "b17544eb-f533-4c92-a4be-1a6391600ec5", "directories/*");
-		qrn = new ResourceName("test:*");
+		qrn = new ObjectId("test:*");
 		assertQrn(qrn, "test", "*");
 	}
 
@@ -38,20 +38,20 @@ public class ResourceNameTest
 	public void shouldMatch()
 	throws ParseException
 	{
-		ResourceName a = new ResourceName("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		ResourceName b = new ResourceName("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectId a = new ObjectId("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectId b = new ObjectId("test:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = new ResourceName("test:directories/*");
+		b = new ObjectId("test:directories/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = new ResourceName("test:directories/*");
+		b = new ObjectId("test:directories/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = new ResourceName(":directories/*");
+		b = new ObjectId(":directories/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 	}
@@ -60,28 +60,28 @@ public class ResourceNameTest
 	public void shouldNotMatch()
 	throws ParseException
 	{
-		ResourceName a = new ResourceName("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		ResourceName b = new ResourceName("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		ObjectId a = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectId b = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = new ResourceName("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = new ResourceName(":directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = new ObjectId(":directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = new ResourceName(":directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = new ObjectId(":directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = new ResourceName("b17544eb-f533-4c92-a4be-1a6391600ec5:applications/*");
+		b = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:applications/*");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 
-		b = new ResourceName("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		b = new ObjectId("b17544eb-f533-4c92-a4be-1a6391600ec5:directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));
 	}
@@ -90,21 +90,21 @@ public class ResourceNameTest
 	public void ShouldThrowOnResourceType()
 	throws ParseException
 	{
-		new ResourceName("test: ");
+		new ObjectId("test: ");
 	}
 
 	@Test(expected=ParseException.class)
 	public void ShouldThrowOnTooShort()
 	throws ParseException
 	{
-		new ResourceName("test");
+		new ObjectId("test");
 	}
 
 	@Test(expected=ParseException.class)
 	public void ShouldThrowOnWrongPrefix()
 	throws ParseException
 	{
-		new ResourceName("x:test:directories/*");
+		new ObjectId("x:test:directories/*");
 	}
 
 	@Test
@@ -148,9 +148,9 @@ public class ResourceNameTest
 		assertEquals(account, qrn.hasAccountId() ? qrn.getAccountId().toString() : "");
 	}
 
-	private void assertQrn(ResourceName qrn, String namespace, String path)
+	private void assertQrn(ObjectId qrn, String namespace, String path)
 	{
 		assertEquals(namespace, qrn.getNamespace());
-		assertEquals(path, qrn.getResourcePath().toString());
+		assertEquals(path, qrn.getObjectPath().toString());
 	}
 }

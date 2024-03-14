@@ -1,13 +1,14 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 /**
- * In Zanzibar, a rewrite rule is a function that takes an objectId and returns a set of users.
- * 
- * Here, we also pass in the relationTuples, which is the set of tuples for use in the rule.
- * 
+ * In Zanzibar, Userset rewrite rules are defined per relation in a namespace. Each rule specifies
+ * a function that takes an object ID as input and outputs a userset expression tree.
+ *
+ * For example, the following rule specifies that the userset for a relation is the intersection
+ * of the "owner" and "editor" relations unioned with the "viewer" relation:
 union(
 	intersection(
 		relation(inputObj, "owner"),
@@ -24,6 +25,7 @@ Outputs:
 intersection      viewer
   /       \
 owner    editor
+
 
 union {
    child { _this {} }
@@ -60,5 +62,5 @@ _this     computed_userset           +-----------tuple_to_userset---------+
 */
 public interface RewriteRule
 {
-	TupleSet rewrite(TupleSet relationTuples, String parentRelation, ResourceName objectId);
+	TupleSet rewrite(TupleSet relationTuples, String parentRelation, ObjectId objectId);
 }

@@ -1,11 +1,19 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 
+/**
+ * Computes, for the input object, a new userset. For example, this allows the userset expression
+ * for a viewer relation to refer to the editor userset on the same object, thus offering an ACL
+ * inheritance capability between relations.
+ *
+ * @author Todd Fredrich
+ * @see RewriteRule
+ */
 public class ComputedUserSet
 implements RewriteRule
 {
@@ -62,7 +70,7 @@ implements RewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, String parentRelation, ResourceName objectId)
+	public TupleSet rewrite(TupleSet input, String parentRelation, ObjectId objectId)
 	{
 		UserSet rewrite = new UserSet(objectId, relation);
 		

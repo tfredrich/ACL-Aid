@@ -14,16 +14,16 @@ public class ResourcePathTest
 	public void shouldParseStrings()
 	throws ParseException
 	{
-		ResourcePath rp = ResourcePath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectPath rp = ObjectPath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertResourcePath(rp, "directories", "d79e866b-a24c-4a27-906c-5985dbc6e377");
 
-		rp = ResourcePath.parse("directories/*");
+		rp = ObjectPath.parse("directories/*");
 		assertResourcePath(rp, "directories", "*");
 
-		rp = ResourcePath.parse("*/*");
+		rp = ObjectPath.parse("*/*");
 		assertResourcePath(rp, "*", "*");
 
-		rp = ResourcePath.parse("*");
+		rp = ObjectPath.parse("*");
 		assertResourcePath(rp, "*", null);
 	}
 
@@ -31,24 +31,24 @@ public class ResourcePathTest
 	public void shouldMatch()
 	throws ParseException
 	{
-		ResourcePath a = ResourcePath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		ResourcePath b = ResourcePath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectPath a = ObjectPath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectPath b = ObjectPath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 		
-		b = ResourcePath.parse("directories/*");
+		b = ObjectPath.parse("directories/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = ResourcePath.parse("*/*");
+		b = ObjectPath.parse("*/*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = ResourcePath.parse("*");
+		b = ObjectPath.parse("*");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 
-		b = ResourcePath.parse("*/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		b = ObjectPath.parse("*/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertTrue(a.matches(b));
 		assertTrue(b.matches(a));
 	}
@@ -57,23 +57,23 @@ public class ResourcePathTest
 	public void shouldNotMatch()
 	throws ParseException
 	{
-		ResourcePath a = ResourcePath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
-		ResourcePath b = ResourcePath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
+		ObjectPath a = ObjectPath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		ObjectPath b = ObjectPath.parse("directories/d79e866b-a24c-4a27-906c-5985dbc6e378");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));		
 
-		b = ResourcePath.parse("applications/d79e866b-a24c-4a27-906c-5985dbc6e377");
+		b = ObjectPath.parse("applications/d79e866b-a24c-4a27-906c-5985dbc6e377");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));		
 
-		b = ResourcePath.parse("applications/*");
+		b = ObjectPath.parse("applications/*");
 		assertFalse(a.matches(b));
 		assertFalse(b.matches(a));		
 	}
 
-	private void assertResourcePath(ResourcePath rp, String resourceType, String value)
+	private void assertResourcePath(ObjectPath rp, String resourceType, String value)
 	{
-		assertEquals(resourceType, rp.getResourceType());
+		assertEquals(resourceType, rp.getType());
 		assertEquals(value, rp.getIdentifier());
 	}
 }

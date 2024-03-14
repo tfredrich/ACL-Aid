@@ -3,7 +3,7 @@ package com.strategicgains.aclaid.domain.rewrite;
 import java.util.List;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 /**
@@ -42,7 +42,7 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet relationTuples, String parentRelation, ResourceName resource)
+	public TupleSet rewrite(TupleSet relationTuples, String parentRelation, ObjectId resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
 		stream()

@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
@@ -78,7 +78,7 @@ extends AbstractChildBuildable<ResourceDefinitionBuilder>
 			workingTuple = cloneCurrent();
 		}
 
-		workingTuple.setObjectId(new ResourceName(resource));
+		workingTuple.setObjectId(new ObjectId(resource));
 		return this;
 	}
 

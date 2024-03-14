@@ -1,6 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.ResourceName;
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public abstract class BinaryRewriteRule
@@ -43,7 +43,7 @@ implements RewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, String parentRelation, ResourceName key)
+	public TupleSet rewrite(TupleSet input, String parentRelation, ObjectId key)
 	{
 		TupleSet left = lRule.rewrite(input, parentRelation, key);
 		TupleSet right = rRule.rewrite(input, parentRelation, key);

@@ -17,7 +17,7 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	TupleSet read(String relation, ResourceName objectId);
+	TupleSet read(String relation, ObjectId objectId);
 
 	/**
 	 * Read all the relations a userset has on an object.
@@ -26,7 +26,7 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	TupleSet read(UserSet userset, ResourceName objectId);
+	TupleSet read(UserSet userset, ObjectId objectId);
 
 	/**
 	 * Read all the resources a userset has with this relation.
@@ -57,7 +57,7 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	Tuple readOne(UserSet userset, String relation, ResourceName objectId);
+	Tuple readOne(UserSet userset, String relation, ObjectId objectId);
 
 	/**
 	 * Add a tuple to this tuple set.
@@ -97,7 +97,7 @@ extends Copyable<TupleSet>
 	 * @return
 	 * @throws InvalidTupleException 
 	 */
-	TupleSet add(UserSet userset, String relation, ResourceName objectId)
+	TupleSet add(UserSet userset, String relation, ObjectId objectId)
 	throws InvalidTupleException;
 
 	/**
@@ -116,7 +116,7 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	TupleSet remove(UserSet userset, String relation, ResourceName objectId);
+	TupleSet remove(UserSet userset, String relation, ObjectId objectId);
 
 	/**
 	 * Stream the Tuples in this TupleSet.
@@ -124,4 +124,11 @@ extends Copyable<TupleSet>
 	 * @return Stream<Tuple>. Never null.
 	 */
 	Stream<Tuple> stream();
+
+	/**
+	 * Stream the UserSets in this TupleSet.
+	 * 
+	 * @return Stream<UserSet>. Never null.
+	 */
+	Stream<UserSet> userSets();
 }

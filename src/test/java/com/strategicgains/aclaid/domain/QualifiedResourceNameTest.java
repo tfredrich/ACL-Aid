@@ -124,6 +124,6 @@ public class QualifiedResourceNameTest
 	{
 		assertEquals(namespace, qrn.getNamespace());
 		assertEquals((accountId == null ? null : UUID.fromString(accountId)), qrn.getAccountId());
-		assertEquals(path, qrn.getResourcePath().toString());
+		assertEquals(path, qrn.getObjectPath().toString());
 	}
 }

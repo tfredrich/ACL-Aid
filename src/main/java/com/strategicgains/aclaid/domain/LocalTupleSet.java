@@ -21,16 +21,16 @@ implements TupleSet
 	private Map<UserSet, Map<String, Set<Tuple>>> usersetTree = new HashMap<>();
 
 	/**
-	 * The directional index of relation tuples by resource and relation.
+	 * The directional index of relation tuples by objectId and relation.
 	 */
-	private Map<ResourceName, Map<String, Set<Tuple>>> objectTree = new HashMap<>();
+	private Map<ObjectId, Map<String, Set<Tuple>>> objectTree = new HashMap<>();
 
 	public LocalTupleSet()
 	{
 		super();
 	}
 
-	public LocalTupleSet(ResourceName objectId, String relation, Set<UserSet> usersets)
+	public LocalTupleSet(ObjectId objectId, String relation, Set<UserSet> usersets)
 	throws InvalidTupleException
 	{
 		this();
@@ -42,13 +42,13 @@ implements TupleSet
 		}
 	}
 
-	public LocalTupleSet(UserSet userset, String relation, Set<ResourceName> objectIds)
+	public LocalTupleSet(UserSet userset, String relation, Set<ObjectId> objectIds)
 	throws InvalidTupleException
 	{
 		this();
 		if (objectIds == null) return;
 
-		for (ResourceName resource : objectIds)
+		for (ObjectId resource : objectIds)
 		{
 			add(userset, relation, resource);
 		}
@@ -77,7 +77,7 @@ implements TupleSet
 	 * Read all the usersets having a relation on an object ID.
 	 */
 	@Override
-	public LocalTupleSet read(String relation, ResourceName objectId)
+	public LocalTupleSet read(String relation, ObjectId objectId)
 	{
 		Map<String, Set<Tuple>> subtree = objectTree.get(objectId);
 
@@ -96,7 +96,7 @@ implements TupleSet
 	 * Read all the relations a userset has on a resource.
 	 */
 	@Override
-	public LocalTupleSet read(UserSet userset, ResourceName resource)
+	public LocalTupleSet read(UserSet userset, ObjectId resource)
 	{
 		return null;
 	}
@@ -121,14 +121,14 @@ implements TupleSet
 	public Tuple readOne(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return readOne(UserSet.parse(userset), relation, new ResourceName(resource));
+		return readOne(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
 	/**
 	 * Read a single tuple, navigating the user set tree.
 	 */
 	@Override
-	public Tuple readOne(UserSet userset, String relation, ResourceName resource)
+	public Tuple readOne(UserSet userset, String relation, ObjectId resource)
 	{
 		Map<String, Set<Tuple>> resourceSubtree = objectTree.get(resource);
 
@@ -158,11 +158,11 @@ implements TupleSet
 	public LocalTupleSet add(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
-		return add(UserSet.parse(userset), relation, new ResourceName(resource));
+		return add(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
 	@Override
-	public LocalTupleSet add(UserSet userset, String relation, ResourceName resource)
+	public LocalTupleSet add(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		return add(newDynamicTuple(userset, relation, resource));
@@ -185,7 +185,7 @@ implements TupleSet
 	}
 
 	@Override
-	public LocalTupleSet remove(UserSet userset, String relation, ResourceName resource)
+	public LocalTupleSet remove(UserSet userset, String relation, ObjectId resource)
 	{
 		return remove(new Tuple(userset, relation, resource));
 	}
@@ -236,7 +236,7 @@ implements TupleSet
 		usersets.remove(tuple);
 	}
 
-	private Tuple newDynamicTuple(UserSet userset, String relation, ResourceName resource)
+	private Tuple newDynamicTuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		if (resource.isWildcard()) throw new InvalidTupleException("Tuple resources cannot contain wildcards: " + resource.toString());
@@ -261,5 +261,11 @@ implements TupleSet
 			.flatMap(m -> m.values().stream())
 			.flatMap(Collection::stream)
 			.map(Tuple::new);
+	}
+
+	@Override
+	public Stream<UserSet> userSets()
+	{
+		return usersetTree.keySet().stream();
 	}
 }
