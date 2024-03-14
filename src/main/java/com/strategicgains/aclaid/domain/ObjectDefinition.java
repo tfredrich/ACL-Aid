@@ -39,15 +39,15 @@ public class ObjectDefinition
 		return relations.get(relation);
 	}
 
-	public TupleSet rewrite(TupleSet tuples, ObjectId objectId)
+	public TupleSet expand(TupleSet tuples, ObjectId objectId)
 	{
 		TupleSet copy = tuples.copy();
-		relations.values().forEach(relation -> copy.addAll(relation.rewrite(tuples, objectId)));
+		relations.values().forEach(relation -> copy.addAll(relation.expand(tuples, objectId)));
 		return copy;
 	}
 
 	public boolean check(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)
 	{
-		return relations.values().stream().anyMatch(r -> r.rewrite(tuples, userset, relation, objectId));
+		return relations.values().stream().anyMatch(r -> r.check(tuples, userset, relation, objectId));
 	}
 }
