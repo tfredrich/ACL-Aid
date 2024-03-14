@@ -4,21 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.strategicgains.aclaid.domain.RelationDefinition;
-
 public abstract class AggregateRewriteRule
-extends AbstractRewriteRule
+implements RewriteRule
 {
 	private List<RewriteRule> children = new ArrayList<>();
 
-	protected AggregateRewriteRule(RelationDefinition parent)
+	protected AggregateRewriteRule()
 	{
-		super(parent);
+		super();
 	}
 
-	protected AggregateRewriteRule(RelationDefinition parent, List<RewriteRule> children)
+	protected AggregateRewriteRule(List<RewriteRule> children)
 	{
-		this(parent);
+		this();
 		setChildren(children);
 	}
 

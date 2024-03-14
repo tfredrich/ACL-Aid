@@ -1,32 +1,31 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
-import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 
 public class ComputedUserSet
-extends AbstractRewriteRule
+implements RewriteRule
 {
 	private String relation;
 	private String resourceToken;
 
-	public ComputedUserSet(RelationDefinition parent)
+	public ComputedUserSet()
 	{
-		super(parent);
+		super();
 	}
 
-	public ComputedUserSet(RelationDefinition parent, String relation)
+	public ComputedUserSet(String relation)
 	{
-		this(parent);
+		this();
 		setRelation(relation);
 	}
 
-	public ComputedUserSet(RelationDefinition parent, String resource, String relation)
+	public ComputedUserSet(String resource, String relation)
 	{
-		this(parent);
+		this();
 		setResource(resource);
 		setRelation(relation);
 	}
@@ -63,7 +62,7 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName objectId)
+	public TupleSet rewrite(TupleSet input, String parentRelation, ResourceName objectId)
 	{
 		UserSet rewrite = new UserSet(objectId, relation);
 		
@@ -87,6 +86,6 @@ extends AbstractRewriteRule
 		}
 
 		return new LocalTupleSet()
-			.add(new Tuple(rewrite, getParentRelationDefinition().getName(), objectId));
+			.add(new Tuple(rewrite, parentRelation, objectId));
 	}
 }

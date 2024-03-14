@@ -59,12 +59,11 @@ public class AccessControlTest
 		builder
 			.object(FOLDER_OBJECT)
 				.relation(PARENT_RELATION)
-					.childOf(PARENT_RELATION)
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.childOf(OWNER_RELATION)
 				.relation(VIEWER_RELATION)
-					.childOf(OWNER_RELATION)
+					.childOf(EDITOR_RELATION)
 				.relation(ADMINISTRATOR_RELATION)
 					.childOf(OWNER_RELATION)
 
@@ -73,8 +72,10 @@ public class AccessControlTest
 				.relation(OWNER_RELATION)
 				.relation(EDITOR_RELATION)
 					.childOf(OWNER_RELATION)
+					// or "editor" of "parent" of "document"
 				.relation(VIEWER_RELATION)
-					.childOf(OWNER_RELATION)
+					.childOf(EDITOR_RELATION)
+					// or "viewer" of "parent" of "document"
 				.relation(ADMINISTRATOR_RELATION)
 					.childOf(OWNER_RELATION)
 

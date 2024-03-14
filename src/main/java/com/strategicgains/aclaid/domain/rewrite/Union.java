@@ -3,7 +3,6 @@ package com.strategicgains.aclaid.domain.rewrite;
 import java.util.List;
 
 import com.strategicgains.aclaid.domain.LocalTupleSet;
-import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.TupleSet;
 
@@ -25,14 +24,14 @@ import com.strategicgains.aclaid.domain.TupleSet;
 public class Union
 extends AggregateRewriteRule
 {
-	public Union(RelationDefinition parent)
+	public Union()
 	{
-		super(parent);
+		super();
 	}
 
-	public Union(RelationDefinition parent, List<RewriteRule> children)
+	public Union(List<RewriteRule> children)
 	{
-		super(parent, children);
+		super(children);
 	}
 
 	@Override
@@ -43,11 +42,11 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet relationTuples, ResourceName resource)
+	public TupleSet rewrite(TupleSet relationTuples, String parentRelation, ResourceName resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
 		stream()
-			.map(r -> r.rewrite(relationTuples, resource))
+			.map(r -> r.rewrite(relationTuples, parentRelation, resource))
 			.forEach(rewrites::addAll);
 		return rewrites;
 	}

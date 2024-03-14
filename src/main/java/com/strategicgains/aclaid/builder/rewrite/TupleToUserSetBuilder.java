@@ -21,7 +21,7 @@ implements RewriteRuleBuilder
 	@Override
 	public TupleToUserSet build(RelationDefinition parent)
 	{
-		return new TupleToUserSet(parent, relation, computedUserSetBuilder.build(parent));
+		return new TupleToUserSet(relation, computedUserSetBuilder.build(parent));
 	}
 
 	public RewriteRuleBuilder end()

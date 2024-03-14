@@ -18,7 +18,7 @@ implements RewriteRuleBuilder
 	@Override
 	public RewriteRule build(RelationDefinition relation)
 	{
-		return new This(relation);
+		return new This();
 	}
 
 	public ComputedUserSetBuilder computedUserSet()

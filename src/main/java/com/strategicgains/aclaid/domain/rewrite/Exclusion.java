@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 /**
@@ -22,14 +21,14 @@ import com.strategicgains.aclaid.domain.TupleSet;
 public class Exclusion
 extends BinaryRewriteRule
 {
-	public Exclusion(RelationDefinition parent)
+	public Exclusion()
 	{
-		super(parent);
+		super();
 	}
 
-	public Exclusion(RelationDefinition parent, RewriteRule left, RewriteRule right)
+	public Exclusion(RewriteRule left, RewriteRule right)
 	{
-		super(parent, left, right);
+		super(left, right);
 	}
 
 	@Override

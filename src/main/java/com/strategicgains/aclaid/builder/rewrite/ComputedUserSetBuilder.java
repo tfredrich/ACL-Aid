@@ -31,7 +31,7 @@ implements RewriteRuleBuilder
 	@Override
 	public ComputedUserSet build(RelationDefinition parent)
 	{
-		return new ComputedUserSet(parent, resourceName, relation);
+		return new ComputedUserSet(resourceName, relation);
 	}
 
 	public ThisBuilder _this()

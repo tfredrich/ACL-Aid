@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 /**
@@ -19,14 +18,14 @@ import com.strategicgains.aclaid.domain.TupleSet;
 public class Intersection
 extends BinaryRewriteRule
 {
-	public Intersection(RelationDefinition parent)
+	public Intersection()
 	{
-		super(parent);
+		super();
 	}
 
-	public Intersection(RelationDefinition parent, RewriteRule left, RewriteRule right)
+	public Intersection(RewriteRule left, RewriteRule right)
 	{
-		super(parent, left, right);
+		super(left, right);
 	}
 
 	@Override

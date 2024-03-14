@@ -39,10 +39,10 @@ public class RelationDefinition
 		return (rewriteRules != null);
 	}
 
-	public TupleSet rewrite(TupleSet input, ResourceName objectId)
+	public TupleSet rewrite(TupleSet relationTuples, ResourceName objectId)
 	{
-		if (hasRewriteRules()) return rewriteRules.rewrite(input, objectId);
+		if (hasRewriteRules()) return rewriteRules.rewrite(relationTuples, name, objectId);
 
-		return new This(this).rewrite(input, objectId);
+		return new This().rewrite(relationTuples, name, objectId);
 	}
 }

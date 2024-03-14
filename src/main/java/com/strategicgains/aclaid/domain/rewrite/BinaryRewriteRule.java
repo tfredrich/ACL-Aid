@@ -1,23 +1,21 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.ResourceName;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public abstract class BinaryRewriteRule
-extends AbstractRewriteRule
+implements RewriteRule
 {
 	private RewriteRule lRule;
 	private RewriteRule rRule;
 
-	protected BinaryRewriteRule(RelationDefinition parent)
+	protected BinaryRewriteRule()
 	{
-		super(parent);
+		super();
 	}
 
-	protected BinaryRewriteRule(RelationDefinition parent, RewriteRule left, RewriteRule right)
+	protected BinaryRewriteRule(RewriteRule left, RewriteRule right)
 	{
-		this(parent);
 		setLRule(left);
 		setRRule(right);
 	}
@@ -45,10 +43,10 @@ extends AbstractRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, ResourceName key)
+	public TupleSet rewrite(TupleSet input, String parentRelation, ResourceName key)
 	{
-		TupleSet left = lRule.rewrite(input, key);
-		TupleSet right = rRule.rewrite(input, key);
+		TupleSet left = lRule.rewrite(input, parentRelation, key);
+		TupleSet right = rRule.rewrite(input, parentRelation, key);
 		return evaluate(left, right);
 	}
 

@@ -21,7 +21,7 @@ implements SetOperationBuilder
 	public RewriteRule build(RelationDefinition relation)
 	{
 		List<RewriteRule> rules = children.stream().map(c -> c.build(relation)).toList();
-		return new Union(relation, rules);
+		return new Union(rules);
 	}
 
 	@Override
