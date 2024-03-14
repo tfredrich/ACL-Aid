@@ -5,6 +5,7 @@ import java.util.List;
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.UserSet;
 
 /**
  * It takes two sets as input and returns a new set as output.
@@ -42,12 +43,19 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet relationTuples, String parentRelation, ObjectId resource)
+	public TupleSet expand(TupleSet relationTuples, String parentRelation, ObjectId resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
 		stream()
-			.map(r -> r.rewrite(relationTuples, parentRelation, resource))
+			.map(r -> r.expand(relationTuples, parentRelation, resource))
 			.forEach(rewrites::addAll);
 		return rewrites;
+	}
+
+	@Override
+	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

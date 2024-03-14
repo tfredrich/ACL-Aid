@@ -1,6 +1,8 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.UserSet;
 
 /**
  * The returned set contains only elements that are members of both input sets.
@@ -38,5 +40,12 @@ extends BinaryRewriteRule
 	{
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

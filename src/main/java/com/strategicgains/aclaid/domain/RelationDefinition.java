@@ -41,8 +41,8 @@ public class RelationDefinition
 
 	public TupleSet rewrite(TupleSet relationTuples, ObjectId objectId)
 	{
-		if (hasRewriteRules()) return rewriteRules.rewrite(relationTuples, name, objectId);
+		if (hasRewriteRules()) return rewriteRules.expand(relationTuples, name, objectId);
 
-		return new This().rewrite(relationTuples, name, objectId);
+		return new This().expand(relationTuples, name, objectId);
 	}
 }

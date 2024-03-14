@@ -3,6 +3,7 @@ package com.strategicgains.aclaid.domain.rewrite;
 import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.UserSet;
 
 /**
  * Computes a tupleset from the input object, fetches relation tuples matching the tupleset, and computes
@@ -23,11 +24,18 @@ implements RewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, String parentRelation, ObjectId objectId)
+	public TupleSet expand(TupleSet input, String parentRelation, ObjectId objectId)
 	{
 		TupleSet read = input.read(relation, objectId);
 		TupleSet rewrites = new LocalTupleSet();
-		read.stream().forEach(t -> rewrites.addAll(computedUserSet.rewrite(read, parentRelation, t.getObjectId())));
+		read.stream().forEach(t -> rewrites.addAll(computedUserSet.expand(read, parentRelation, t.getObjectId())));
 		return rewrites;
+	}
+
+	@Override
+	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

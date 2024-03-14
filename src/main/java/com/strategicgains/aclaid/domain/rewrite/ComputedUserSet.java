@@ -70,7 +70,7 @@ implements RewriteRule
 	}
 
 	@Override
-	public TupleSet rewrite(TupleSet input, String parentRelation, ObjectId objectId)
+	public TupleSet expand(TupleSet input, String parentRelation, ObjectId objectId)
 	{
 		UserSet rewrite = new UserSet(objectId, relation);
 		
@@ -95,5 +95,12 @@ implements RewriteRule
 
 		return new LocalTupleSet()
 			.add(new Tuple(rewrite, parentRelation, objectId));
+	}
+
+	@Override
+	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	{
+		// TODO Auto-generated method stub
+		return false;
 	}
 }

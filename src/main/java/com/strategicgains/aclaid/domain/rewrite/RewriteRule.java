@@ -2,6 +2,7 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.UserSet;
 
 /**
  * In Zanzibar, Userset rewrite rules are defined per relation in a namespace. Each rule specifies
@@ -64,5 +65,6 @@ _this     computed_userset           +-----------tuple_to_userset---------+
 */
 public interface RewriteRule
 {
-	TupleSet rewrite(TupleSet relationTuples, String parentRelation, ObjectId objectId);
+	TupleSet expand(TupleSet relationTuples, String parentRelation, ObjectId objectId);
+	boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId);
 }

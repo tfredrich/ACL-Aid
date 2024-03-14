@@ -101,7 +101,7 @@ public class RewriteRuleTest
 	{
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		RewriteRule rule = new ComputedUserSet().withRelation(OWNER);
-		TupleSet result = rule.rewrite(tuples, viewer.getName(), new ObjectId(DOC_ROADMAP));
+		TupleSet result = rule.expand(tuples, viewer.getName(), new ObjectId(DOC_ROADMAP));
 		assertEquals(1, result.size());
 		Tuple t = result.stream().findFirst().get();
 		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
