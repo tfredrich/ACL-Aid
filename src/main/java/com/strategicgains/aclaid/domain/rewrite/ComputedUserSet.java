@@ -71,7 +71,7 @@ implements RewriteRule
 	@Override
 	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
 	{
-		return compute(tuples, relation, objectId)
+		return compute(relationTuples, relation, objectId)
 			.matches(user, relation, objectId);
 	}
 
@@ -105,33 +105,33 @@ implements RewriteRule
 		return new Tuple(userset, relation, objectId);
 	}
 
-	private UserSet compute(String relation, ObjectId objectId)
-	{
-		UserSet userset = new UserSet(objectId, containedRelation);
-		
-		if (hasObjectToken() && getObjectToken().startsWith("$"))
-		{
-			switch(getObjectToken())
-			{
-				case Tuple.USERSET_OBJECT:
-					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
-					input.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
-					break;
-				case Tuple.USERSET_RELATION:
-					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
-					break;
-				case Tuple.RELATION:
-					System.out.println(Tuple.RELATION + " of " + userset);
-					break;
-				default:
-					System.out.println(getObjectToken() + " of " + userset);
-			}
-		}
-
-//		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
-//		assertEquals(VIEWER, t.getRelation());
-//		assertEquals(UserSet.parse(DOC_ROADMAP + "#" + OWNER), t.getUserset());
-
-		return new Tuple(userset, relation, objectId);
-	}
+//	private UserSet compute(String relation, ObjectId objectId)
+//	{
+//		UserSet userset = new UserSet(objectId, containedRelation);
+//		
+//		if (hasObjectToken() && getObjectToken().startsWith("$"))
+//		{
+//			switch(getObjectToken())
+//			{
+//				case Tuple.USERSET_OBJECT:
+//					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
+//					input.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
+//					break;
+//				case Tuple.USERSET_RELATION:
+//					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
+//					break;
+//				case Tuple.RELATION:
+//					System.out.println(Tuple.RELATION + " of " + userset);
+//					break;
+//				default:
+//					System.out.println(getObjectToken() + " of " + userset);
+//			}
+//		}
+//
+////		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
+////		assertEquals(VIEWER, t.getRelation());
+////		assertEquals(UserSet.parse(DOC_ROADMAP + "#" + OWNER), t.getUserset());
+//
+//		return new Tuple(userset, relation, objectId);
+//	}
 }
