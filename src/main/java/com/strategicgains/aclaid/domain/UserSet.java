@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.Objects;
 
 /**
- * This is the Zanzibar User (which is either a user or a user set) property of a Tuple.
+ * ThisExpression is the Zanzibar User (which is either a user or a user set) property of a Tuple.
  * It can be a user identifier or a userset, which is a reference to a relation on another
  * resource (e.g. to determine if the user is a member of a group).
  * 
@@ -17,6 +17,8 @@ import java.util.Objects;
  * 
  * Where ⟨namespace⟩ and ⟨relation⟩ are predefined in client configurations.
  * 
+ * In other words, a UserSet instance can be a user identifier or a object-relation pair.
+ * 
  * For example:
  *  'user:123' is a user identifier.
  *  'groups:group/admin#owner' is a userset.
@@ -27,8 +29,9 @@ import java.util.Objects;
 public class UserSet
 {
 	public static final UserSet EMPTY = new UserSet();
+	public static final String USER_PREFIX = "user";
 
-	private ObjectId userId;
+	private ObjectId objectId;
 	private String relation;
 
 	public UserSet()
@@ -36,28 +39,28 @@ public class UserSet
 		super();
 	}
 
-	public UserSet(ObjectId resource)
+	public UserSet(ObjectId userId)
 	{
-		this(resource, null);
+		this(userId, null);
 	}
 
-	public UserSet(ObjectId userId, String relation)
+	public UserSet(ObjectId objectId, String relation)
 	{
 		this();
 		setRelation(relation);
-		setUserId(userId);
+		setObjectId(objectId);
 	}
 
 	public UserSet(UserSet that)
 	{
 		this();
 		setRelation(that.relation);
-		setUserId(that.userId);
+		setObjectId(that.objectId);
 	}
 
 	public String getNamespace()
 	{
-		return (hasUserId() ? userId.getNamespace() : null);
+		return (hasObjectId() ? objectId.getNamespace() : null);
 	}
 
 	public static UserSet parse(String string)
@@ -71,7 +74,7 @@ public class UserSet
 
 		
 		UserSet userset = new UserSet();
-		userset.setUserId(new ObjectId(segments[0]));
+		userset.setObjectId(new ObjectId(segments[0]));
 
 		if (segments.length == 2)
 		{
@@ -98,28 +101,28 @@ public class UserSet
 
 	protected boolean isUser()
 	{
-		return !hasRelation();
+		return (hasObjectId() && USER_PREFIX.equals(objectId.getType()));
 	}
 
-	protected boolean hasUserId()
+	protected boolean hasObjectId()
 	{
-		return (userId != null);
+		return (objectId != null);
 	}
 
-	public void setUserId(ObjectId userId)
+	public void setObjectId(ObjectId objectId)
 	{
-		this.userId = userId;
+		this.objectId = objectId;
 	}
 
-	public ObjectId getUserId()
+	public ObjectId getObjectId()
 	{
-		return userId;
+		return objectId;
 	}
 
 	@Override
 	public String toString()
 	{
-		StringBuilder s = new StringBuilder(userId.toString());
+		StringBuilder s = new StringBuilder(objectId.toString());
 
 		if (hasRelation())
 		{
@@ -133,7 +136,7 @@ public class UserSet
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(relation, userId);
+		return Objects.hash(relation, objectId);
 	}
 
 	@Override
@@ -146,12 +149,12 @@ public class UserSet
 		if (getClass() != obj.getClass())
 			return false;
 		UserSet other = (UserSet) obj;
-		return Objects.equals(relation, other.relation) && Objects.equals(userId, other.userId);
+		return Objects.equals(relation, other.relation) && Objects.equals(objectId, other.objectId);
 	}
 
 	public boolean matches(UserSet that)
 	{
-		if (this.userId.matches(that.userId))
+		if (this.objectId.matches(that.objectId))
 		{
 			if (hasRelation())
 			{

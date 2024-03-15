@@ -85,7 +85,7 @@ implements RewriteRule
 			{
 				case Tuple.USERSET_OBJECT:
 					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
-					input.stream().findFirst().ifPresent(t -> userset.setUserId(t.getUsersetResource()));
+					input.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
 					break;
 				case Tuple.USERSET_RELATION:
 					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
@@ -115,7 +115,7 @@ implements RewriteRule
 			{
 				case Tuple.USERSET_OBJECT:
 					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
-					input.stream().findFirst().ifPresent(t -> userset.setUserId(t.getUsersetResource()));
+					input.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
 					break;
 				case Tuple.USERSET_RELATION:
 					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
