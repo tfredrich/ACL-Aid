@@ -82,10 +82,11 @@ implements TupleSet
 	{
 		Map<String, Set<Tuple>> subtree = objectTree.get(objectId);
 
-		if (subtree == null) return null;
+		if (subtree == null) return LocalTupleSet.EMPTY_SET;
 
 		Set<Tuple> tuples = subtree.get(relation);
-		if (tuples == null) return null;
+		if (tuples == null) return LocalTupleSet.EMPTY_SET;
+
 		LocalTupleSet results = new LocalTupleSet(tuples);
 		
 		//Recursively add tuples for usersets with a relation on this resource.
