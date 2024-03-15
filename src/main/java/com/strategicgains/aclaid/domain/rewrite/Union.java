@@ -46,7 +46,7 @@ extends AggregateRewriteRule
 	public TupleSet expand(TupleSet relationTuples, String parentRelation, ObjectId resource)
 	{
 		TupleSet rewrites = new LocalTupleSet();
-		stream()
+		children()
 			.map(r -> r.expand(relationTuples, parentRelation, resource))
 			.forEach(rewrites::addAll);
 		return rewrites;
@@ -55,7 +55,6 @@ extends AggregateRewriteRule
 	@Override
 	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
 	{
-		// TODO Auto-generated method stub
-		return false;
+		return children().anyMatch(r -> r.check(relationTuples, user, relation, objectId));
 	}
 }

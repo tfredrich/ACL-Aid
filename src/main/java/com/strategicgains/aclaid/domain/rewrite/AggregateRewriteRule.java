@@ -26,7 +26,7 @@ implements RewriteRule
 		return this;
 	}
 
-	protected Stream<RewriteRule> stream()
+	protected Stream<RewriteRule> children()
 	{
 		return children.stream();
 	}

@@ -12,23 +12,24 @@ import com.strategicgains.aclaid.domain.UserSet;
  *
  * For example, the following rule specifies that the userset for a relation is the intersection
  * of the "owner" and "editor" relations unioned with the "viewer" relation:
-union(
-	intersection(
-		relation(inputObj, "owner"),
-		relation(inputObj, "editor")
-	),
-	relation(inputObj, "viewer")
-)
-
-Outputs:
-       +--union--+
-      /           \
-     /             \
-    /               \
-intersection      viewer
-  /       \
-owner    editor
-
+ * 
+ * union(
+ *     intersection(
+ *         relation(inputObj, "owner"),
+ *         relation(inputObj, "editor")
+ *     ),
+ *     relation(inputObj, "viewer")
+ * )
+ *
+ *	Outputs:
+ *	       +--union--+
+ *	      /           \
+ *	     /             \
+ *	    /               \
+ *	intersection      viewer
+ *	  /       \
+ *	owner    editor
+ *
 
 union {
    child { _this {} }

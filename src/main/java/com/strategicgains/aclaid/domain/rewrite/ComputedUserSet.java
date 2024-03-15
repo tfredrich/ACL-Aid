@@ -72,6 +72,19 @@ implements RewriteRule
 	@Override
 	public TupleSet expand(TupleSet input, String parentRelation, ObjectId objectId)
 	{
+		return new LocalTupleSet()
+			.add(compute(input, parentRelation, objectId));
+	}
+
+	@Override
+	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	{
+		return compute(relationTuples, relation, objectId)
+			.matches(user, relation, objectId);
+	}
+
+	private UserSet compute(TupleSet input, String parentRelation, ObjectId objectId)
+	{
 		UserSet rewrite = new UserSet(objectId, relation);
 		
 		if (hasResource() && getResource().startsWith("$"))
@@ -93,14 +106,6 @@ implements RewriteRule
 			}
 		}
 
-		return new LocalTupleSet()
-			.add(new Tuple(rewrite, parentRelation, objectId));
-	}
-
-	@Override
-	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
-	{
-		// TODO Auto-generated method stub
-		return false;
+		return new Tuple(rewrite, parentRelation, objectId);
 	}
 }
