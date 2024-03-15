@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -17,8 +16,8 @@ import com.strategicgains.aclaid.domain.UserSet;
 public class ComputedUserSet
 implements RewriteRule
 {
-	private String relation;
-	private String resourceToken;
+	private String containedRelation;
+	private String objectToken;
 
 	public ComputedUserSet()
 	{
@@ -28,84 +27,111 @@ implements RewriteRule
 	public ComputedUserSet(String relation)
 	{
 		this();
-		setRelation(relation);
+		setContainedRelation(relation);
 	}
 
-	public ComputedUserSet(String resource, String relation)
+	public ComputedUserSet(String objectToken, String relation)
 	{
 		this();
-		setResource(resource);
-		setRelation(relation);
+		setObjectToken(objectToken);
+		setContainedRelation(relation);
 	}
 
-	protected String getResource()
+	protected String getObjectToken()
 	{
-		return resourceToken;
+		return objectToken;
 	}
 
-	public boolean hasResource()
+	public boolean hasObjectToken()
 	{
-		return (resourceToken != null);
+		return (objectToken != null);
 	}
 
-	protected void setResource(String resource)
+	protected void setObjectToken(String objectToken)
 	{
-		this.resourceToken = resource;
+		this.objectToken = objectToken;
 	}
 
 	public boolean hasRelation()
 	{
-		return (relation != null);
+		return (containedRelation != null);
 	}
 
-	protected void setRelation(String relation)
+	protected void setContainedRelation(String relation)
 	{
-		this.relation = relation;
+		this.containedRelation = relation;
 	}
 
 	public RewriteRule withRelation(String relation)
 	{
-		setRelation(relation);
+		setContainedRelation(relation);
 		return this;
-	}
-
-	@Override
-	public TupleSet expand(TupleSet input, String parentRelation, ObjectId objectId)
-	{
-		return new LocalTupleSet()
-			.add(compute(input, parentRelation, objectId));
 	}
 
 	@Override
 	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
 	{
-		return compute(relationTuples, relation, objectId)
+		return compute(tuples, relation, objectId)
 			.matches(user, relation, objectId);
 	}
 
-	private UserSet compute(TupleSet input, String parentRelation, ObjectId objectId)
+	private Tuple compute(TupleSet input, String relation, ObjectId objectId)
 	{
-		UserSet rewrite = new UserSet(objectId, relation);
+		UserSet userset = new UserSet(objectId, containedRelation);
 		
-		if (hasResource() && getResource().startsWith("$"))
+		if (hasObjectToken() && getObjectToken().startsWith("$"))
 		{
-			switch(getResource())
+			switch(getObjectToken())
 			{
 				case Tuple.USERSET_OBJECT:
-					System.out.println(Tuple.USERSET_OBJECT + " of " + rewrite + " / " + objectId);
-					input.stream().findFirst().ifPresent(t -> rewrite.setUserId(t.getUsersetResource()));
+					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
+					input.stream().findFirst().ifPresent(t -> userset.setUserId(t.getUsersetResource()));
 					break;
 				case Tuple.USERSET_RELATION:
-					System.out.println(Tuple.USERSET_RELATION + " of " + rewrite);
+					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
 					break;
 				case Tuple.RELATION:
-					System.out.println(Tuple.RELATION + " of " + rewrite);
+					System.out.println(Tuple.RELATION + " of " + userset);
 					break;
 				default:
-					System.out.println(getResource() + " of " + rewrite);
+					System.out.println(getObjectToken() + " of " + userset);
 			}
 		}
 
-		return new Tuple(rewrite, parentRelation, objectId);
+//		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
+//		assertEquals(VIEWER, t.getRelation());
+//		assertEquals(UserSet.parse(DOC_ROADMAP + "#" + OWNER), t.getUserset());
+
+		return new Tuple(userset, relation, objectId);
+	}
+
+	private UserSet compute(String relation, ObjectId objectId)
+	{
+		UserSet userset = new UserSet(objectId, containedRelation);
+		
+		if (hasObjectToken() && getObjectToken().startsWith("$"))
+		{
+			switch(getObjectToken())
+			{
+				case Tuple.USERSET_OBJECT:
+					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
+					input.stream().findFirst().ifPresent(t -> userset.setUserId(t.getUsersetResource()));
+					break;
+				case Tuple.USERSET_RELATION:
+					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
+					break;
+				case Tuple.RELATION:
+					System.out.println(Tuple.RELATION + " of " + userset);
+					break;
+				default:
+					System.out.println(getObjectToken() + " of " + userset);
+			}
+		}
+
+//		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
+//		assertEquals(VIEWER, t.getRelation());
+//		assertEquals(UserSet.parse(DOC_ROADMAP + "#" + OWNER), t.getUserset());
+
+		return new Tuple(userset, relation, objectId);
 	}
 }

@@ -2,7 +2,6 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import java.util.List;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -40,16 +39,6 @@ extends AggregateRewriteRule
 	{
 		super.addChild(rewriteRule);
 		return this;
-	}
-
-	@Override
-	public TupleSet expand(TupleSet relationTuples, String parentRelation, ObjectId resource)
-	{
-		TupleSet rewrites = new LocalTupleSet();
-		children()
-			.map(r -> r.expand(relationTuples, parentRelation, resource))
-			.forEach(rewrites::addAll);
-		return rewrites;
 	}
 
 	@Override

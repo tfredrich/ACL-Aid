@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -24,17 +23,12 @@ implements RewriteRule
 	}
 
 	@Override
-	public TupleSet expand(TupleSet input, String parentRelation, ObjectId objectId)
-	{
-		TupleSet read = input.read(relation, objectId);
-		TupleSet rewrites = new LocalTupleSet();
-		read.stream().forEach(t -> rewrites.addAll(computedUserSet.expand(read, parentRelation, t.getObjectId())));
-		return rewrites;
-	}
-
-	@Override
 	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
 	{
+//		TupleSet read = input.read(relation, objectId);
+//		TupleSet rewrites = new LocalTupleSet();
+//		read.stream().forEach(t -> rewrites.addAll(computedUserSet.expand(read, parentRelation, t.getObjectId())));
+//		return rewrites;
 		// TODO Auto-generated method stub
 		return false;
 	}

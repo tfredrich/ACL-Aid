@@ -39,13 +39,6 @@ public class RelationDefinition
 		return (rewriteRules != null);
 	}
 
-	public TupleSet expand(TupleSet relationTuples, ObjectId objectId)
-	{
-		if (hasRewriteRules()) return rewriteRules.expand(relationTuples, name, objectId);
-
-		return new This().expand(relationTuples, name, objectId);
-	}
-
 	public boolean check(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)
 	{
 		if (hasRewriteRules()) return rewriteRules.check(tuples, userset, relation, objectId);

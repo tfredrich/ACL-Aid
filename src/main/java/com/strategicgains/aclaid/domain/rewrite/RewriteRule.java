@@ -66,6 +66,5 @@ _this     computed_userset           +-----------tuple_to_userset---------+
 */
 public interface RewriteRule
 {
-	TupleSet expand(TupleSet relationTuples, String parentRelation, ObjectId objectId);
 	boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId);
 }

@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -18,14 +17,6 @@ implements RewriteRule
 	public This()
 	{
 		super();
-	}
-
-	@Override
-	public TupleSet expand(TupleSet relationTuples, String parentRelation, ObjectId objectId)
-	{
-		TupleSet ts = relationTuples.read(parentRelation, objectId);
-
-		return (ts != null) ? ts : LocalTupleSet.EMPTY_SET;
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.domain;
 
-import java.text.ParseException;
 import java.util.stream.Stream;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
@@ -44,18 +43,6 @@ extends Copyable<TupleSet>
 	 * @param relation
 	 * @param objectId
 	 * @return
-	 * @throws ParseException
-	 */
-	Tuple readOne(String userset, String relation, String objectId)
-	throws ParseException;
-
-	/**
-	 * Read a single tuple.
-	 * 
-	 * @param userset
-	 * @param relation
-	 * @param objectId
-	 * @return
 	 */
 	Tuple readOne(UserSet userset, String relation, ObjectId objectId);
 
@@ -74,19 +61,6 @@ extends Copyable<TupleSet>
 	 * @return
 	 */
 	TupleSet addAll(TupleSet tupleset);
-
-	/**
-	 * Create a new tuple using the given object ID, relation and userset then add it to the tuple set.
-	 * 
-	 * @param userset
-	 * @param relation
-	 * @param objectId
-	 * @return
-	 * @throws ParseException
-	 * @throws InvalidTupleException 
-	 */
-	TupleSet add(String userset, String relation, String objectId)
-	throws ParseException, InvalidTupleException;
 
 	/**
 	 * Create a new tuple using the given object ID, relation and userset then add it to the tuple set.

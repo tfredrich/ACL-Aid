@@ -1,6 +1,5 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 
 public abstract class BinaryRewriteRule
@@ -40,14 +39,6 @@ implements RewriteRule
 	{
 		this.rRule = operand;
 		return this;
-	}
-
-	@Override
-	public TupleSet expand(TupleSet input, String parentRelation, ObjectId key)
-	{
-		TupleSet left = lRule.expand(input, parentRelation, key);
-		TupleSet right = rRule.expand(input, parentRelation, key);
-		return evaluate(left, right);
 	}
 
 	protected abstract TupleSet evaluate(TupleSet left, TupleSet right);

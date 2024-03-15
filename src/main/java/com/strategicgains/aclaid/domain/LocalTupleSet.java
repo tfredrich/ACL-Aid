@@ -74,7 +74,8 @@ implements TupleSet
 	}
 
 	/**
-	 * Read all the usersets having a relation on an object ID.
+	 * Read all the usersets having a relation on an object ID. It includes all the tuples for usersets
+	 * with a relation on this resource whether direct or indirect.
 	 */
 	@Override
 	public LocalTupleSet read(String relation, ObjectId objectId)
@@ -117,7 +118,6 @@ implements TupleSet
 	/**
 	 * Read a single tuple, navigating the user set tree.
 	 */
-	@Override
 	public Tuple readOne(String userset, String relation, String resource)
 	throws ParseException
 	{
@@ -154,7 +154,6 @@ implements TupleSet
 		return null;
 	}
 
-	@Override
 	public LocalTupleSet add(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{

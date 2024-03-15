@@ -8,13 +8,22 @@ import java.util.Objects;
  * It can be a user identifier or a userset, which is a reference to a relation on another
  * resource (e.g. to determine if the user is a member of a group).
  * 
- * ⟨user⟩    ::= ⟨user id⟩ | ⟨userset⟩
- * (user id) ::= 'user:'(resource id)
- * ⟨userset⟩ ::= ⟨resource⟩‘#’⟨relation⟩
- * ⟨resource⟩::= ⟨namespace⟩‘:’⟨resource id⟩
+ * ⟨user⟩      ::= ⟨user id⟩ | ⟨userset⟩
+ * (user id)   ::= 'user:'(object id)
+ * ⟨userset⟩   ::= ⟨object⟩‘#’⟨relation⟩
+ * ⟨object⟩    ::= ⟨namespace⟩‘:’⟨object id⟩
+ * (namespace) ::= (string)
+ * (object id) ::= (string)
  * 
- * @author toddfredrich
-**/
+ * Where ⟨namespace⟩ and ⟨relation⟩ are predefined in client configurations.
+ * 
+ * For example:
+ *  'user:123' is a user identifier.
+ *  'groups:group/admin#owner' is a userset.
+ *  
+ * @author Todd Fredrich
+ *
+ **/
 public class UserSet
 {
 	public static final UserSet EMPTY = new UserSet();
