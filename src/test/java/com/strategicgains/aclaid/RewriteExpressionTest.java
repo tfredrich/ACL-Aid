@@ -19,6 +19,7 @@ import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.expression.ComputedUserSetExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.RewriteExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
+import com.strategicgains.aclaid.domain.rewrite.expression.TupleToUserSetExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.UnionExpression;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
@@ -106,10 +107,11 @@ public class RewriteExpressionTest
 	public void testTupleToUserSet()
 	throws ParseException
 	{
-		RewriteExpression rule = new ComputedUserSetExpression(new ObjectDefinition(DOCUMENT_OBJECT))
-				.withRelation(OWNER);
+		RewriteExpression rule = new TupleToUserSetExpression(PARENT,
+			new ComputedUserSetExpression(new ObjectDefinition(DOCUMENT_OBJECT))
+				.withRelation(VIEWER));
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + OWNER)));
+		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + VIEWER)));
 		assertEquals(1, rewrite.size());
 	}
 

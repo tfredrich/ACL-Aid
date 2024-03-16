@@ -3,6 +3,7 @@ package com.strategicgains.aclaid.domain.rewrite.expression;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -31,7 +32,7 @@ implements RewriteExpression
 		return tuples
 			.read(relation, objectId)
 			.stream()
-			.flatMap(t -> childExpression.rewrite(tuples, t.getObjectId()).stream())
+			.flatMap(t -> childExpression.rewrite(new LocalTupleSet().add(t), t.getObjectId()).stream())
 			.collect(Collectors.toSet());
 	}
 }
