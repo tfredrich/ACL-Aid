@@ -37,6 +37,9 @@ public class RewriteExpressionTest
 	private static final String PARENT = "parent";
 	private static final String VIEWER = "viewer";
 
+	// Groups
+	private static final String CONTOSO = NAMESPACE + ORGANIZATION_OBJECT + "/contoso";
+
 	// Users
 	private static final String KIM = NAMESPACE + USER_OBJECT + "/kim";
 	private static final String BEN = NAMESPACE + USER_OBJECT + "/ben";
@@ -59,7 +62,14 @@ public class RewriteExpressionTest
 		tuples
 			.add(KIM, OWNER, DOC_ROADMAP)
 			.add(BEN, EDITOR, DOC_ROADMAP)
-			.add(CARL, VIEWER, DOC_SLIDES);
+			.add(CARL, VIEWER, DOC_SLIDES)
+
+			.add(CARL, MEMBER, CONTOSO)
+			.add(CONTOSO + "#" + MEMBER, VIEWER, FOLDER_PLANNING)
+			
+			.add(FOLDER_PLANNING, PARENT, FOLDER_ENGINEERING)
+			.add(FOLDER_ENGINEERING, PARENT, DOC_ROADMAP);
+;
 	}
 
 	@Test
@@ -89,6 +99,17 @@ public class RewriteExpressionTest
 		RewriteExpression rule = new ComputedUserSetExpression(new ObjectDefinition(DOCUMENT_OBJECT)).withRelation(EDITOR);
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + EDITOR)));
+		assertEquals(1, rewrite.size());
+	}
+
+	@Test
+	public void testTupleToUserSet()
+	throws ParseException
+	{
+		RewriteExpression rule = new ComputedUserSetExpression(new ObjectDefinition(DOCUMENT_OBJECT))
+				.withRelation(OWNER);
+		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
+		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + OWNER)));
 		assertEquals(1, rewrite.size());
 	}
 

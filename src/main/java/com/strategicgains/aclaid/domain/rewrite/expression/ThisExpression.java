@@ -20,8 +20,8 @@ implements RewriteExpression
 	}
 
 	@Override
-	public Set<UserSet> rewrite(TupleSet tuples, ObjectId inputObj)
+	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
-		return tuples.read(relation.getName(), inputObj).userSets().collect(Collectors.toSet());
+		return tuples.read(relation.getName(), objectId).userSets().collect(Collectors.toSet());
 	}
 }
