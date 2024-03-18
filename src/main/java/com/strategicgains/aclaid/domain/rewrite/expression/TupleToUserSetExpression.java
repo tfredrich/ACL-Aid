@@ -17,9 +17,9 @@ public class TupleToUserSetExpression
 implements RewriteExpression
 {
 	private String relation;
-	private RewriteExpression childExpression;
+	private ComputedUserSetExpression childExpression;
 
-	public TupleToUserSetExpression(String relation, RewriteExpression childExpression)
+	public TupleToUserSetExpression(String relation, ComputedUserSetExpression childExpression)
 	{
 		super();
 		this.relation = relation;

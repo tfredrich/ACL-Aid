@@ -22,19 +22,19 @@ import com.strategicgains.aclaid.domain.UserSet;
 public class ComputedUserSetExpression
 implements RewriteExpression
 {
-	private ObjectDefinition objectDefintion;
+	private ObjectDefinition objectDefinition;
 	private String relation;
 	private String objectToken;
 
 	public ComputedUserSetExpression(ObjectDefinition objectDefintion)
 	{
 		super();
-		setObjectDefintion(objectDefintion);
+		setObjectDefinition(objectDefintion);
 	}
 
-	public ComputedUserSetExpression(ObjectDefinition objectDefintion, String relation)
+	public ComputedUserSetExpression(ObjectDefinition objectDefinition, String relation)
 	{
-		this(objectDefintion);
+		this(objectDefinition);
 		setRelation(relation);
 	}
 
@@ -63,9 +63,9 @@ implements RewriteExpression
 		this.relation = relation;
 	}
 
-	protected void setObjectDefintion(ObjectDefinition objectDefintion)
+	protected void setObjectDefinition(ObjectDefinition objectDefintion)
 	{
-		this.objectDefintion = objectDefintion;
+		this.objectDefinition = objectDefintion;
 	}
 
 	public RewriteExpression withRelation(String relation)
@@ -85,7 +85,7 @@ implements RewriteExpression
 	{
 		if (objectId == null) return Collections.emptySet();
 
-		if (objectDefintion.getName().equals(objectId.getType()))
+		if (objectDefinition.getName().equals(objectId.getType()))
 		{
 			return new HashSet<>(Arrays.asList(compute(tuples, objectId, relation)));
 		}
