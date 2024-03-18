@@ -4,19 +4,34 @@ import java.util.stream.Stream;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
+/**
+ * A TupleSet is a collection of Tuples. It is the primary data structure used to store and query access control data.
+ * 
+ * @author Todd Fredrich
+ * @see Tuple, LocalTupleSet
+ */
 public interface TupleSet
 extends Copyable<TupleSet>
 {
 	int size();
 	
 	/**
-	 * Read all the usersets having a relation on an object.
+	 * Read all the usersets having a direct relation on an object.
 	 * 
 	 * @param relation
 	 * @param objectId
 	 * @return
 	 */
 	TupleSet read(String relation, ObjectId objectId);
+
+	/**
+	 * Read all the usersets having a relation on an object including indirect ACLs.
+	 * 
+	 * @param relation
+	 * @param objectId
+	 * @return
+	 */
+	TupleSet expand(String relation, ObjectId objectId);
 
 	/**
 	 * Read all the relations a userset has on an object.

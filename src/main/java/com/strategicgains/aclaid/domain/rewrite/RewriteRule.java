@@ -68,5 +68,5 @@ _this     computed_userset           +-----------tuple_to_userset---------+
 */
 public interface RewriteRule
 {
-	Set<UserSet> rewrite(TupleSet tuples, ObjectId inputObj);
+	Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId);
 }

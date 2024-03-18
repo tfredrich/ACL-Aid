@@ -10,6 +10,12 @@ import java.util.stream.Stream;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
+/**
+ * A LocalTupleSet is a collection of tuples that can be read and written to. It is a simple in-memory
+ * implementation of a TupleSet. It is not thread-safe.
+ * 
+ * @author Todd Fredrich
+ */
 public class LocalTupleSet
 implements TupleSet
 {
@@ -74,9 +80,11 @@ implements TupleSet
 	}
 
 	/**
-	 * Read all the usersets having a relation on an object ID. It includes all the tuples for usersets
-	 * with a relation on this resource whether direct or indirect.
+	 * Read all the usersets having a direct relation on an object ID.
 	 */
+	// TODO: indirect ACLs don't seem to be supported by this method.
+	// Besides, according to the document, read() should not return indirect ACLs.
+	// So, perhaps another method should be introduced to support indirect ACLs.
 	@Override
 	public LocalTupleSet read(String relation, ObjectId objectId)
 	{
@@ -87,10 +95,20 @@ implements TupleSet
 		Set<Tuple> tuples = subtree.get(relation);
 		if (tuples == null) return LocalTupleSet.EMPTY_SET;
 
-		LocalTupleSet results = new LocalTupleSet(tuples);
+		return new LocalTupleSet(tuples);
+	}
+
+	/**
+	 * Read all the usersets having a relation on an object ID, including indirect ACLs.
+	 */
+	// TODO: indirect ACLs are not currently returned by expand().
+	@Override
+	public LocalTupleSet expand(String relation, ObjectId objectId)
+	{
+		LocalTupleSet results = read(relation, objectId);
 		
 		//Recursively add tuples for usersets with a relation on this resource.
-		tuples.stream().filter(t -> t.getUserset().hasRelation()).forEach(t -> results.addAll(read(t.getUsersetRelation(), t.getUsersetResource())));
+		results.stream().filter(t -> t.getUserset().hasRelation()).forEach(t -> results.addAll(read(t.getUsersetRelation(), t.getUsersetResource())));
 		return results;
 	}
 

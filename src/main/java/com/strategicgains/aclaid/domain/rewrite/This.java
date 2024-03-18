@@ -29,6 +29,7 @@ implements RewriteRule
 	@Override
 	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
-		return tuples.read(relation.getName(), objectId).userSets().collect(Collectors.toSet());
+		// TODO: add support for indirect ACLs
+		return tuples.expand(relation.getName(), objectId).userSets().collect(Collectors.toSet());
 	}
 }

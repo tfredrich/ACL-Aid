@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.util.Objects;
 
 /**
- * ThisExpression is the Zanzibar User (which is either a user or a user set) property of a Tuple.
+ * This is the Zanzibar User (which is either a user or a user set) property of a Tuple.
  * It can be a user identifier or a userset, which is a reference to a relation on another
  * resource (e.g. to determine if the user is a member of a group).
  * 

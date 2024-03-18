@@ -91,18 +91,19 @@ public class RewriteRuleTest
 	throws ParseException
 	{
 		RelationDefinition relation = new RelationDefinition(EDITOR);
-		relation.setRewriteRules(new This());
-		assertTrue(relation.check(tuples, UserSet.parse(BEN), EDITOR, new ObjectId(DOC_ROADMAP)));
+		relation.setRewriteRules(new This(relation));
+		assertTrue(relation.check(tuples, UserSet.parse(BEN), new ObjectId(DOC_ROADMAP)));
 	}
 
 	@Test
 	public void testComputedUserSet()
 	throws ParseException
 	{
-		RewriteRule rule = new ComputedUserSet().withRelation(EDITOR);
-		assertTrue(rule.check(tuples, UserSet.parse(BEN), VIEWER, new ObjectId(DOC_ROADMAP)));
-		assertFalse(rule.check(tuples, UserSet.parse(KIM), VIEWER, new ObjectId(DOC_ROADMAP)));
-		assertFalse(rule.check(tuples, UserSet.parse(CARL), VIEWER, new ObjectId(DOC_ROADMAP)));
+		ObjectDefinition document = new ObjectDefinition(DOCUMENT_OBJECT);
+		RewriteRule rule = new ComputedUserSet(document).withRelation(EDITOR);
+		assertTrue(rule.check(tuples, UserSet.parse(BEN), new ObjectId(DOC_ROADMAP)));
+		assertFalse(rule.check(tuples, UserSet.parse(KIM), new ObjectId(DOC_ROADMAP)));
+		assertFalse(rule.check(tuples, UserSet.parse(CARL), new ObjectId(DOC_ROADMAP)));
 	}
 
 	@Test
