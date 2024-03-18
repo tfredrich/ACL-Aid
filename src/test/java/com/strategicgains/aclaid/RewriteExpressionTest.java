@@ -14,6 +14,7 @@ import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.RelationDefinition;
+import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
@@ -108,10 +109,12 @@ public class RewriteExpressionTest
 	{
 		RewriteRule rule = new TupleToUserSet(PARENT,
 			new ComputedUserSet(new ObjectDefinition(DOCUMENT_OBJECT))
-				.withRelation(VIEWER));
+			    .withRelation(VIEWER)
+				.withToken(Tuple.USERSET_OBJECT));
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + VIEWER)));
-		assertEquals(1, rewrite.size());
+		assertTrue(rewrite.contains(UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
+		assertTrue(rewrite.contains(UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
+		assertEquals(2, rewrite.size());
 	}
 
 	@Test
