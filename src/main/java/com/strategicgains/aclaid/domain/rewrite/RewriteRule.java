@@ -1,5 +1,7 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import java.util.Set;
+
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -66,5 +68,5 @@ _this     computed_userset           +-----------tuple_to_userset---------+
 */
 public interface RewriteRule
 {
-	boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId);
+	Set<UserSet> rewrite(TupleSet tuples, ObjectId inputObj);
 }

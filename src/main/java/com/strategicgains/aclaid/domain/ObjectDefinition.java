@@ -41,6 +41,13 @@ public class ObjectDefinition
 
 	public boolean check(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)
 	{
-		return relations.values().stream().anyMatch(r -> r.check(tuples, userset, relation, objectId));
+		RelationDefinition r = relations.get(relation);
+
+		if (r != null)
+		{
+			return r.check(tuples, userset, objectId);
+		}
+
+		return false;
 	}
 }

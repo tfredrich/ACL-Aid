@@ -1,5 +1,9 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -23,13 +27,12 @@ implements RewriteRule
 	}
 
 	@Override
-	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
-//		TupleSet read = input.read(relation, objectId);
-//		TupleSet rewrites = new LocalTupleSet();
-//		read.stream().forEach(t -> rewrites.addAll(computedUserSet.expand(read, parentRelation, t.getObjectId())));
-//		return rewrites;
-		// TODO Auto-generated method stub
-		return false;
+		return tuples
+			.read(relation, objectId)
+			.stream()
+			.flatMap(t -> computedUserSet.rewrite(new LocalTupleSet().add(t), t.getObjectId()).stream())
+			.collect(Collectors.toSet());
 	}
 }

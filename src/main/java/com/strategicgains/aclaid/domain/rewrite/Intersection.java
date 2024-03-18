@@ -1,5 +1,7 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import java.util.Set;
+
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -43,9 +45,9 @@ extends BinaryRewriteRule
 	}
 
 	@Override
-	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	public Set<UserSet> rewrite(TupleSet tuples, ObjectId inputObj)
 	{
 		// TODO Auto-generated method stub
-		return false;
+		return null;
 	}
 }

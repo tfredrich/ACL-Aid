@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
@@ -16,11 +15,11 @@ import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.domain.rewrite.expression.ComputedUserSetExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.RewriteExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.TupleToUserSetExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.UnionExpression;
+import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
+import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
+import com.strategicgains.aclaid.domain.rewrite.This;
+import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
+import com.strategicgains.aclaid.domain.rewrite.Union;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class RewriteExpressionTest
@@ -77,7 +76,7 @@ public class RewriteExpressionTest
 	public void testEmptyThis()
 	throws ParseException
 	{
-		RewriteExpression rule = new ThisExpression(new RelationDefinition(VIEWER));
+		RewriteRule rule = new This(new RelationDefinition(VIEWER));
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertTrue(rewrite.isEmpty());
 	}
@@ -88,7 +87,7 @@ public class RewriteExpressionTest
     {
         LocalTupleSet local = new LocalTupleSet(tuples);
         local.add(KIM, VIEWER, DOC_ROADMAP);
-        RewriteExpression rule = new ThisExpression(new RelationDefinition(VIEWER));
+        RewriteRule rule = new This(new RelationDefinition(VIEWER));
         Set<UserSet> rewrite = rule.rewrite(local, new ObjectId(DOC_ROADMAP));
         assertTrue(rewrite.contains(UserSet.parse(KIM)));
     }
@@ -97,7 +96,7 @@ public class RewriteExpressionTest
 	public void testComputedUserSet()
 	throws ParseException
 	{
-		RewriteExpression rule = new ComputedUserSetExpression(new ObjectDefinition(DOCUMENT_OBJECT)).withRelation(EDITOR);
+		RewriteRule rule = new ComputedUserSet(new ObjectDefinition(DOCUMENT_OBJECT)).withRelation(EDITOR);
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + EDITOR)));
 		assertEquals(1, rewrite.size());
@@ -107,8 +106,8 @@ public class RewriteExpressionTest
 	public void testTupleToUserSet()
 	throws ParseException
 	{
-		RewriteExpression rule = new TupleToUserSetExpression(PARENT,
-			new ComputedUserSetExpression(new ObjectDefinition(DOCUMENT_OBJECT))
+		RewriteRule rule = new TupleToUserSet(PARENT,
+			new ComputedUserSet(new ObjectDefinition(DOCUMENT_OBJECT))
 				.withRelation(VIEWER));
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + VIEWER)));
@@ -122,11 +121,11 @@ public class RewriteExpressionTest
 		ObjectDefinition docs = new ObjectDefinition(DOCUMENT_OBJECT);
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
 		docs.addRelation(viewer);
-		RewriteExpression rule = new UnionExpression(
+		RewriteRule rule = new Union(
 			Arrays.asList(
-				new ThisExpression(viewer),
-				new ComputedUserSetExpression(docs).withRelation(OWNER),
-				new ComputedUserSetExpression(docs).withRelation(EDITOR)
+				new This(viewer),
+				new ComputedUserSet(docs).withRelation(OWNER),
+				new ComputedUserSet(docs).withRelation(EDITOR)
 			)
 		);
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));

@@ -1,5 +1,11 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -16,25 +22,20 @@ import com.strategicgains.aclaid.domain.UserSet;
 public class ComputedUserSet
 implements RewriteRule
 {
-	private String containedRelation;
+	private ObjectDefinition objectDefinition;
+	private String relation;
 	private String objectToken;
 
-	public ComputedUserSet()
+	public ComputedUserSet(ObjectDefinition objectDefintion)
 	{
 		super();
+		setObjectDefinition(objectDefintion);
 	}
 
-	public ComputedUserSet(String relation)
+	public ComputedUserSet(ObjectDefinition objectDefinition, String relation)
 	{
-		this();
-		setContainedRelation(relation);
-	}
-
-	public ComputedUserSet(String objectToken, String relation)
-	{
-		this();
-		setObjectToken(objectToken);
-		setContainedRelation(relation);
+		this(objectDefinition);
+		setRelation(relation);
 	}
 
 	protected String getObjectToken()
@@ -54,30 +55,47 @@ implements RewriteRule
 
 	public boolean hasRelation()
 	{
-		return (containedRelation != null);
+		return (relation != null);
 	}
 
-	protected void setContainedRelation(String relation)
+	protected void setRelation(String relation)
 	{
-		this.containedRelation = relation;
+		this.relation = relation;
 	}
 
-	public RewriteRule withRelation(String relation)
+	protected void setObjectDefinition(ObjectDefinition objectDefintion)
 	{
-		setContainedRelation(relation);
+		this.objectDefinition = objectDefintion;
+	}
+
+	public ComputedUserSet withRelation(String relation)
+	{
+		setRelation(relation);
+		return this;
+	}
+
+	public ComputedUserSet withToken(String objectToken)
+	{
+		setObjectToken(objectToken);
 		return this;
 	}
 
 	@Override
-	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
-		return compute(relationTuples, relation, objectId)
-			.matches(user, relation, objectId);
+		if (objectId == null) return Collections.emptySet();
+
+		if (objectDefinition.getName().equals(objectId.getType()))
+		{
+			return new HashSet<>(Arrays.asList(compute(tuples, objectId, relation)));
+		}
+
+		return Collections.emptySet();
 	}
 
-	private Tuple compute(TupleSet input, String relation, ObjectId objectId)
+	private UserSet compute(TupleSet tuples, ObjectId objectId, String relation)
 	{
-		UserSet userset = new UserSet(objectId, containedRelation);
+		UserSet userset = new UserSet(objectId, relation);
 		
 		if (hasObjectToken() && getObjectToken().startsWith("$"))
 		{
@@ -85,7 +103,7 @@ implements RewriteRule
 			{
 				case Tuple.USERSET_OBJECT:
 					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
-					input.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
+					tuples.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
 					break;
 				case Tuple.USERSET_RELATION:
 					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
@@ -98,40 +116,6 @@ implements RewriteRule
 			}
 		}
 
-//		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
-//		assertEquals(VIEWER, t.getRelation());
-//		assertEquals(UserSet.parse(DOC_ROADMAP + "#" + OWNER), t.getUserset());
-
-		return new Tuple(userset, relation, objectId);
+		return userset;
 	}
-
-//	private UserSet compute(String relation, ObjectId objectId)
-//	{
-//		UserSet userset = new UserSet(objectId, containedRelation);
-//		
-//		if (hasObjectToken() && getObjectToken().startsWith("$"))
-//		{
-//			switch(getObjectToken())
-//			{
-//				case Tuple.USERSET_OBJECT:
-//					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
-//					input.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
-//					break;
-//				case Tuple.USERSET_RELATION:
-//					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
-//					break;
-//				case Tuple.RELATION:
-//					System.out.println(Tuple.RELATION + " of " + userset);
-//					break;
-//				default:
-//					System.out.println(getObjectToken() + " of " + userset);
-//			}
-//		}
-//
-////		assertEquals(DOC_ROADMAP, t.getObjectId().toString());
-////		assertEquals(VIEWER, t.getRelation());
-////		assertEquals(UserSet.parse(DOC_ROADMAP + "#" + OWNER), t.getUserset());
-//
-//		return new Tuple(userset, relation, objectId);
-//	}
 }

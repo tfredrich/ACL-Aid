@@ -1,5 +1,7 @@
 package com.strategicgains.aclaid.domain;
 
+import java.util.Set;
+
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.This;
 
@@ -39,10 +41,13 @@ public class RelationDefinition
 		return (rewriteRules != null);
 	}
 
-	public boolean check(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)
+	public boolean check(TupleSet tuples, UserSet userset, ObjectId objectId)
 	{
-		if (hasRewriteRules()) return rewriteRules.check(tuples, userset, relation, objectId);
+		Set<UserSet> rewrites = null;
 
-		return new This().check(tuples, userset, relation, objectId);
+		if (hasRewriteRules()) rewrites = rewriteRules.rewrite(tuples, objectId);
+		else rewrites = new This(this).rewrite(tuples, objectId);
+
+		return rewrites.contains(userset);
 	}
 }

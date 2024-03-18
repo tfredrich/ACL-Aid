@@ -1,6 +1,10 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.strategicgains.aclaid.domain.ObjectId;
+import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 
@@ -14,14 +18,17 @@ import com.strategicgains.aclaid.domain.UserSet;
 public class This
 implements RewriteRule
 {
-	public This()
+	private RelationDefinition relation;
+
+	public This(RelationDefinition relation)
 	{
 		super();
+		this.relation = relation;
 	}
 
 	@Override
-	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
-		return relationTuples.readOne(user, relation, objectId) != null;
+		return tuples.read(relation.getName(), objectId).userSets().collect(Collectors.toSet());
 	}
 }

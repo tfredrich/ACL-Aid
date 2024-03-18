@@ -1,6 +1,8 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -42,8 +44,8 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public boolean check(TupleSet relationTuples, UserSet user, String relation, ObjectId objectId)
+	public Set<UserSet> rewrite(TupleSet relationTuples, ObjectId objectId)
 	{
-		return children().anyMatch(r -> r.check(relationTuples, user, relation, objectId));
+		return children().flatMap(child -> child.rewrite(relationTuples, objectId).stream()).collect(Collectors.toSet());
 	}
 }
