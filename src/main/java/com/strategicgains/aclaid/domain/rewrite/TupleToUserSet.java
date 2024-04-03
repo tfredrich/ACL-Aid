@@ -3,7 +3,6 @@ package com.strategicgains.aclaid.domain.rewrite;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -32,7 +31,7 @@ implements RewriteRule
 		return tuples
 			.read(relation, objectId)
 			.stream()
-			.flatMap(t -> computedUserSet.rewrite(new LocalTupleSet().add(t), t.getObjectId()).stream())
+			.flatMap(u -> computedUserSet.rewrite(tuples, u.getObjectId()).stream())
 			.collect(Collectors.toSet());
 	}
 }

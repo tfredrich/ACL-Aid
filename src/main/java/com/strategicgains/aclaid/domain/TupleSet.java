@@ -1,6 +1,6 @@
 package com.strategicgains.aclaid.domain;
 
-import java.util.stream.Stream;
+import java.util.Set;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
@@ -22,7 +22,7 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	TupleSet read(String relation, ObjectId objectId);
+	Set<UserSet> read(String relation, ObjectId objectId);
 
 	/**
 	 * Read all the usersets having a relation on an object including indirect ACLs.
@@ -31,16 +31,7 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	TupleSet expand(String relation, ObjectId objectId);
-
-	/**
-	 * Read all the relations a userset has on an object.
-	 * 
-	 * @param userset
-	 * @param objectId
-	 * @return
-	 */
-	TupleSet read(UserSet userset, ObjectId objectId);
+	Set<UserSet> expand(String relation, ObjectId objectId);
 
 	/**
 	 * Read all the resources a userset has with this relation.
@@ -49,7 +40,7 @@ extends Copyable<TupleSet>
 	 * @param relation
 	 * @return
 	 */
-	TupleSet read(UserSet userset, String relation);
+	Set<ObjectId> read(UserSet userset, String relation);
 
 	/**
 	 * Read a single tuple.
@@ -106,18 +97,4 @@ extends Copyable<TupleSet>
 	 * @return
 	 */
 	TupleSet remove(UserSet userset, String relation, ObjectId objectId);
-
-	/**
-	 * Stream the Tuples in this TupleSet.
-	 * 
-	 * @return Stream<Tuple>. Never null.
-	 */
-	Stream<Tuple> stream();
-
-	/**
-	 * Stream the UserSets in this TupleSet.
-	 * 
-	 * @return Stream<UserSet>. Never null.
-	 */
-	Stream<UserSet> userSets();
 }

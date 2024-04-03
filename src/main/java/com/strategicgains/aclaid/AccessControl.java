@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.builder.AccessControlBuilder;
-import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.InMemoryTupleSet;
 import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
@@ -32,7 +32,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
 public class AccessControl
 {
 	private Map<String, ObjectDefinition> objectsByName = new HashMap<>();
-	private TupleSet tuples = new LocalTupleSet();
+	private TupleSet tuples = new InMemoryTupleSet();
 
 	public AccessControl addTuple(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException

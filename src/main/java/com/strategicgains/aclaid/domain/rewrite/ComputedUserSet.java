@@ -103,7 +103,7 @@ implements RewriteRule
 			{
 				case Tuple.USERSET_OBJECT:
 					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
-					tuples.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
+//					tuples.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
 					break;
 				case Tuple.USERSET_RELATION:
 					System.out.println(Tuple.USERSET_RELATION + " of " + userset);

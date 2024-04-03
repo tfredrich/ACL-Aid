@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.RelationDefinition;
@@ -29,7 +28,6 @@ implements RewriteRule
 	@Override
 	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
-		// TODO: add support for indirect ACLs
-		return tuples.expand(relation.getName(), objectId).userSets().collect(Collectors.toSet());
+		return tuples.expand(relation.getName(), objectId);
 	}
 }
