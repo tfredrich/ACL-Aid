@@ -108,12 +108,20 @@ implements TupleSet
 	{
 		Set<UserSet> usersets = read(relation, objectId);
 		Set<UserSet> results = new HashSet<>(usersets);
-		
-		//Recursively add other usersets with a relation component (e.g. group#member).
+
+		//Recursively add usersets with a relation component (e.g. group#member).
 		//TODO: Look out for deep (and wide) relationship graphs.
 		usersets.stream()
-			.filter(UserSet::hasRelation)
-			.forEach(u -> results.addAll(expand(u.getRelation(), u.getObjectId())));
+			.forEach(u -> {
+				if (u.hasRelation())
+				{
+					results.addAll(expand(u.getRelation(), u.getObjectId()));
+				}
+				else
+				{
+					results.addAll(read(relation, u.getObjectId()));
+				}
+			});
 		return results;
 	}
 
