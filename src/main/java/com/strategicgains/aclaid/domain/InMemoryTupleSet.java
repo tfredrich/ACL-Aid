@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -109,7 +110,7 @@ implements TupleSet
 		Set<UserSet> results = new HashSet<>(usersets);
 		
 		//Recursively add other usersets with a relation component (e.g. group#member).
-		//TODO: NOTE this only does one level of indirection--it should account for arbitrary depth/width of the tree.
+		//TODO: Look out for deep (and wide) relationship graphs.
 		usersets.stream()
 			.filter(UserSet::hasRelation)
 			.forEach(u -> results.addAll(expand(u.getRelation(), u.getObjectId())));
@@ -142,26 +143,29 @@ implements TupleSet
 	 * Read a single tuple, navigating the user set tree.
 	 */
 	@Override
-	public Tuple readOne(UserSet userset, String relation, ObjectId resource)
+	public Tuple readOne(UserSet userset, String relation, ObjectId objectId)
 	{
-		Map<String, Set<UserSet>> resourceSubtree = objectTree.get(resource);
-		if (resourceSubtree == null) return null;
+		Map<String, Set<UserSet>> objectSubtree = objectTree.get(objectId);
+		if (objectSubtree == null) return null;
 
 		// these are the usersets with the direct relation.
-		Set<UserSet> resourceUsersets = resourceSubtree.get(relation);
+		Set<UserSet> usersets = objectSubtree.get(relation);
 
-		if (resourceUsersets == null) return null;
+		if (usersets == null) return null;
 
 		//Check for direct membership...
-		if (resourceUsersets.contains(userset))
+		if (usersets.contains(userset))
 		{
-			return new Tuple(userset, relation, resource);
+			return new Tuple(userset, relation, objectId);
 		}
 
 		//Recursively check indirect memberships...
-		if (resourceUsersets.stream().filter(t -> t.hasRelation()).anyMatch(t -> readOne(userset, t.getRelation(), t.getObjectId()) != null))
+		//TODO: Look out for deep (and wide) relationship graphs.
+		if (usersets.stream()
+			.filter(UserSet::hasRelation)
+			.anyMatch(t -> readOne(userset, t.getRelation(), t.getObjectId()) != null))
 		{
-			return new Tuple(userset, relation, resource);
+			return new Tuple(userset, relation, objectId);
 		}
 
 		return null;
@@ -267,14 +271,21 @@ implements TupleSet
 		return new Tuple(userset, relation, resource);
 	}
 
-	@Override
-	public TupleSet addAll(TupleSet tupleset)
+	public InMemoryTupleSet addAll(InMemoryTupleSet tupleset)
 	{
 		if (tupleset != null)
 		{
-//			tupleset.stream().forEach(this::add);
+			tupleset.stream().forEach(this::add);
 		}
 
 		return this;
+	}
+
+	private List<Tuple> stream()
+	{
+		return usersetTree.entrySet().stream()
+			.flatMap(e -> e.getValue().entrySet().stream()
+			.flatMap(f -> f.getValue().stream().map(o -> new Tuple(e.getKey(), f.getKey(), o))))
+			.collect(java.util.stream.Collectors.toList());
 	}
 }

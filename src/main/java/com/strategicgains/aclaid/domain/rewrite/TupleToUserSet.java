@@ -28,6 +28,7 @@ implements RewriteRule
 	@Override
 	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
+		Set<UserSet> usersets = tuples.read(relation, objectId);
 		return tuples
 			.read(relation, objectId)
 			.stream()

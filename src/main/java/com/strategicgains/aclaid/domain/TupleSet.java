@@ -61,14 +61,6 @@ extends Copyable<TupleSet>
 	TupleSet add(Tuple tuple);
 
 	/**
-	 * Add all the tuples from one tuple set to this one.
-	 * 
-	 * @param tupleset
-	 * @return
-	 */
-	TupleSet addAll(TupleSet tupleset);
-
-	/**
 	 * Create a new tuple using the given object ID, relation and userset then add it to the tuple set.
 	 * 
 	 * @param userset

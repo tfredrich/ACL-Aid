@@ -112,9 +112,9 @@ public class RewriteRuleTest
 			    .withRelation(VIEWER)
 				.withToken(Tuple.USERSET_OBJECT));
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
+		assertEquals(2, rewrite.size());
 		assertTrue(rewrite.contains(UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
 		assertTrue(rewrite.contains(UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
-		assertEquals(2, rewrite.size());
 	}
 
 	@Test
