@@ -85,12 +85,12 @@ implements RewriteRule
 	{
 		if (objectId == null) return Collections.emptySet();
 
-		if (objectDefinition.getName().equals(objectId.getType()))
+//		if (objectDefinition.getName().equals(objectId.getType()))
 		{
 			return new HashSet<>(Arrays.asList(compute(tuples, objectId, relation)));
 		}
 
-		return Collections.emptySet();
+//		return Collections.emptySet();
 	}
 
 	private UserSet compute(TupleSet tuples, ObjectId objectId, String relation)

@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
@@ -29,16 +30,16 @@ implements TupleSet
 	/**
 	 * The directional index of ObjectIds by user set and relation.
 	 */
-	private Map<UserSet, Map<String, Set<ObjectId>>> usersetTree = new HashMap<>();
+	private Map<UserSet, Map<String, Set<ObjectId>>> usersetTree;
 
 	/**
 	 * The directional index of UserSets by objectId and relation.
 	 */
-	private Map<ObjectId, Map<String, Set<UserSet>>> objectTree = new HashMap<>();
+	private Map<ObjectId, Map<String, Set<UserSet>>> objectTree;
 
 	public InMemoryTupleSet()
 	{
-		super();
+		this(null, null);
 	}
 
 	public InMemoryTupleSet(ObjectId objectId, String relation, Set<UserSet> usersets)
@@ -67,15 +68,20 @@ implements TupleSet
 
 	public InMemoryTupleSet(InMemoryTupleSet that)
 	{
-		this();
-		this.usersetTree = new HashMap<>(that.usersetTree);
-		this.objectTree = new HashMap<>(that.objectTree);
+		this(that.usersetTree, that.objectTree);
 	}
 
 	public InMemoryTupleSet(Collection<Tuple> tuples)
 	{
 		this();
 		tuples.stream().forEach(this::add);
+	}
+
+	protected InMemoryTupleSet(Map<UserSet, Map<String, Set<ObjectId>>> usersetTree,
+		Map<ObjectId, Map<String, Set<UserSet>>> objectTree)
+	{
+		this.usersetTree = usersetTree != null ? new ConcurrentHashMap<>(usersetTree) : new ConcurrentHashMap<>();
+		this.objectTree = objectTree != null ? new ConcurrentHashMap<>(objectTree) : new ConcurrentHashMap<>();
 	}
 
 	@Override
@@ -88,15 +94,37 @@ implements TupleSet
 	 * Read all the usersets having a direct relation on an object ID.
 	 */
 	@Override
-	public Set<UserSet> read(String relation, ObjectId objectId)
+	public Set<UserSet> readUserSets(String relation, ObjectId objectId)
 	{
 		Map<String, Set<UserSet>> subtree = objectTree.get(objectId);
 		if (subtree == null) return Collections.emptySet();
 
-		Set<UserSet> tuples = subtree.get(relation);
-		if (tuples == null) return Collections.emptySet();
+		Set<UserSet> usersets = subtree.get(relation);
+		if (usersets == null) return Collections.emptySet();
 
-		return Collections.unmodifiableSet(tuples);
+		return Collections.unmodifiableSet(usersets);
+	}
+
+	/**
+	 * Read all the relation tuples having a direct relation on an object ID.
+	 * 
+	 * @param relation
+	 * @param objectId
+	 * @return a TupleSet of all the relation tuples having a direct relation on an object ID.
+	 */
+	@Override
+	public TupleSet readAll(String relation, ObjectId objectId)
+	{
+		Set<UserSet> usersets = readUserSets(relation, objectId);
+		InMemoryTupleSet results = new InMemoryTupleSet();
+		usersets.stream().forEach(u -> {
+			try {
+				results.add(u, relation, objectId);
+			} catch (InvalidTupleException e) {
+				e.printStackTrace();
+			}
+		});
+		return results;
 	}
 
 	/**
@@ -104,9 +132,9 @@ implements TupleSet
 	 */
 	// TODO: indirect ACLs are not currently returned by expand().
 	@Override
-	public Set<UserSet> expand(String relation, ObjectId objectId)
+	public Set<UserSet> expandUserSets(String relation, ObjectId objectId)
 	{
-		Set<UserSet> usersets = read(relation, objectId);
+		Set<UserSet> usersets = readUserSets(relation, objectId);
 		Set<UserSet> results = new HashSet<>(usersets);
 
 		//Recursively add usersets with a relation component (e.g. group#member).
@@ -115,11 +143,11 @@ implements TupleSet
 			.forEach(u -> {
 				if (u.hasRelation())
 				{
-					results.addAll(expand(u.getRelation(), u.getObjectId()));
+					results.addAll(expandUserSets(u.getRelation(), u.getObjectId()));
 				}
 				else
 				{
-					results.addAll(read(relation, u.getObjectId()));
+					results.addAll(readUserSets(relation, u.getObjectId()));
 				}
 			});
 		return results;
@@ -128,15 +156,15 @@ implements TupleSet
 	/**
 	 * Read all the ObjectIds for objects a userset has with this relation directly.
 	 */
-	@Override
-	public Set<ObjectId> read(UserSet userset, String relation)
-	{
-		Map<String, Set<ObjectId>> subtree = usersetTree.get(userset);
-		if (subtree == null) return Collections.emptySet();
-
-		Set<ObjectId> tuples = subtree.get(relation);
-		return (tuples != null ? Collections.unmodifiableSet(tuples) : null);
-	}
+//	@Override
+//	public Set<ObjectId> read(UserSet userset, String relation)
+//	{
+//		Map<String, Set<ObjectId>> subtree = usersetTree.get(userset);
+//		if (subtree == null) return Collections.emptySet();
+//
+//		Set<ObjectId> tuples = subtree.get(relation);
+//		return (tuples != null ? Collections.unmodifiableSet(tuples) : null);
+//	}
 
 	/**
 	 * Read a single tuple, navigating the user set tree.
@@ -144,14 +172,14 @@ implements TupleSet
 	public Tuple readOne(String userset, String relation, String resource)
 	throws ParseException
 	{
-		return readOne(UserSet.parse(userset), relation, new ObjectId(resource));
+		return read(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
 	/**
 	 * Read a single tuple, navigating the user set tree.
 	 */
 	@Override
-	public Tuple readOne(UserSet userset, String relation, ObjectId objectId)
+	public Tuple read(UserSet userset, String relation, ObjectId objectId)
 	{
 		Map<String, Set<UserSet>> objectSubtree = objectTree.get(objectId);
 		if (objectSubtree == null) return null;
@@ -171,7 +199,7 @@ implements TupleSet
 		//TODO: Look out for deep (and wide) relationship graphs.
 		if (usersets.stream()
 			.filter(UserSet::hasRelation)
-			.anyMatch(t -> readOne(userset, t.getRelation(), t.getObjectId()) != null))
+			.anyMatch(t -> read(userset, t.getRelation(), t.getObjectId()) != null))
 		{
 			return new Tuple(userset, relation, objectId);
 		}
@@ -212,12 +240,6 @@ implements TupleSet
 	public InMemoryTupleSet remove(UserSet userset, String relation, ObjectId resource)
 	{
 		return remove(new Tuple(userset, relation, resource));
-	}
-
-	@Override
-	public TupleSet copy()
-	{
-		return new InMemoryTupleSet(this);
 	}
 
 	private void writeUsersetTree(Tuple tuple)

@@ -8,13 +8,21 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * A TupleSet is a collection of Tuples. It is the primary data structure used to store and query access control data.
  * 
  * @author Todd Fredrich
- * @see Tuple, LocalTupleSet
+ * @see Tuple, InMemoryTupleSet
  */
 public interface TupleSet
-extends Copyable<TupleSet>
 {
 	int size();
-	
+
+	/**
+	 * Read all relation tuples having a direct relation on an object ID.
+	 * 
+	 * @param relation
+	 * @param objectId
+	 * @return a TupleSet of all the relation tuples having a direct relation on an object ID.
+	 */
+	public TupleSet readAll(String relation, ObjectId objectId);
+
 	/**
 	 * Read all the usersets having a direct relation on an object.
 	 * 
@@ -22,7 +30,7 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	Set<UserSet> read(String relation, ObjectId objectId);
+	Set<UserSet> readUserSets(String relation, ObjectId objectId);
 
 	/**
 	 * Read all the usersets having a relation on an object including indirect ACLs.
@@ -31,26 +39,17 @@ extends Copyable<TupleSet>
 	 * @param objectId
 	 * @return
 	 */
-	Set<UserSet> expand(String relation, ObjectId objectId);
+	Set<UserSet> expandUserSets(String relation, ObjectId objectId);
 
 	/**
-	 * Read all the resources a userset has with this relation.
-	 * 
-	 * @param userset
-	 * @param relation
-	 * @return
-	 */
-	Set<ObjectId> read(UserSet userset, String relation);
-
-	/**
-	 * Read a single tuple.
+	 * Read a single direct tuple.
 	 * 
 	 * @param userset
 	 * @param relation
 	 * @param objectId
 	 * @return
 	 */
-	Tuple readOne(UserSet userset, String relation, ObjectId objectId);
+	Tuple read(UserSet userset, String relation, ObjectId objectId);
 
 	/**
 	 * Add a tuple to this tuple set.

@@ -28,6 +28,6 @@ implements RewriteRule
 	@Override
 	public Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId)
 	{
-		return tuples.expand(relation.getName(), objectId);
+		return tuples.expandUserSets(relation.getName(), objectId);
 	}
 }

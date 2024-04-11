@@ -96,7 +96,7 @@ public class InMemoryTupleSetTest
 	public void testReadEditorsForRoadmap()
 	throws ParseException
 	{
-		Set<UserSet> usersets = ts.read(EDITOR_RELATION, new ObjectId(DOC_ROADMAP));
+		Set<UserSet> usersets = ts.readUserSets(EDITOR_RELATION, new ObjectId(DOC_ROADMAP));
 		assertNotNull(usersets);
 		assertEquals(2, usersets.size());
 		assertTrue(usersets.contains(UserSet.parse(KIM)));
@@ -107,7 +107,7 @@ public class InMemoryTupleSetTest
 	public void testReadViewersSlides()
 	throws ParseException
 	{
-		Set<UserSet> usersets = ts.read(VIEWER_RELATION, new ObjectId(DOC_SLIDES));
+		Set<UserSet> usersets = ts.readUserSets(VIEWER_RELATION, new ObjectId(DOC_SLIDES));
 		assertNotNull(usersets);
 		assertEquals(1, usersets.size());
 		assertTrue(usersets.contains(UserSet.parse(CONTOSO_MEMBER)));
@@ -117,7 +117,7 @@ public class InMemoryTupleSetTest
 	public void testExpandViewersSlides()
 	throws ParseException
 	{
-		Set<UserSet> usersets = ts.expand(VIEWER_RELATION, new ObjectId(DOC_SLIDES));
+		Set<UserSet> usersets = ts.expandUserSets(VIEWER_RELATION, new ObjectId(DOC_SLIDES));
 		assertNotNull(usersets);
 		assertEquals(3, usersets.size());
 		assertTrue(usersets.contains(UserSet.parse(CARL)));
@@ -151,7 +151,7 @@ public class InMemoryTupleSetTest
 	public void testExpandDocReadmeParent()
 	throws ParseException
 	{
-		Set<UserSet> usersets = ts.expand(PARENT_RELATION, new ObjectId(DOC_README));
+		Set<UserSet> usersets = ts.expandUserSets(PARENT_RELATION, new ObjectId(DOC_README));
 		assertNotNull(usersets);
 		assertEquals(2, usersets.size());
 		assertTrue(usersets.contains(UserSet.parse(FOLDER_ENGINEERING)));
@@ -162,7 +162,7 @@ public class InMemoryTupleSetTest
 	public void testExpandDocSlidesViewer()
 	throws ParseException
 	{
-		Set<UserSet> usersets = ts.expand(VIEWER_RELATION, new ObjectId(DOC_SLIDES));
+		Set<UserSet> usersets = ts.expandUserSets(VIEWER_RELATION, new ObjectId(DOC_SLIDES));
 		assertNotNull(usersets);
 		assertEquals(3, usersets.size());
 		assertTrue(usersets.contains(UserSet.parse(CONTOSO_MEMBER)));
