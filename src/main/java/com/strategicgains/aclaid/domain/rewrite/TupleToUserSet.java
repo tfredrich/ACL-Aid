@@ -1,12 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.strategicgains.aclaid.domain.InMemoryTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.expression.TupleToUserSetExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
