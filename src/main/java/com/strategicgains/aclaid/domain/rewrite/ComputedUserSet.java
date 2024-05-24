@@ -1,10 +1,9 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.Tuple;
-import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.rewrite.expression.ComputedUserSetExpression;
+import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
@@ -18,20 +17,19 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 public class ComputedUserSet
 implements RewriteRule
 {
-	private ObjectDefinition objectDefinition;
 	private String relation;
 	private String objectToken;
 
-	public ComputedUserSet(ObjectDefinition objectDefintion)
+	public ComputedUserSet(String relation)
 	{
 		super();
-		setObjectDefinition(objectDefintion);
+		setRelation(relation);
 	}
 
-	public ComputedUserSet(ObjectDefinition objectDefinition, String relation)
+	public ComputedUserSet(String relation, String objectToken)
 	{
-		this(objectDefinition);
-		setRelation(relation);
+		this(relation);
+		setObjectToken(objectToken);
 	}
 
 	protected String getObjectToken()
@@ -59,11 +57,6 @@ implements RewriteRule
 		this.relation = relation;
 	}
 
-	protected void setObjectDefinition(ObjectDefinition objectDefintion)
-	{
-		this.objectDefinition = objectDefintion;
-	}
-
 	public ComputedUserSet withRelation(String relation)
 	{
 		setRelation(relation);
@@ -79,40 +72,11 @@ implements RewriteRule
 	@Override
 	public UsersetExpression rewrite(ObjectId objectId)
 	{
-//		if (objectId == null) return Collections.emptySet();
-//
-////		if (objectDefinition.getName().equals(objectId.getType()))
-//		{
-//			return new HashSet<>(Arrays.asList(compute(tuples, objectId, relation)));
-//		}
-//
-////		return Collections.emptySet();
-		return null;
-	}
-
-	private UserSet compute(TupleSet tuples, ObjectId objectId, String relation)
-	{
-		UserSet userset = new UserSet(objectId, relation);
-		
 		if (hasObjectToken() && getObjectToken().startsWith("$"))
 		{
-			switch(getObjectToken())
-			{
-				case Tuple.USERSET_OBJECT:
-					System.out.println(Tuple.USERSET_OBJECT + " of " + userset + " / " + objectId);
-//					tuples.stream().findFirst().ifPresent(t -> userset.setObjectId(t.getUsersetResource()));
-					break;
-				case Tuple.USERSET_RELATION:
-					System.out.println(Tuple.USERSET_RELATION + " of " + userset);
-					break;
-				case Tuple.RELATION:
-					System.out.println(Tuple.RELATION + " of " + userset);
-					break;
-				default:
-					System.out.println(getObjectToken() + " of " + userset);
-			}
+			return new ComputedUserSetExpression(objectId, relation, getObjectToken());
 		}
-
-		return userset;
+		
+		return new ThisExpression(new UserSet(objectId, relation));
 	}
 }

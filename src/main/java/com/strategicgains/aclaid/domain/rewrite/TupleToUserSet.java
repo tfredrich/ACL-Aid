@@ -7,6 +7,7 @@ import com.strategicgains.aclaid.domain.InMemoryTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.rewrite.expression.TupleToUserSetExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
@@ -30,12 +31,6 @@ implements RewriteRule
 	@Override
 	public UsersetExpression rewrite(ObjectId objectId)
 	{
-//		TupleSet readAll = tuples.readAll(relation, objectId);
-//		return tuples
-//			.readAll(relation, objectId)
-//			.stream()
-//			.flatMap(u -> computedUserSet.rewrite(tuples, u.getObjectId()).stream())
-//			.collect(Collectors.toSet());
-		return null;
+		return new TupleToUserSetExpression(objectId, relation, computedUserSet.rewrite(objectId));
 	}
 }

@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 
 /**
  * Computes, for the input object, a new userset. For example, this allows the userset expression
@@ -22,20 +22,16 @@ import com.strategicgains.aclaid.domain.UserSet;
 public class ComputedUserSetExpression
 implements UsersetExpression
 {
-	private ObjectDefinition objectDefinition;
+	private ObjectId objectId;
 	private String relation;
 	private String objectToken;
 
-	public ComputedUserSetExpression(ObjectDefinition objectDefintion)
+	public ComputedUserSetExpression(ObjectId objectId, String relation, String objectToken)
 	{
 		super();
-		setObjectDefinition(objectDefintion);
-	}
-
-	public ComputedUserSetExpression(ObjectDefinition objectDefinition, String relation)
-	{
-		this(objectDefinition);
+		setObjectId(objectId);
 		setRelation(relation);
+		setObjectToken(objectToken);
 	}
 
 	protected String getObjectToken()
@@ -63,34 +59,17 @@ implements UsersetExpression
 		this.relation = relation;
 	}
 
-	protected void setObjectDefinition(ObjectDefinition objectDefintion)
+	protected void setObjectId(ObjectId objectId)
 	{
-		this.objectDefinition = objectDefintion;
-	}
-
-	public ComputedUserSetExpression withRelation(String relation)
-	{
-		setRelation(relation);
-		return this;
-	}
-
-	public ComputedUserSetExpression withToken(String objectToken)
-	{
-		setObjectToken(objectToken);
-		return this;
+		this.objectId = objectId;
 	}
 
 	@Override
 	public Set<UserSet> evaluate(TupleSet tuples)
 	{
-		if (objectId == null) return Collections.emptySet();
-
-//		if (objectDefinition.getName().equals(objectId.getType()))
-		{
-			return new HashSet<>(Arrays.asList(compute(tuples, objectId, relation)));
-		}
-
-//		return Collections.emptySet();
+		TupleSet filtered = tuples.readAll(relation, objectId);
+		UserSet userset = compute(filtered, objectId, relation);
+		return tuples.expandUserSets(userset.getRelation(), userset.getObjectId());
 	}
 
 	private UserSet compute(TupleSet tuples, ObjectId objectId, String relation)

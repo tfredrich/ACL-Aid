@@ -1,12 +1,9 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.rewrite.expression.UnionExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
@@ -14,7 +11,7 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
  * The returned set contains all elements that are members of either the first or second input set.
  * Duplicate elements that are in both sets will only appear once in the union.
  * The union of A and B is equal to the union of B and A. So union is commutative.
- * Union is associative - (A.union(B)).union(C) equals A.union(B.union(C))
+ * UnionExpression is associative - (A.union(B)).union(C) equals A.union(B.union(C))
  * The union of a set with an empty set returns the original set.
  * 
  * For example:
@@ -47,6 +44,6 @@ extends AggregateRewriteRule
 	@Override
 	public UsersetExpression rewrite(ObjectId objectId)
 	{
-		return null; //children().flatMap(child -> child.rewrite(relationTuples, objectId).stream()).collect(Collectors.toSet());
+		return new UnionExpression(children().map(child -> child.rewrite(objectId)).toList());
 	}
 }

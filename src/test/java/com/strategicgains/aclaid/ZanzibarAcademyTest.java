@@ -21,7 +21,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * @author tfredrich
  * @see https://zanzibar.academy/
  */
-@Ignore
+//@Ignore
 public class ZanzibarAcademyTest
 {
 	private static final String NAMESPACE = "ZanzibarAcademyTest:";

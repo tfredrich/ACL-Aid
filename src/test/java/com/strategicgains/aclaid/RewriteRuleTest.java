@@ -18,9 +18,10 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
+import com.strategicgains.aclaid.domain.rewrite.This;
 import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
 import com.strategicgains.aclaid.domain.rewrite.Union;
-import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class RewriteRuleTest
@@ -77,9 +78,9 @@ public class RewriteRuleTest
 	public void testEmptyThis()
 	throws ParseException
 	{
-		RewriteRule rule = new ThisExpression(new RelationDefinition(VIEWER));
-		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.isEmpty());
+		RewriteRule rule = new This(new RelationDefinition(VIEWER));
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		assertTrue(rewrite.evaluate(tuples).isEmpty());
 	}
 
 	@Test
@@ -88,19 +89,22 @@ public class RewriteRuleTest
     {
         InMemoryTupleSet local = new InMemoryTupleSet(tuples);
         local.add(KIM, VIEWER, DOC_ROADMAP);
-        RewriteRule rule = new ThisExpression(new RelationDefinition(VIEWER));
-        Set<UserSet> rewrite = rule.rewrite(local, new ObjectId(DOC_ROADMAP));
-        assertTrue(rewrite.contains(UserSet.parse(KIM)));
+        RewriteRule rule = new This(new RelationDefinition(VIEWER));
+        UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+        Set<UserSet> users = rewrite.evaluate(local);
+        assertTrue(users.contains(UserSet.parse(KIM)));
+        assertEquals(1, users.size());
     }
 
 	@Test
 	public void testComputedUserSet()
 	throws ParseException
 	{
-		RewriteRule rule = new ComputedUserSet(new ObjectDefinition(DOCUMENT_OBJECT)).withRelation(EDITOR);
-		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + EDITOR)));
-		assertEquals(1, rewrite.size());
+		RewriteRule rule = new ComputedUserSet(EDITOR);
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		Set<UserSet> users = rewrite.evaluate(tuples);
+		assertTrue(users.contains(UserSet.parse(BEN)));
+		assertEquals(1, users.size());
 	}
 
 	@Test
@@ -108,13 +112,13 @@ public class RewriteRuleTest
 	throws ParseException
 	{
 		RewriteRule rule = new TupleToUserSet(PARENT,
-			new ComputedUserSet(new ObjectDefinition(DOCUMENT_OBJECT))
-			    .withRelation(VIEWER)
+			new ComputedUserSet(VIEWER)
 				.withToken(Tuple.USERSET_OBJECT));
-		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
-		assertEquals(2, rewrite.size());
-		assertTrue(rewrite.contains(UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
-		assertTrue(rewrite.contains(UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		Set<UserSet> users = rewrite.evaluate(tuples);
+		assertEquals(2, users.size());
+		assertTrue(users.contains(UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
+		assertTrue(users.contains(UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
 	}
 
 	@Test
@@ -126,14 +130,15 @@ public class RewriteRuleTest
 		docs.addRelation(viewer);
 		RewriteRule rule = new Union(
 			Arrays.asList(
-				new ThisExpression(viewer),
-				new ComputedUserSet(docs).withRelation(OWNER),
-				new ComputedUserSet(docs).withRelation(EDITOR)
+				new This(viewer),
+				new ComputedUserSet(OWNER),
+				new ComputedUserSet(EDITOR)
 			)
 		);
-		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + EDITOR)));
-		assertTrue(rewrite.contains(UserSet.parse(DOC_ROADMAP + "#" + OWNER)));
-		assertEquals(2, rewrite.size());
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		Set<UserSet> users = rewrite.evaluate(tuples);
+		assertEquals(2, users.size());
+		assertTrue(users.contains(UserSet.parse(KIM)));
+		assertTrue(users.contains(UserSet.parse(BEN)));
 	}
 }
