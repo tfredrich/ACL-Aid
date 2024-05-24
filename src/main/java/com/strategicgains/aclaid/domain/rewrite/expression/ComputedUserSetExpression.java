@@ -1,11 +1,15 @@
-package com.strategicgains.aclaid.domain.rewrite;
+package com.strategicgains.aclaid.domain.rewrite.expression;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * Computes, for the input object, a new userset. For example, this allows the userset expression
@@ -15,20 +19,20 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
  * @author Todd Fredrich
  * @see RewriteRule
  */
-public class ComputedUserSet
-implements RewriteRule
+public class ComputedUserSetExpression
+implements UsersetExpression
 {
 	private ObjectDefinition objectDefinition;
 	private String relation;
 	private String objectToken;
 
-	public ComputedUserSet(ObjectDefinition objectDefintion)
+	public ComputedUserSetExpression(ObjectDefinition objectDefintion)
 	{
 		super();
 		setObjectDefinition(objectDefintion);
 	}
 
-	public ComputedUserSet(ObjectDefinition objectDefinition, String relation)
+	public ComputedUserSetExpression(ObjectDefinition objectDefinition, String relation)
 	{
 		this(objectDefinition);
 		setRelation(relation);
@@ -64,30 +68,29 @@ implements RewriteRule
 		this.objectDefinition = objectDefintion;
 	}
 
-	public ComputedUserSet withRelation(String relation)
+	public ComputedUserSetExpression withRelation(String relation)
 	{
 		setRelation(relation);
 		return this;
 	}
 
-	public ComputedUserSet withToken(String objectToken)
+	public ComputedUserSetExpression withToken(String objectToken)
 	{
 		setObjectToken(objectToken);
 		return this;
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
+	public Set<UserSet> evaluate(TupleSet tuples)
 	{
-//		if (objectId == null) return Collections.emptySet();
-//
-////		if (objectDefinition.getName().equals(objectId.getType()))
-//		{
-//			return new HashSet<>(Arrays.asList(compute(tuples, objectId, relation)));
-//		}
-//
-////		return Collections.emptySet();
-		return null;
+		if (objectId == null) return Collections.emptySet();
+
+//		if (objectDefinition.getName().equals(objectId.getType()))
+		{
+			return new HashSet<>(Arrays.asList(compute(tuples, objectId, relation)));
+		}
+
+//		return Collections.emptySet();
 	}
 
 	private UserSet compute(TupleSet tuples, ObjectId objectId, String relation)

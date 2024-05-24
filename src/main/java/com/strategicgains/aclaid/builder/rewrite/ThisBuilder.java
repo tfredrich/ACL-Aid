@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.builder.rewrite;
 
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
-import com.strategicgains.aclaid.domain.rewrite.This;
+import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
 
 public class ThisBuilder
 implements RewriteRuleBuilder
@@ -18,7 +18,7 @@ implements RewriteRuleBuilder
 	@Override
 	public RewriteRule build(RelationDefinition relation)
 	{
-		return new This();
+		return new ThisExpression();
 	}
 
 	public ComputedUserSetBuilder computedUserSet()

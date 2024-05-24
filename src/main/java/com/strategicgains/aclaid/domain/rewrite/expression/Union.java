@@ -1,13 +1,11 @@
-package com.strategicgains.aclaid.domain.rewrite;
+package com.strategicgains.aclaid.domain.rewrite.expression;
 
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * It takes two sets as input and returns a new set as output.
@@ -25,28 +23,28 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
  * {1, 2, 3, 4, 5, 6}
  */
 public class Union
-extends AggregateRewriteRule
+extends AggregateExpression
 {
 	public Union()
 	{
 		super();
 	}
 
-	public Union(List<RewriteRule> children)
+	public Union(List<UsersetExpression> children)
 	{
 		super(children);
 	}
 
 	@Override
-	public Union addChild(RewriteRule rewriteRule)
+	public Union addChild(UsersetExpression rewriteRule)
 	{
 		super.addChild(rewriteRule);
 		return this;
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
+	public Set<UserSet> evaluate(TupleSet relationTuples)
 	{
-		return null; //children().flatMap(child -> child.rewrite(relationTuples, objectId).stream()).collect(Collectors.toSet());
+		return children().flatMap(child -> child.evaluate(relationTuples).stream()).collect(Collectors.toSet());
 	}
 }

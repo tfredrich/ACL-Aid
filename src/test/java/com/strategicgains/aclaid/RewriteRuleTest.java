@@ -18,9 +18,9 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.ComputedUserSet;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
-import com.strategicgains.aclaid.domain.rewrite.This;
 import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
 import com.strategicgains.aclaid.domain.rewrite.Union;
+import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class RewriteRuleTest
@@ -77,7 +77,7 @@ public class RewriteRuleTest
 	public void testEmptyThis()
 	throws ParseException
 	{
-		RewriteRule rule = new This(new RelationDefinition(VIEWER));
+		RewriteRule rule = new ThisExpression(new RelationDefinition(VIEWER));
 		Set<UserSet> rewrite = rule.rewrite(tuples, new ObjectId(DOC_ROADMAP));
 		assertTrue(rewrite.isEmpty());
 	}
@@ -88,7 +88,7 @@ public class RewriteRuleTest
     {
         InMemoryTupleSet local = new InMemoryTupleSet(tuples);
         local.add(KIM, VIEWER, DOC_ROADMAP);
-        RewriteRule rule = new This(new RelationDefinition(VIEWER));
+        RewriteRule rule = new ThisExpression(new RelationDefinition(VIEWER));
         Set<UserSet> rewrite = rule.rewrite(local, new ObjectId(DOC_ROADMAP));
         assertTrue(rewrite.contains(UserSet.parse(KIM)));
     }
@@ -126,7 +126,7 @@ public class RewriteRuleTest
 		docs.addRelation(viewer);
 		RewriteRule rule = new Union(
 			Arrays.asList(
-				new This(viewer),
+				new ThisExpression(viewer),
 				new ComputedUserSet(docs).withRelation(OWNER),
 				new ComputedUserSet(docs).withRelation(EDITOR)
 			)

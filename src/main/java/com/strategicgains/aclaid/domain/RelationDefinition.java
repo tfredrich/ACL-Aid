@@ -1,9 +1,8 @@
 package com.strategicgains.aclaid.domain;
 
-import java.util.Set;
-
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.This;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 public class RelationDefinition
 {
@@ -43,11 +42,11 @@ public class RelationDefinition
 
 	public boolean check(TupleSet tuples, UserSet userset, ObjectId objectId)
 	{
-		Set<UserSet> rewrites = null;
+		UsersetExpression rewrites = null;
 
-		if (hasRewriteRules()) rewrites = rewriteRules.rewrite(tuples, objectId);
-		else rewrites = new This(this).rewrite(tuples, objectId);
+		if (hasRewriteRules()) rewrites = rewriteRules.rewrite(objectId);
+		else rewrites = new This(this).rewrite(objectId);
 
-		return rewrites.contains(userset);
+		return rewrites.evaluate(tuples).contains(userset);
 	}
 }

@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid.domain.rewrite;
+package com.strategicgains.aclaid.domain.rewrite.expression;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -7,7 +7,6 @@ import com.strategicgains.aclaid.domain.InMemoryTupleSet;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * Computes a tupleset from the input object, fetches relation tuples matching the tupleset, and computes
@@ -15,27 +14,25 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
  * policies such as “look up the parent folder of the document and inherit its viewers”.
  */
 public class TupleToUserSet
-implements RewriteRule
+implements UsersetExpression
 {
 	private String relation;
-	private ComputedUserSet computedUserSet;
+	private UserSet userSet;
 
-	public TupleToUserSet(String relation, ComputedUserSet computedUserSet)
+	public TupleToUserSet(String relation, UserSet computedUserSet)
 	{
 		super();
 		this.relation = relation;
-		this.computedUserSet = computedUserSet;
+		this.userSet = computedUserSet;
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
+	public Set<UserSet> evaluate(TupleSet tuples)
 	{
-//		TupleSet readAll = tuples.readAll(relation, objectId);
-//		return tuples
-//			.readAll(relation, objectId)
-//			.stream()
-//			.flatMap(u -> computedUserSet.rewrite(tuples, u.getObjectId()).stream())
-//			.collect(Collectors.toSet());
+//		return tuples.readAll(relation, userSet.getObjectId());
+//				.stream()
+//				.flatMap(u -> computedUserSet.evaluate(tuples).stream())
+//				.collect(Collectors.toSet());
 		return null;
 	}
 }

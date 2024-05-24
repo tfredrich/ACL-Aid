@@ -1,10 +1,7 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import java.util.Set;
-
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * In Zanzibar, Userset rewrite rules are defined per relation in a namespace.
@@ -69,10 +66,5 @@ import com.strategicgains.aclaid.domain.UserSet;
  */
 public interface RewriteRule
 {
-	Set<UserSet> rewrite(TupleSet tuples, ObjectId objectId);
-
-	//TODO: Would this be a better signature per the paper? 
-	// This is the correct signature per the paper: answers "what is the set of Users that can access this object?"
-	// The input TupleSet can be passed via the constructor or the root namespace.
-	//Set<UserSet> rewrite(ObjectId objectId);
+	UsersetExpression rewrite(ObjectId objectId);
 }

@@ -5,6 +5,7 @@ import java.util.Set;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * The returned set contains only elements that are members of both input sets.
@@ -45,7 +46,7 @@ extends BinaryRewriteRule
 	}
 
 	@Override
-	public Set<UserSet> rewrite(TupleSet tuples, ObjectId inputObj)
+	public UsersetExpression rewrite(ObjectId inputObj)
 	{
 		// TODO Auto-generated method stub
 		return null;
