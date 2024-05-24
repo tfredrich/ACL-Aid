@@ -3,6 +3,9 @@ package com.strategicgains.aclaid.domain;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.strategicgains.aclaid.domain.rewrite.expression.UnionExpression;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+
 public class ObjectDefinition
 {
 	private String name;
