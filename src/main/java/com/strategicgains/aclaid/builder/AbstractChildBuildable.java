@@ -23,7 +23,7 @@ implements Buildable
 	}
 
 	@Override
-	public ResourceDefinitionBuilder object(String name)
+	public ObjectDefinitionBuilder object(String name)
 	{
 		return parent.object(name);
 	}
@@ -35,21 +35,21 @@ implements Buildable
 	}
 
 	@Override
-	public ResourceDefinitionBuilder tuple(String userset, String relation, String resource)
+	public ObjectDefinitionBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}
 
 	@Override
-	public ResourceDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
+	public ObjectDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		return parent.tuple(userset, relation, resource);
 	}
 
 	@Override
-	public ResourceDefinitionBuilder tuple(String tuple)
+	public ObjectDefinitionBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException
 	{
 		return parent.tuple(tuple);

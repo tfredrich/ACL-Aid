@@ -6,6 +6,7 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 public class RelationDefinition
 {
+	private ObjectDefinition parent;
 	private String name;
 	private RewriteRule rewriteRules;
 
@@ -25,6 +26,16 @@ public class RelationDefinition
 		this.name = name;
 	}
 
+	public ObjectDefinition getParent()
+	{
+		return parent;
+	}
+
+	public void setParent(ObjectDefinition parent)
+	{
+		this.parent = parent;
+	}
+
 	public String toString()
 	{
 		return String.format("Relation: %s", name);
@@ -42,11 +53,29 @@ public class RelationDefinition
 
 	public boolean check(TupleSet tuples, UserSet userset, ObjectId objectId)
 	{
-		UsersetExpression rewrites = null;
-
-		if (hasRewriteRules()) rewrites = rewriteRules.rewrite(objectId);
-		else rewrites = new This(this).rewrite(objectId);
-
+		UsersetExpression rewrites = rewrite(objectId);
 		return rewrites.evaluate(tuples).contains(userset);
+	}
+
+	private UsersetExpression rewrite(ObjectId objectId)
+	{
+		if (hasRewriteRules())
+		{
+			return rewriteRules.rewrite(objectId);
+		}
+
+		return new This(this).rewrite(objectId);
+	}
+
+	public UsersetExpression rewrite(ObjectId objectId, String relation)
+	{
+		if (parent != null && parent.containsRelation(relation))
+		{
+			return parent.getRelation(relation).rewrite(objectId, relation);
+		}
+		else
+		{
+			throw new IllegalArgumentException("Relation not found: " + relation); 
+		}
 	}
 }

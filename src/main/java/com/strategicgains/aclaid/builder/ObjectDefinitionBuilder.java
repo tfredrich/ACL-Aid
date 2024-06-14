@@ -15,7 +15,7 @@ import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
-public class ResourceDefinitionBuilder
+public class ObjectDefinitionBuilder
 implements Buildable
 {
 	private AccessControlBuilder parent;
@@ -24,7 +24,7 @@ implements Buildable
 	private List<TupleBuilder> tupleBuilders = new ArrayList<>();
 	private List<Tuple> tuples = new ArrayList<>();
 
-	public ResourceDefinitionBuilder(AccessControlBuilder parent, String objectName)
+	public ObjectDefinitionBuilder(AccessControlBuilder parent, String objectName)
 	{
 		super();
 		this.name = objectName;
@@ -54,7 +54,7 @@ implements Buildable
 		return parent;
 	}
 
-	public ResourceDefinitionBuilder object(String objectName)
+	public ObjectDefinitionBuilder object(String objectName)
 	{
 		return parent.object(objectName);
 	}
@@ -71,13 +71,13 @@ implements Buildable
 		return rb;
 	}
 
-	public ResourceDefinitionBuilder tuple(String userset, String relation, String resource)
+	public ObjectDefinitionBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
 		return tuple(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
-	public ResourceDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
+	public ObjectDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
@@ -91,7 +91,7 @@ implements Buildable
 		return parent.containsRelation(relation);
 	}
 
-	public ResourceDefinitionBuilder tuple(String tuple)
+	public ObjectDefinitionBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException
 	{
 		tuples.add(Tuple.parse(tuple));

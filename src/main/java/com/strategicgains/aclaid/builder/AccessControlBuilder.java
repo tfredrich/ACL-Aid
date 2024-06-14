@@ -9,12 +9,12 @@ import com.strategicgains.aclaid.AccessControl;
 
 public class AccessControlBuilder
 {
-	private Map<String, ResourceDefinitionBuilder> objectBuilders = new HashMap<>();
+	private Map<String, ObjectDefinitionBuilder> objectBuilders = new HashMap<>();
 	private Set<String> relations = new HashSet<>();
 
-	public ResourceDefinitionBuilder object(String objectName)
+	public ObjectDefinitionBuilder object(String objectName)
 	{
-		ResourceDefinitionBuilder current = new ResourceDefinitionBuilder(this, objectName);
+		ObjectDefinitionBuilder current = new ObjectDefinitionBuilder(this, objectName);
 		objectBuilders.put(objectName, current);
 		relations.clear();
 		return current;

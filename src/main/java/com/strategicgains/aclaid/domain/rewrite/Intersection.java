@@ -1,10 +1,7 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import java.util.Set;
-
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
@@ -46,7 +43,7 @@ extends BinaryRewriteRule
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId inputObj)
+	public UsersetExpression rewrite(ObjectId objectId)
 	{
 		// TODO Auto-generated method stub
 		return null;

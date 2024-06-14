@@ -6,12 +6,12 @@ import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 
 public class RelationBuilder
-extends AbstractChildBuildable<ResourceDefinitionBuilder>
+extends AbstractChildBuildable<ObjectDefinitionBuilder>
 {
 	private RelationDefinition relationDefinition;
 	private RewriteRuleBuilder rewriteRuleBuilder;
 
-	public RelationBuilder(String relation, ResourceDefinitionBuilder parent)
+	public RelationBuilder(String relation, ObjectDefinitionBuilder parent)
 	{
 		super(parent);
 		this.relationDefinition = new RelationDefinition(relation);

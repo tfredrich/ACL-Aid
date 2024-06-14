@@ -16,12 +16,18 @@ public class ObjectDefinition
 
 	public void addRelation(RelationDefinition relation)
 	{
+		relation.setParent(this);
 		relations.put(relation.getName(), relation);
 	}
 
 	public boolean containsRelation(String relation)
 	{
 		return relations.containsKey(relation);
+	}
+
+	public RelationDefinition getRelation(String relation)
+	{
+		return relations.get(relation);
 	}
 
 	public String getName()
@@ -32,11 +38,6 @@ public class ObjectDefinition
 	public String toString()
 	{
 		return (String.format("resource: %s", getName()));
-	}
-
-	public RelationDefinition relation(String relation)
-	{
-		return relations.get(relation);
 	}
 
 	public boolean check(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)

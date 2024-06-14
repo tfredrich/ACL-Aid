@@ -8,18 +8,18 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public interface Buildable
 {
-	ResourceDefinitionBuilder object(String name);
+	ObjectDefinitionBuilder object(String name);
 
 	RelationBuilder relation(String name);
 
 	TupleBuilder tuples();
 
-	ResourceDefinitionBuilder tuple(String userset, String relation, String resource)
+	ObjectDefinitionBuilder tuple(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException;
 
-	ResourceDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
+	ObjectDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException;
 
-	ResourceDefinitionBuilder tuple(String tuple)
+	ObjectDefinitionBuilder tuple(String tuple)
 	throws ParseException, InvalidTupleException;
 }
