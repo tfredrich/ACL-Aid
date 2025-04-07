@@ -8,7 +8,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * A TupleSet is a collection of Tuples. It is the primary data structure used to store and query access control data.
  * 
  * @author Todd Fredrich
- * @see Tuple, InMemoryTupleSet
+ * @see Tuple, LocalTupleSet
  */
 public interface TupleSet
 {

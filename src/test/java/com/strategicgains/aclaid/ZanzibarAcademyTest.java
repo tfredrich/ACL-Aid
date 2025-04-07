@@ -154,10 +154,10 @@ public class ZanzibarAcademyTest
 
 		assertTrue(acl.check(KIM, OWNER, DOC_ROADMAP));
 		assertTrue(acl.check(KIM, EDITOR, DOC_ROADMAP));
-		assertTrue(acl.check(KIM, VIEWER, DOC_ROADMAP));
 		assertTrue(acl.check(BEN, EDITOR, DOC_ROADMAP));
 		assertTrue(acl.check(BEN, VIEWER, DOC_ROADMAP));
 		assertTrue(acl.check(CARL, VIEWER, DOC_SLIDES));
+		assertTrue(acl.check(KIM, VIEWER, DOC_ROADMAP));
 	}
 
 	/**

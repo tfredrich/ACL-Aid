@@ -43,13 +43,13 @@ public class InMemoryTupleSetTest
 	private static final String FOLDER_PLANNING = FOLDER_NAMESPACE + ":folder/planning";
 	private static final String FOLDER_ENGINEERING = FOLDER_NAMESPACE + ":folder/engineering";
 
-	private InMemoryTupleSet ts;
+	private LocalTupleSet ts;
 
 	@Before
 	public void initialize()
 	throws ParseException, InvalidTupleException
 	{
-		ts = new InMemoryTupleSet()
+		ts = new LocalTupleSet()
 			.add(KIM, OWNER_RELATION, DOC_ROADMAP)
 			.add(BEN, EDITOR_RELATION, DOC_ROADMAP)
 			.add(KIM, EDITOR_RELATION, DOC_ROADMAP)

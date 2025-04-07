@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
- * An InMemoryTupleSet is a graph of of tuples that can be read and written to. It is a simple in-memory
+ * An LocalTupleSet is a graph of of tuples that can be read and written to. It is a simple in-memory
  * implementation of a TupleSet and is not thread-safe.
  * 
- * There are two indexes maintained by InMemoryTupleSet, both being essentially adjacency lists:
+ * There are two indexes maintained by LocalTupleSet, both being essentially adjacency lists:
  * 1) From a UserSet to Relations to ObjectIds and
  * 2) From an ObjectID to Relations to UserSets
  * 
@@ -24,7 +24,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * 
  * @author Todd Fredrich
  */
-public class InMemoryTupleSet
+public class LocalTupleSet
 implements TupleSet
 {
 	/**
@@ -37,12 +37,12 @@ implements TupleSet
 	 */
 	private Map<ObjectId, Map<String, Set<UserSet>>> objectTree;
 
-	public InMemoryTupleSet()
+	public LocalTupleSet()
 	{
 		this(null, null);
 	}
 
-	public InMemoryTupleSet(ObjectId objectId, String relation, Set<UserSet> usersets)
+	public LocalTupleSet(ObjectId objectId, String relation, Set<UserSet> usersets)
 	throws InvalidTupleException
 	{
 		this();
@@ -54,7 +54,7 @@ implements TupleSet
 		}
 	}
 
-	public InMemoryTupleSet(UserSet userset, String relation, Set<ObjectId> objectIds)
+	public LocalTupleSet(UserSet userset, String relation, Set<ObjectId> objectIds)
 	throws InvalidTupleException
 	{
 		this();
@@ -66,18 +66,18 @@ implements TupleSet
 		}
 	}
 
-	public InMemoryTupleSet(InMemoryTupleSet that)
+	public LocalTupleSet(LocalTupleSet that)
 	{
 		this(that.usersetTree, that.objectTree);
 	}
 
-	public InMemoryTupleSet(Collection<Tuple> tuples)
+	public LocalTupleSet(Collection<Tuple> tuples)
 	{
 		this();
 		tuples.stream().forEach(this::add);
 	}
 
-	protected InMemoryTupleSet(Map<UserSet, Map<String, Set<ObjectId>>> usersetTree,
+	protected LocalTupleSet(Map<UserSet, Map<String, Set<ObjectId>>> usersetTree,
 		Map<ObjectId, Map<String, Set<UserSet>>> objectTree)
 	{
 		this.usersetTree = usersetTree != null ? new ConcurrentHashMap<>(usersetTree) : new ConcurrentHashMap<>();
@@ -116,7 +116,7 @@ implements TupleSet
 	public TupleSet readAll(String relation, ObjectId objectId)
 	{
 		Set<UserSet> usersets = readUserSets(relation, objectId);
-		InMemoryTupleSet results = new InMemoryTupleSet();
+		LocalTupleSet results = new LocalTupleSet();
 		usersets.stream().forEach(u -> {
 			try {
 				results.add(u, relation, objectId);
@@ -207,21 +207,21 @@ implements TupleSet
 		return null;
 	}
 
-	public InMemoryTupleSet add(String userset, String relation, String resource)
+	public LocalTupleSet add(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
 		return add(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
 	@Override
-	public InMemoryTupleSet add(UserSet userset, String relation, ObjectId resource)
+	public LocalTupleSet add(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		return add(newDynamicTuple(userset, relation, resource));
 	}
 
 	@Override
-	public InMemoryTupleSet add(Tuple tuple)
+	public LocalTupleSet add(Tuple tuple)
 	{
 		writeUsersetTree(tuple);
 		writeResourceTree(tuple);
@@ -229,7 +229,7 @@ implements TupleSet
 	}
 
 	@Override
-	public InMemoryTupleSet remove(Tuple tuple)
+	public LocalTupleSet remove(Tuple tuple)
 	{
 		removeUsersetTree(tuple);
 		removeResourceTree(tuple);
@@ -237,7 +237,7 @@ implements TupleSet
 	}
 
 	@Override
-	public InMemoryTupleSet remove(UserSet userset, String relation, ObjectId resource)
+	public LocalTupleSet remove(UserSet userset, String relation, ObjectId resource)
 	{
 		return remove(new Tuple(userset, relation, resource));
 	}
@@ -301,7 +301,7 @@ implements TupleSet
 		return new Tuple(userset, relation, resource);
 	}
 
-	public InMemoryTupleSet addAll(InMemoryTupleSet tupleset)
+	public LocalTupleSet addAll(LocalTupleSet tupleset)
 	{
 		if (tupleset != null)
 		{

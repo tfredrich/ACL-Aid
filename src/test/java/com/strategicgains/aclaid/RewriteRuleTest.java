@@ -10,7 +10,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.strategicgains.aclaid.domain.InMemoryTupleSet;
+import com.strategicgains.aclaid.domain.LocalTupleSet;
 import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.RelationDefinition;
@@ -54,13 +54,13 @@ public class RewriteRuleTest
 	private static final String FOLDER_PLANNING = NAMESPACE + FOLDER_OBJECT + "/planning";
 	private static final String FOLDER_ENGINEERING = NAMESPACE + FOLDER_OBJECT + "/engineering";
 
-	private InMemoryTupleSet tuples;
+	private LocalTupleSet tuples;
 
 	@Before
 	public void initialize()
 	throws ParseException, InvalidTupleException
 	{
-		tuples = new InMemoryTupleSet();		
+		tuples = new LocalTupleSet();		
 		tuples
 			.add(KIM, OWNER, DOC_ROADMAP)
 			.add(BEN, EDITOR, DOC_ROADMAP)
@@ -87,7 +87,7 @@ public class RewriteRuleTest
 	public void testThis()
 	throws ParseException, InvalidTupleException
     {
-        InMemoryTupleSet local = new InMemoryTupleSet(tuples);
+        LocalTupleSet local = new LocalTupleSet(tuples);
         local.add(KIM, VIEWER, DOC_ROADMAP);
         RewriteRule rule = new This(new RelationDefinition(VIEWER));
         UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
