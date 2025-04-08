@@ -76,6 +76,12 @@ extends User
 		return userset;
 	}
 
+	@Override
+	public boolean isUser()
+	{
+		return getObjectId() != null && !hasRelation();
+	}
+
 	public String getRelation()
 	{
 		return relation;

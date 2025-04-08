@@ -72,7 +72,7 @@ public class User
 
 	protected boolean isUser()
 	{
-		return (hasObjectId() && USER_PREFIX.equals(objectId.getType()));
+		return true;
 	}
 
 	protected boolean hasObjectId()
