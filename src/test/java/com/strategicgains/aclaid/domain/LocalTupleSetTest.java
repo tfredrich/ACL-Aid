@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.domain;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -13,7 +14,7 @@ import org.junit.Test;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
-public class InMemoryTupleSetTest
+public class LocalTupleSetTest
 {
 	private static final String DOCUMENT_NAMESPACE = "doc";
 	private static final String ORGANIZATION_NAMESPACE = "org";
@@ -68,6 +69,8 @@ public class InMemoryTupleSetTest
 	{
 		Tuple tuple = ts.readOne(KIM, VIEWER_RELATION, DOC_ROADMAP);
 		assertNull(tuple);
+//		boolean result = ts.check(KIM, VIEWER_RELATION, DOC_ROADMAP);
+//		assertFalse(result);
 	}
 
 	@Test
@@ -79,6 +82,8 @@ public class InMemoryTupleSetTest
 		assertEquals(DOC_ROADMAP, tuple.getObjectId().toString());
 		assertEquals(OWNER_RELATION, tuple.getRelation());
 		assertEquals(KIM, tuple.getUserset().toString());
+//		boolean result = ts.check(KIM, OWNER_RELATION, DOC_ROADMAP);
+//		assertTrue(result);
 	}
 
 	@Test
