@@ -28,14 +28,16 @@ public class LocalTupleSet
 implements TupleSet
 {
 	/**
-	 * The directional index of ObjectIds by user set and relation.
+	 * The directional index of ObjectIds by user set and relation:
+	 * Essentially MEMBER2GROUP containing direct relations.
 	 */
-	private Map<UserSet, Map<String, Set<ObjectId>>> usersetTree;
+	private Map<UserSet, Map<String, Set<ObjectId>>> usersetTree; 
 
 	/**
 	 * The directional index of UserSets by objectId and relation.
+	 * Essentially GROUP2GROUP containing indirect relations.
 	 */
-	private Map<ObjectId, Map<String, Set<UserSet>>> objectTree;
+	private Map<ObjectId, Map<String, Set<UserSet>>> objectTree; 
 
 	public LocalTupleSet()
 	{
@@ -82,6 +84,15 @@ implements TupleSet
 	{
 		this.usersetTree = usersetTree != null ? new ConcurrentHashMap<>(usersetTree) : new ConcurrentHashMap<>();
 		this.objectTree = objectTree != null ? new ConcurrentHashMap<>(objectTree) : new ConcurrentHashMap<>();
+	}
+
+	public boolean check(String userset, String relation, String objectId)
+	throws ParseException {
+		return check(UserSet.parse(userset), relation, new ObjectId(objectId));
+	}
+
+	public boolean check(User actor, String relation, ObjectId objectId) {
+		return read(new UserSet(actor.getObjectId()), relation, objectId) != null;
 	}
 
 	@Override
