@@ -69,8 +69,12 @@ public class LocalTupleSetTest
 	{
 		Tuple tuple = ts.readOne(KIM, VIEWER_RELATION, DOC_ROADMAP);
 		assertNull(tuple);
-//		boolean result = ts.check(KIM, VIEWER_RELATION, DOC_ROADMAP);
-//		assertFalse(result);
+	}
+
+	@Test
+	public void testCheckKimViewerOfRoadmap() throws ParseException {
+		boolean result = ts.check(KIM, VIEWER_RELATION, DOC_ROADMAP);
+		assertFalse(result);
 	}
 
 	@Test
@@ -82,8 +86,12 @@ public class LocalTupleSetTest
 		assertEquals(DOC_ROADMAP, tuple.getObjectId().toString());
 		assertEquals(OWNER_RELATION, tuple.getRelation());
 		assertEquals(KIM, tuple.getUserset().toString());
-//		boolean result = ts.check(KIM, OWNER_RELATION, DOC_ROADMAP);
-//		assertTrue(result);
+	}
+
+	@Test
+	public void testCheckKimOwnerOfRoadmap() throws ParseException {
+		boolean result = ts.check(KIM, OWNER_RELATION, DOC_ROADMAP);
+		assertTrue(result);
 	}
 
 	@Test
