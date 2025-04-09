@@ -27,7 +27,7 @@ import java.util.Objects;
  *
  **/
 public class UserSet
-extends User
+extends Actor
 {
 	public static final UserSet EMPTY = new UserSet();
 
@@ -77,7 +77,7 @@ extends User
 	}
 
 	@Override
-	public boolean isUser()
+	public boolean isActor()
 	{
 		return getObjectId() != null && !hasRelation();
 	}

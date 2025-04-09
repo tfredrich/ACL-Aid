@@ -86,12 +86,12 @@ implements TupleSet
 		this.objectTree = objectTree != null ? new ConcurrentHashMap<>(objectTree) : new ConcurrentHashMap<>();
 	}
 
-	public boolean check(String userset, String relation, String objectId)
+	public boolean check(String actor, String relation, String objectId)
 	throws ParseException {
-		return check(UserSet.parse(userset), relation, new ObjectId(objectId));
+		return check(Actor.parse(actor), relation, new ObjectId(objectId));
 	}
 
-	public boolean check(User actor, String relation, ObjectId objectId) {
+	public boolean check(Actor actor, String relation, ObjectId objectId) {
 		return read(new UserSet(actor.getObjectId()), relation, objectId) != null;
 	}
 

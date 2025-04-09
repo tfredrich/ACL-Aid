@@ -4,46 +4,32 @@ import java.text.ParseException;
 import java.util.Objects;
 
 /**
- * This is the Zanzibar User (which is either a user or a user set) property of a Tuple.
- * It can be a user identifier or a userset, which is a reference to a relation on another
- * resource (e.g. to determine if the user is a member of a group).
+ * This is the user ID portion of the Zanzibar UserSet property of a Tuple.
  * 
- * ⟨user⟩      ::= ⟨user id⟩ | ⟨userset⟩
- * (user id)   ::= 'user:'(object id)
- * ⟨userset⟩   ::= ⟨object⟩‘#’⟨relation⟩
+ * ⟨user⟩      ::= ⟨object⟩ | ⟨userset⟩
  * ⟨object⟩    ::= ⟨namespace⟩‘:’⟨object id⟩
  * (namespace) ::= (string)
  * (object id) ::= (string)
- * 
- * Where ⟨namespace⟩ and ⟨relation⟩ are predefined in client configurations.
- * 
- * In other words, a UserSet instance can be a user identifier or a object-relation pair.
- * 
- * For example:
- *  'user:123' is a user identifier.
- *  'groups:group/admin#owner' is a userset.
  *  
  * @author Todd Fredrich
- *
+ * see: {@link UserSet}
  **/
-public class User
+public class Actor
 {
-	public static final String USER_PREFIX = "user";
-
 	private ObjectId objectId;
 
-	public User()
+	public Actor()
 	{
 		super();
 	}
 
-	public User(ObjectId objectId)
+	public Actor(ObjectId objectId)
 	{
 		this();
 		setObjectId(objectId);
 	}
 
-	public User(User that)
+	public Actor(Actor that)
 	{
 		this();
 		setObjectId(that.objectId);
@@ -54,23 +40,23 @@ public class User
 		return (hasObjectId() ? objectId.getNamespace() : null);
 	}
 
-	public static User parse(String string)
+	public static Actor parse(String string)
 	throws ParseException
 	{
-		if (string == null || string.isEmpty()) throw new ParseException("Users cannot be null or empty", 0);
+		if (string == null || string.isEmpty()) throw new ParseException("Actors cannot be null or empty", 0);
 
 		String[] segments = string.trim().split("#", 2);
 
-		if (segments.length > 1) throw new ParseException("Invalid user: " + string, 0);
+		if (segments.length > 1) throw new ParseException("Invalid actor: " + string, 0);
 
 		
-		User user = new User();
+		Actor user = new Actor();
 		user.setObjectId(new ObjectId(segments[0]));
 
 		return user;
 	}
 
-	protected boolean isUser()
+	protected boolean isActor()
 	{
 		return true;
 	}
@@ -111,11 +97,11 @@ public class User
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		Actor other = (Actor) obj;
 		return Objects.equals(objectId, other.objectId);
 	}
 
-	public boolean matches(User that)
+	public boolean matches(Actor that)
 	{
 		return this.objectId.matches(that.objectId);
 	}
