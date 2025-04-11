@@ -10,6 +10,14 @@ import com.strategicgains.aclaid.AccessControl;
 public class AccessControlBuilder
 {
 	private Map<String, ObjectDefinitionBuilder> objectBuilders = new HashMap<>();
+
+	/*
+	 * A set of relation names within the entire context of the ACL.
+	 * This is used to determine if a relation name has been defined and
+	 * can, therefore, be used in a tuple or rewrite rule.
+	 * 
+	 * The set is cleared after each object definition is built.
+	 */
 	private Set<String> relations = new HashSet<>();
 
 	public ObjectDefinitionBuilder object(String objectName)
@@ -34,8 +42,10 @@ public class AccessControlBuilder
 	{
 		AccessControl acl = new AccessControl();
 
-		objectBuilders.values().stream().forEach(b -> b.buildRelations(acl));
-		objectBuilders.values().stream().forEach(b -> b.buildTuples(acl));
+		objectBuilders.values().stream().forEach(b -> {
+			b.buildRelations(acl);
+			b.buildTuples(acl);
+		});
 
 		return acl;
 	}
