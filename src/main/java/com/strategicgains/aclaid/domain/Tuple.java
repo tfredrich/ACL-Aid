@@ -98,6 +98,11 @@ public class Tuple
 		return (expiresAt != null);
 	}
 
+	public boolean isExpired()
+	{
+		return (expires() && expiresAt.getTime() < System.currentTimeMillis());
+	}
+
 	public Date getExpiresAt()
 	{
 		return (expires() ? new Date(expiresAt.getTime()) : null);
