@@ -88,11 +88,11 @@ implements TupleSet
 
 	public boolean check(String actor, String relation, String objectId)
 	throws ParseException {
-		return check(Actor.parse(actor), relation, new ObjectId(objectId));
+		return check(UserSet.parse(actor), relation, new ObjectId(objectId));
 	}
 
-	public boolean check(Actor actor, String relation, ObjectId objectId) {
-		return read(new UserSet(actor.getObjectId()), relation, objectId) != null;
+	public boolean check(UserSet actor, String relation, ObjectId objectId) {
+		return read(actor, relation, objectId) != null;
 	}
 
 	@Override

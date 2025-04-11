@@ -27,10 +27,10 @@ import java.util.Objects;
  *
  **/
 public class UserSet
-extends Actor
 {
 	public static final UserSet EMPTY = new UserSet();
 
+	private ObjectId objectId;
 	private String relation;
 
 	public UserSet()
@@ -45,13 +45,13 @@ extends Actor
 
 	public UserSet(ObjectId objectId, String relation)
 	{
-		super(objectId);
+		setObjectId(objectId);
 		setRelation(relation);
 	}
 
 	public UserSet(UserSet that)
 	{
-		super(that.getObjectId());
+		setObjectId(that.getObjectId());
 		setRelation(that.relation);
 	}
 
@@ -76,10 +76,9 @@ extends Actor
 		return userset;
 	}
 
-	@Override
 	public boolean isActor()
 	{
-		return getObjectId() != null && !hasRelation();
+		return (getObjectId() != null && !hasRelation());
 	}
 
 	public String getRelation()
@@ -97,10 +96,34 @@ extends Actor
 		this.relation = relation;
 	}
 
+	public String getNamespace()
+	{
+		return (hasObjectId() ? objectId.getNamespace() : null);
+	}
+
+	protected boolean hasObjectId()
+	{
+		return (objectId != null);
+	}
+
+	public void setObjectId(ObjectId objectId)
+	{
+		this.objectId = objectId;
+	}
+
+	public ObjectId getObjectId()
+	{
+		return objectId;
+	}
+
 	@Override
 	public String toString()
 	{
-		StringBuilder s = new StringBuilder(super.toString());
+		StringBuilder s = new StringBuilder();
+
+		if (hasObjectId()) {
+			s.append(objectId);
+		}
 
 		if (hasRelation())
 		{
@@ -114,24 +137,29 @@ extends Actor
 	@Override
 	public int hashCode()
 	{
-		return Objects.hash(relation, getObjectId());
+		if (hasRelation()) {
+			return Objects.hash(relation, getObjectId());
+		}
+		else return Objects.hash(getObjectId());
 	}
 
 	@Override
 	public boolean equals(Object obj)
 	{
-		if (super.equals(obj))
-		{
-			UserSet other = (UserSet) obj;
-			return Objects.equals(relation, other.relation);
-		}
-
-		return false;
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserSet other = (UserSet) obj;
+		return (Objects.equals(relation, other.relation)
+			&& Objects.equals(objectId, other.objectId));
 	}
 
 	public boolean matches(UserSet that)
 	{
-		if (super.matches(that))
+		if (this.hasObjectId() && this.objectId.matches(that.objectId))
 		{
 			if (hasRelation())
 			{
