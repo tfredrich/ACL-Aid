@@ -76,9 +76,13 @@ public class UserSet
 		return userset;
 	}
 
-	public boolean isActor()
+	public boolean isObject()
 	{
-		return (getObjectId() != null && !hasRelation());
+		return (hasObjectId() && !hasRelation());
+	}
+
+	public boolean isGroup() {
+		return (hasObjectId() && hasRelation());
 	}
 
 	public String getRelation()
@@ -157,20 +161,25 @@ public class UserSet
 			&& Objects.equals(objectId, other.objectId));
 	}
 
-	public boolean matches(UserSet that)
+	public boolean matches(ObjectId objectId, String relation)
 	{
-		if (this.hasObjectId() && this.objectId.matches(that.objectId))
+		if (this.hasObjectId() && this.objectId.matches(objectId))
 		{
 			if (hasRelation())
 			{
-				return this.relation.equals(that.relation);
+				return this.relation.equals(relation);
 			}
 			else
 			{
-				return (!that.hasRelation());
+				return (relation == null);
 			}
 		}
 
 		return false;
+	}
+
+	public boolean matches(UserSet that)
+	{
+		return matches(that.objectId, that.relation);
 	}
 }
