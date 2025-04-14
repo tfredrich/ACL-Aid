@@ -298,4 +298,8 @@ public class Tuple
 	{
 		return (hasUserset() ? getUserset().getObjectId() : null);
 	}
+
+	public boolean isDirectRelation() {
+		return userset.isObject();
+	}
 }
