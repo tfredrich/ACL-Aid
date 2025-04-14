@@ -12,7 +12,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  */
 public interface TupleSet
 {
-	int size();
+	boolean isEmpty();
 
 	/**
 	 * Read all relation tuples having a direct relation on an object ID.
@@ -21,7 +21,7 @@ public interface TupleSet
 	 * @param objectId
 	 * @return a TupleSet of all the relation tuples having a direct relation on an object ID.
 	 */
-	public TupleSet readAll(String relation, ObjectId objectId);
+	TupleSet readAll(String relation, ObjectId objectId);
 
 	/**
 	 * Read all the usersets having a direct relation on an object.

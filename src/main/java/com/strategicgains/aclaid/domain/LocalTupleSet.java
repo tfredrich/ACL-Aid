@@ -13,8 +13,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
- * An LocalTupleSet is a graph of of tuples that can be read and written to. It is a simple in-memory
- * implementation of a TupleSet and is not thread-safe.
+ * A LocalTupleSet is a graph of of tuples that can be read and written to. It is a simple in-memory
+ * implementation of a TupleSet and is not thread-safe and is not durable.
  * 
  * There are two indexes maintained by LocalTupleSet, both being essentially adjacency lists:
  * 1) From a UserSet to Relations to ObjectIds and
@@ -96,9 +96,8 @@ implements TupleSet
 	}
 
 	@Override
-	public int size()
-	{
-		return usersetTree.size();
+	public boolean isEmpty() {
+		return usersetTree.isEmpty() && objectTree.isEmpty();
 	}
 
 	/**
