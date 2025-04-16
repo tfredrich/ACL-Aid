@@ -107,6 +107,7 @@ implements TupleSet
 	 * @param objectId The ObjectId to check.
 	 * @return true if the relation exists.
 	 */
+	@Override
 	public boolean check(UserSet actor, String relation, ObjectId objectId)
 	{
 		if (actor == null || relation == null || objectId == null) return false;
@@ -145,7 +146,6 @@ implements TupleSet
 		return direct.stream().anyMatch(d -> groups.stream().anyMatch(d::matches));
 	}
 
-	@Override
 	public Tuple read(UserSet actor, String relation, ObjectId objectId)
 	{
 //		if (actor == null || relation == null || objectId == null) return null;
@@ -286,23 +286,5 @@ implements TupleSet
 	@Override
 	public boolean isEmpty() {
 		return memberToGroup.isEmpty() && groupToGroup.isEmpty();
-	}
-
-	@Override
-	public TupleSet readAll(String relation, ObjectId objectId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<UserSet> readUserSets(String relation, ObjectId objectId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Set<UserSet> expandUserSets(String relation, ObjectId objectId) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

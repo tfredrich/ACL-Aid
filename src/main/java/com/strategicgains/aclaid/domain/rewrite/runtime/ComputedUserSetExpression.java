@@ -62,11 +62,12 @@ implements UsersetExpression
 	}
 
 	@Override
-	public Set<UserSet> evaluate(TupleSet tuples)
+	public boolean evaluate(TupleSet tuples, UserSet userset)
 	{
-		TupleSet filtered = tuples.readAll(relation, objectId);
-		UserSet userset = compute(filtered, objectId, relation);
-		return tuples.expandUserSets(userset.getRelation(), userset.getObjectId());
+//		TupleSet filtered = tuples.readAll(relation, objectId);
+//		UserSet computed = compute(filtered, objectId, relation);
+//		return tuples.expandUserSets(userset.getRelation(), userset.getObjectId());
+		return false;
 	}
 
 	private UserSet compute(TupleSet tuples, ObjectId objectId, String relation)

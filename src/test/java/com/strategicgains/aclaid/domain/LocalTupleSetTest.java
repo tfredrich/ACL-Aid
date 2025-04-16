@@ -1,7 +1,6 @@
 package com.strategicgains.aclaid.domain;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -72,12 +71,6 @@ public class LocalTupleSetTest
 	}
 
 	@Test
-	public void testCheckKimViewerOfRoadmap() throws ParseException {
-		boolean result = ts.check(KIM, VIEWER_RELATION, DOC_ROADMAP);
-		assertFalse(result);
-	}
-
-	@Test
 	public void testReadOneKimOwnerOfRoadmap()
 	throws ParseException
 	{
@@ -86,12 +79,6 @@ public class LocalTupleSetTest
 		assertEquals(DOC_ROADMAP, tuple.getObjectId().toString());
 		assertEquals(OWNER_RELATION, tuple.getRelation());
 		assertEquals(KIM, tuple.getUserset().toString());
-	}
-
-	@Test
-	public void testCheckKimOwnerOfRoadmap() throws ParseException {
-		boolean result = ts.check(KIM, OWNER_RELATION, DOC_ROADMAP);
-		assertTrue(result);
 	}
 
 	@Test

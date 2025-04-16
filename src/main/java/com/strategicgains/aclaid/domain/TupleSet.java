@@ -1,7 +1,5 @@
 package com.strategicgains.aclaid.domain;
 
-import java.util.Set;
-
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
@@ -15,41 +13,18 @@ public interface TupleSet
 	boolean isEmpty();
 
 	/**
-	 * Read all relation tuples having a direct relation on an object ID.
+	 * Check if the provided user has the relation to the object in this tuple set.
 	 * 
-	 * @param relation
-	 * @param objectId
-	 * @return a TupleSet of all the relation tuples having a direct relation on an object ID.
-	 */
-	TupleSet readAll(String relation, ObjectId objectId);
-
-	/**
-	 * Read all the usersets having a direct relation on an object.
-	 * 
-	 * @param relation
-	 * @param objectId
-	 * @return
-	 */
-	Set<UserSet> readUserSets(String relation, ObjectId objectId);
-
-	/**
-	 * Read all the usersets having a relation on an object including indirect ACLs.
-	 * 
-	 * @param relation
-	 * @param objectId
-	 * @return
-	 */
-	Set<UserSet> expandUserSets(String relation, ObjectId objectId);
-
-	/**
-	 * Read a single direct tuple.
+	 * From the Zanzibar document:
+	 * A check request specifies a userset, represented by ⟨object#relation⟩, a
+	 * putative user, often represented by an authentication token.
 	 * 
 	 * @param userset
 	 * @param relation
 	 * @param objectId
 	 * @return
 	 */
-	Tuple read(UserSet userset, String relation, ObjectId objectId);
+	boolean check(UserSet userset, String relation, ObjectId objectId);
 
 	/**
 	 * Add a tuple to this tuple set.

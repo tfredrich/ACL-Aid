@@ -54,7 +54,7 @@ public class RelationDefinition
 	public boolean check(TupleSet tuples, UserSet userset, ObjectId objectId)
 	{
 		UsersetExpression rewrites = rewrite(objectId);
-		return rewrites.evaluate(tuples).contains(userset);
+		return rewrites.evaluate(tuples, userset);
 	}
 
 	private UsersetExpression rewrite(ObjectId objectId)

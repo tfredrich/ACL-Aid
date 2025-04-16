@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
@@ -80,7 +81,7 @@ public class RewriteRuleTest
 	{
 		RewriteRule rule = new This(new RelationDefinition(VIEWER));
 		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.evaluate(tuples).isEmpty());
+		assertFalse(rewrite.evaluate(tuples, UserSet.parse(KIM)));
 	}
 
 	@Test
@@ -91,10 +92,8 @@ public class RewriteRuleTest
         local.add(KIM, VIEWER, DOC_ROADMAP);
         RewriteRule rule = new This(new RelationDefinition(VIEWER));
         UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-        Set<UserSet> users = rewrite.evaluate(local);
-        assertTrue(users.contains(UserSet.parse(KIM)));
-        assertEquals(1, users.size());
-    }
+        assertTrue(rewrite.evaluate(local, UserSet.parse(KIM)));
+        assertFalse(rewrite.evaluate(local, UserSet.parse(BEN)));    }
 
 	@Test
 	public void testComputedUserSet()
@@ -102,9 +101,8 @@ public class RewriteRuleTest
 	{
 		RewriteRule rule = new ComputedUserSet(EDITOR);
 		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		Set<UserSet> users = rewrite.evaluate(tuples);
-		assertTrue(users.contains(UserSet.parse(BEN)));
-		assertEquals(1, users.size());
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(BEN)));
+		assertFalse(rewrite.evaluate(tuples, UserSet.parse(KIM)));
 	}
 
 	@Test
@@ -115,10 +113,8 @@ public class RewriteRuleTest
 			new ComputedUserSet(VIEWER)
 				.withToken(Tuple.USERSET_OBJECT));
 		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		Set<UserSet> users = rewrite.evaluate(tuples);
-		assertEquals(2, users.size());
-		assertTrue(users.contains(UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
-		assertTrue(users.contains(UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
 	}
 
 	@Test
@@ -136,9 +132,7 @@ public class RewriteRuleTest
 			)
 		);
 		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		Set<UserSet> users = rewrite.evaluate(tuples);
-		assertEquals(2, users.size());
-		assertTrue(users.contains(UserSet.parse(KIM)));
-		assertTrue(users.contains(UserSet.parse(BEN)));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(KIM)));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(BEN)));
 	}
 }

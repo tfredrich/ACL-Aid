@@ -58,13 +58,13 @@ public class Tuple
 
 	/**
 	 * The UserSet being granted the relationship to the resource.
-	 * Examples: 'users:user/todd', 'users:group/B#member'
+	 * Examples: 'users:user/todd', 'groups:group/B#member'
 	 */
 	private UserSet userset;
 
 	/**
 	 * Optional. If this is a temporal, expiring tuple then this is when the tuple expires or becomes
-	 * ineffectual and is no longer applicable. After the expiration time, the tuple is available for
+	 * ineffective and is no longer applicable. After the expiration time, the tuple is available for
 	 * garbage collection (or otherwise removal).
 	 */
 	private Date expiresAt;

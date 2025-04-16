@@ -1,8 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite.runtime;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
@@ -36,8 +34,7 @@ extends AggregateExpression
 	}
 
 	@Override
-	public Set<UserSet> evaluate(TupleSet relationTuples)
-	{
-		return children().flatMap(child -> child.evaluate(relationTuples).stream()).collect(Collectors.toSet());
+	public boolean evaluate(TupleSet tuples, UserSet userSet) {
+		return children().anyMatch(child -> child.evaluate(tuples, userSet));
 	}
 }

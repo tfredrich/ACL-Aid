@@ -1,12 +1,12 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.runtime.ComputedUserSetExpression;
 import com.strategicgains.aclaid.domain.rewrite.runtime.ThisExpression;
 import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
 
 /**
+ * From the Zanzibar document:
  * Computes, for the input object, a new userset. For example, this allows the userset expression
  * for a viewer relation to refer to the editor userset on the same object, thus offering an ACL
  * inheritance capability between relations.
@@ -77,6 +77,6 @@ implements RewriteRule
 			return new ComputedUserSetExpression(objectId, relation, getObjectToken());
 		}
 		
-		return new ThisExpression(new UserSet(objectId, relation));
+		return new ThisExpression(objectId, relation);
 	}
 }

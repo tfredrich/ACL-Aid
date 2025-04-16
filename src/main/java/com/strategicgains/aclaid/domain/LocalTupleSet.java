@@ -86,15 +86,6 @@ implements TupleSet
 		this.objectTree = objectTree != null ? new ConcurrentHashMap<>(objectTree) : new ConcurrentHashMap<>();
 	}
 
-	public boolean check(String actor, String relation, String objectId)
-	throws ParseException {
-		return check(UserSet.parse(actor), relation, new ObjectId(objectId));
-	}
-
-	public boolean check(UserSet actor, String relation, ObjectId objectId) {
-		return read(actor, relation, objectId) != null;
-	}
-
 	@Override
 	public boolean isEmpty() {
 		return usersetTree.isEmpty() && objectTree.isEmpty();
@@ -103,7 +94,6 @@ implements TupleSet
 	/**
 	 * Read all the usersets having a direct relation on an object ID.
 	 */
-	@Override
 	public Set<UserSet> readUserSets(String relation, ObjectId objectId)
 	{
 		Map<String, Set<UserSet>> subtree = objectTree.get(objectId);
@@ -122,7 +112,6 @@ implements TupleSet
 	 * @param objectId
 	 * @return a TupleSet of all the relation tuples having a direct relation on an object ID.
 	 */
-	@Override
 	public TupleSet readAll(String relation, ObjectId objectId)
 	{
 		Set<UserSet> usersets = readUserSets(relation, objectId);
@@ -141,7 +130,6 @@ implements TupleSet
 	 * Read all the usersets having a relation on an object ID, including indirect ACLs.
 	 */
 	// TODO: indirect ACLs are not currently returned by expand().
-	@Override
 	public Set<UserSet> expandUserSets(String relation, ObjectId objectId)
 	{
 		Set<UserSet> usersets = readUserSets(relation, objectId);
@@ -188,7 +176,6 @@ implements TupleSet
 	/**
 	 * Read a single tuple, navigating the user set tree.
 	 */
-	@Override
 	public Tuple read(UserSet userset, String relation, ObjectId objectId)
 	{
 		Map<String, Set<UserSet>> objectSubtree = objectTree.get(objectId);
@@ -327,5 +314,10 @@ implements TupleSet
 			.flatMap(e -> e.getValue().entrySet().stream()
 			.flatMap(f -> f.getValue().stream().map(o -> new Tuple(e.getKey(), f.getKey(), o))))
 			.collect(java.util.stream.Collectors.toList());
+	}
+
+	@Override
+	public boolean check(UserSet userset, String relation, ObjectId objectId) {
+		return read(userset, relation, objectId) != null;
 	}
 }
