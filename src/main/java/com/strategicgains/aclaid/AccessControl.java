@@ -34,19 +34,19 @@ public class AccessControl
 	private Map<String, ObjectDefinition> objectsByName = new HashMap<>();
 	private TupleSet tuples = new LocalTupleSet();
 
-	public AccessControl addTuple(String userset, String relation, String resource)
+	public AccessControl addTuple(String userset, String relation, String objectId)
 	throws ParseException, InvalidTupleException
 	{
-		return addTuple(new Tuple(userset, relation, resource));
+		return addTuple(new Tuple(userset, relation, objectId));
 	}
 
-	public AccessControl addTuple(UserSet userset, String relation, ObjectId resource)
+	public AccessControl addTuple(UserSet userset, String relation, ObjectId objectId)
 	throws InvalidTupleException
 	{
 		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
-		if (!objectsByName.containsKey(resource.getType())) throw new InvalidTupleException("Resource not defined: " + resource.getType());
+		if (!objectsByName.containsKey(objectId.getType())) throw new InvalidTupleException("Object not defined: " + objectId.getType());
 
-		tuples.add(userset, relation, resource);
+		tuples.add(userset, relation, objectId);
 		return this;
 	}
 
@@ -71,7 +71,7 @@ public class AccessControl
 	 */
 	public ObjectDefinition object(String resourceName)
 	{
-		return objectsByName.computeIfAbsent(resourceName, n -> new ObjectDefinition(resourceName));
+		return objectsByName.computeIfAbsent(resourceName, ObjectDefinition::new);
 	}
 
 	/**
