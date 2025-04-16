@@ -3,8 +3,8 @@ package com.strategicgains.aclaid.domain.rewrite;
 import java.util.List;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.expression.UnionExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.UnionExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
 
 /**
  * It takes two sets as input and returns a new set as output.

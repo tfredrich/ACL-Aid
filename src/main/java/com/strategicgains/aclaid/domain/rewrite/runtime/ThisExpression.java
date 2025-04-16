@@ -1,7 +1,8 @@
-package com.strategicgains.aclaid.domain.rewrite.expression;
+package com.strategicgains.aclaid.domain.rewrite.runtime;
 
 import java.util.Set;
 
+import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
@@ -16,17 +17,24 @@ import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 public class ThisExpression
 implements UsersetExpression
 {
-	private UserSet userset;
+	// The object/relation pair to retrieve from the tuple set.
+	private ObjectId objectId;
+	private String relation;
 
 	public ThisExpression(UserSet userset)
 	{
+		this(userset.getObjectId(), userset.getRelation());
+	}
+
+	public ThisExpression(ObjectId objectId, String relation) {
 		super();
-		this.userset = userset;
+		this.objectId = objectId;
+		this.relation = relation;
 	}
 
 	@Override
 	public Set<UserSet> evaluate(TupleSet tuples)
 	{
-		return tuples.expandUserSets(userset.getRelation(), userset.getObjectId());
+		return tuples.expandUserSets(relation, objectId);
 	}
 }

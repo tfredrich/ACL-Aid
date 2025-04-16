@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
 
 /**
  * The returned set contains only elements that are members of both input sets.

@@ -21,7 +21,7 @@ import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.This;
 import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
 import com.strategicgains.aclaid.domain.rewrite.Union;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class RewriteRuleTest

@@ -1,8 +1,8 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.expression.TupleToUserSetExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.TupleToUserSetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
 
 /**
  * Computes a tupleset from the input object, fetches relation tuples matching the tupleset, and computes

@@ -2,9 +2,9 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.UserSet;
-import com.strategicgains.aclaid.domain.rewrite.expression.ComputedUserSetExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.ComputedUserSetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.ThisExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
 
 /**
  * Computes, for the input object, a new userset. For example, this allows the userset expression

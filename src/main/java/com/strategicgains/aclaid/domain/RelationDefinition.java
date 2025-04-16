@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.domain;
 
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.This;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
 
 public class RelationDefinition
 {
