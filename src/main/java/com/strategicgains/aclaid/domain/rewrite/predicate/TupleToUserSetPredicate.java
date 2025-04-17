@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid.domain.rewrite.runtime;
+package com.strategicgains.aclaid.domain.rewrite.predicate;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -11,14 +11,14 @@ import com.strategicgains.aclaid.domain.UserSet;
  * express complex policies such as “look up the parent folder of the document
  * and inherit its viewers”.
  */
-public class TupleToUserSetExpression
-implements UsersetExpression
+public class TupleToUserSetPredicate
+implements UsersetPredicate
 {
 	private ObjectId objectId;
 	private String relation;
-	private UsersetExpression userSet;
+	private UsersetPredicate userSet;
 
-	public TupleToUserSetExpression(ObjectId objectId, String relation, UsersetExpression computedUserSet)
+	public TupleToUserSetPredicate(ObjectId objectId, String relation, UsersetPredicate computedUserSet)
 	{
 		super();
 		this.objectId = objectId;
@@ -27,7 +27,7 @@ implements UsersetExpression
 	}
 
 	@Override
-	public boolean evaluate(TupleSet tuples, UserSet userset)
+	public boolean test(TupleSet tuples, UserSet userset)
     {
 //		TupleSet relations = tuples.readAll(relation, objectId);
 //        return userSet.evaluate(relations, userSet, relation, objectId);

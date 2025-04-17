@@ -2,8 +2,8 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.RelationDefinition;
-import com.strategicgains.aclaid.domain.rewrite.runtime.ThisExpression;
-import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.predicate.ThisPredicate;
+import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
 
 /**
  * From the Zanzibar document: 
@@ -20,7 +20,7 @@ public class This implements RewriteRule {
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId) {
-		return new ThisExpression(objectId, relation.getName());
+	public UsersetPredicate rewrite(ObjectId objectId) {
+		return new ThisPredicate(objectId, relation.getName());
 	}
 }

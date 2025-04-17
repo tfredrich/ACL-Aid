@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid.domain.rewrite.runtime;
+package com.strategicgains.aclaid.domain.rewrite.predicate;
 
 import java.util.Set;
 
@@ -16,14 +16,14 @@ import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
  * @author Todd Fredrich
  * @see RewriteRule
  */
-public class ComputedUserSetExpression
-implements UsersetExpression
+public class ComputedUserSetPredicate
+implements UsersetPredicate
 {
 	private ObjectId objectId;
 	private String relation;
 	private String objectToken;
 
-	public ComputedUserSetExpression(ObjectId objectId, String relation, String objectToken)
+	public ComputedUserSetPredicate(ObjectId objectId, String relation, String objectToken)
 	{
 		super();
 		setObjectId(objectId);
@@ -62,7 +62,7 @@ implements UsersetExpression
 	}
 
 	@Override
-	public boolean evaluate(TupleSet tuples, UserSet userset)
+	public boolean test(TupleSet tuples, UserSet userset)
 	{
 //		TupleSet filtered = tuples.readAll(relation, objectId);
 //		UserSet computed = compute(filtered, objectId, relation);

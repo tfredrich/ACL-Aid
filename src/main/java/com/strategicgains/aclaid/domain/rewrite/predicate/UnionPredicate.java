@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid.domain.rewrite.runtime;
+package com.strategicgains.aclaid.domain.rewrite.predicate;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import com.strategicgains.aclaid.domain.UserSet;
  * The returned set contains all elements that are members of either the first or second input set.
  * Duplicate elements that are in both sets will only appear once in the union.
  * The union of A and B is equal to the union of B and A. So union is commutative.
- * UnionExpression is associative - (A.union(B)).union(C) equals A.union(B.union(C))
+ * UnionPredicate is associative - (A.union(B)).union(C) equals A.union(B.union(C))
  * The union of a set with an empty set returns the original set.
  * 
  * For example:
@@ -20,21 +20,21 @@ import com.strategicgains.aclaid.domain.UserSet;
  * A.union(B) would return:
  * {1, 2, 3, 4, 5, 6}
  */
-public class UnionExpression
-extends AggregateExpression
+public class UnionPredicate
+extends AggregatePredicate
 {
-	public UnionExpression()
+	public UnionPredicate()
 	{
 		super();
 	}
 
-	public UnionExpression(List<UsersetExpression> children)
+	public UnionPredicate(List<UsersetPredicate> children)
 	{
 		super(children);
 	}
 
 	@Override
-	public boolean evaluate(TupleSet tuples, UserSet userSet) {
-		return children().anyMatch(child -> child.evaluate(tuples, userSet));
+	public boolean test(TupleSet tuples, UserSet userSet) {
+		return children().anyMatch(child -> child.test(tuples, userSet));
 	}
 }

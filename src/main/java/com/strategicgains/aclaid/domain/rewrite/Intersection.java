@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
 
 /**
  * The returned set contains only elements that are members of both input sets.
@@ -43,7 +43,7 @@ extends BinaryRewriteRule
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
+	public UsersetPredicate rewrite(ObjectId objectId)
 	{
 		// TODO Auto-generated method stub
 		return null;

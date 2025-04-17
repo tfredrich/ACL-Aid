@@ -1,9 +1,9 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.runtime.ComputedUserSetExpression;
-import com.strategicgains.aclaid.domain.rewrite.runtime.ThisExpression;
-import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.predicate.ComputedUserSetPredicate;
+import com.strategicgains.aclaid.domain.rewrite.predicate.ThisPredicate;
+import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
 
 /**
  * From the Zanzibar document:
@@ -70,13 +70,13 @@ implements RewriteRule
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
+	public UsersetPredicate rewrite(ObjectId objectId)
 	{
 		if (hasObjectToken() && getObjectToken().startsWith("$"))
 		{
-			return new ComputedUserSetExpression(objectId, relation, getObjectToken());
+			return new ComputedUserSetPredicate(objectId, relation, getObjectToken());
 		}
 		
-		return new ThisExpression(objectId, relation);
+		return new ThisPredicate(objectId, relation);
 	}
 }

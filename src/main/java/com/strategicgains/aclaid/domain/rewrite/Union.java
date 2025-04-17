@@ -3,15 +3,15 @@ package com.strategicgains.aclaid.domain.rewrite;
 import java.util.List;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.runtime.UnionExpression;
-import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.predicate.UnionPredicate;
+import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
 
 /**
  * It takes two sets as input and returns a new set as output.
  * The returned set contains all elements that are members of either the first or second input set.
  * Duplicate elements that are in both sets will only appear once in the union.
  * The union of A and B is equal to the union of B and A. So union is commutative.
- * UnionExpression is associative - (A.union(B)).union(C) equals A.union(B.union(C))
+ * UnionPredicate is associative - (A.union(B)).union(C) equals A.union(B.union(C))
  * The union of a set with an empty set returns the original set.
  * 
  * For example:
@@ -42,8 +42,8 @@ extends AggregateRewriteRule
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
+	public UsersetPredicate rewrite(ObjectId objectId)
 	{
-		return new UnionExpression(children().map(child -> child.rewrite(objectId)).toList());
+		return new UnionPredicate(children().map(child -> child.rewrite(objectId)).toList());
 	}
 }

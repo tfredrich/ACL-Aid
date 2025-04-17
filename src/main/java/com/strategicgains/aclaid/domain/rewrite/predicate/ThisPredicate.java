@@ -1,4 +1,4 @@
-package com.strategicgains.aclaid.domain.rewrite.runtime;
+package com.strategicgains.aclaid.domain.rewrite.predicate;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.TupleSet;
@@ -14,14 +14,14 @@ import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
  * @author Todd Fredrich
  * @see RewriteRule
  */
-public class ThisExpression
-implements UsersetExpression
+public class ThisPredicate
+implements UsersetPredicate
 {
 	// The object/relation pair to retrieve from the tuple set.
 	private ObjectId objectId;
 	private String relation;
 
-	public ThisExpression(ObjectId objectId, String relation)
+	public ThisPredicate(ObjectId objectId, String relation)
 	{
 		super();
 		this.objectId = objectId;
@@ -29,7 +29,7 @@ implements UsersetExpression
 	}
 
 	@Override
-	public boolean evaluate(TupleSet tuples, UserSet userset)
+	public boolean test(TupleSet tuples, UserSet userset)
    	{
 		return tuples.check(userset, relation, objectId);
 	}

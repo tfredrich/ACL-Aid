@@ -1,8 +1,8 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.runtime.TupleToUserSetExpression;
-import com.strategicgains.aclaid.domain.rewrite.runtime.UsersetExpression;
+import com.strategicgains.aclaid.domain.rewrite.predicate.TupleToUserSetPredicate;
+import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
 
 /**
  * From the Zanzibar document:
@@ -26,8 +26,8 @@ implements RewriteRule
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
+	public UsersetPredicate rewrite(ObjectId objectId)
 	{
-		return new TupleToUserSetExpression(objectId, relation, computedUserSet.rewrite(objectId));
+		return new TupleToUserSetPredicate(objectId, relation, computedUserSet.rewrite(objectId));
 	}
 }
