@@ -116,7 +116,7 @@ implements TupleSet
 
 		if (hasDirectRelation(direct, relation, objectId)) return true;
 
-		Set<UserSet> groups = getIndirectRelations(relation, new UserSet(objectId));
+		Set<UserSet> groups = getIndirectRelations(new UserSet(objectId));
 
 		return intersects(direct, groups);
 	}
@@ -146,27 +146,6 @@ implements TupleSet
 		return direct.stream().anyMatch(d -> groups.stream().anyMatch(d::matches));
 	}
 
-	public Tuple read(UserSet actor, String relation, ObjectId objectId)
-	{
-//		if (actor == null || relation == null || objectId == null) return null;
-//
-//		Set<Tuple> direct = getDirectRelations(actor, relation);
-//
-//		Tuple t = direct.stream().filter(v -> v.appliesTo(objectId)).findFirst().orElse(null);
-//		if (t != null) return t;
-//
-//		Set<Tuple> groups = getIndirectRelations(relation, new UserSet(objectId));
-//
-//		if (groups.stream()
-//			.filter(u -> u.getUserset().hasRelation())
-//			.anyMatch(g -> read(actor, g.getRelation(), g.getObjectId()) != null))
-//		{
-//			return new Tuple(actor, relation, objectId);
-//		}
-
-		return null;
-	}
-
 	private Set<UserSet> getDirectRelations(UserSet actor)
 	{
 		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(actor.getObjectId());
@@ -177,7 +156,7 @@ implements TupleSet
 			.collect(Collectors.toSet());
 	}
 
-	private Set<UserSet> getIndirectRelations(String relation, UserSet target)
+	private Set<UserSet> getIndirectRelations(UserSet target)
 	{
 		Map<String, Set<Tuple>> targetSubtree = groupToGroup.get(target);
 		if (targetSubtree == null) return Collections.emptySet();
