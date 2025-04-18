@@ -112,11 +112,11 @@ implements TupleSet
 	{
 		if (actor == null || relation == null || objectId == null) return false;
 
-		Set<UserSet> direct = getDirectRelations(actor);
+		Set<Tuple> direct = getDirectTuples(actor);
 
 		if (hasDirectRelation(direct, relation, objectId)) return true;
 
-		Set<UserSet> groups = getIndirectRelations(new UserSet(objectId));
+		Set<Tuple> groups = getIndirectTuples(objectId, relation);
 
 		return intersects(direct, groups);
 	}
@@ -129,40 +129,56 @@ implements TupleSet
 	 * @param objectId The ObjectId to check.
 	 * @return true if the relation exists.
 	 */
-	private boolean hasDirectRelation(Set<UserSet> direct, String relation, ObjectId objectId)
+	private boolean hasDirectRelation(Set<Tuple> direct, String relation, ObjectId objectId)
 	{
-		return direct.stream().anyMatch(d -> d.matches(objectId, relation));
+		return direct.stream().anyMatch(t -> t.appliesTo(objectId) && t.getRelation().equals(relation));
 	}
 
 	/**
 	 * Answer whether the two sets intersect.
 	 * 
-	 * @param direct UserSets of direct relations.
-	 * @param groups UserSets of indirect relations.
+	 * @param direct Tuples of direct relations.
+	 * @param indirect Tuples of indirect relations.
 	 * @return true if there is an intersection.
 	 */
-	private boolean intersects(Set<UserSet> direct, Set<UserSet> groups)
+	private boolean intersects(Set<Tuple> direct, Set<Tuple> indirect)
 	{
-		return direct.stream().anyMatch(d -> groups.stream().anyMatch(d::matches));
+		return direct.stream().anyMatch(d -> indirect.stream().anyMatch(i -> i.getUserset().matches(d.getObjectId(), d.getRelation())));
 	}
 
-	private Set<UserSet> getDirectRelations(UserSet actor)
+	/**
+	 * Answer the set of tuples that have direct relations from the actor.
+	 * 
+	 * @param actor The UserSet acting on the objectId.
+	 * @return The set of tuples that have direct relations from the actor.
+	 */
+	private Set<Tuple> getDirectTuples(UserSet actor)
 	{
-		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(actor.getObjectId());
-		if (relationSubtree == null) return Collections.emptySet();
+		Map<String, Set<Tuple>> objectSubtree = memberToGroup.get(actor.getObjectId());
+		if (objectSubtree == null) return Collections.emptySet();
 
-		return relationSubtree.values().stream()
-			.flatMap(s -> s.stream().map(t -> new UserSet(t.getObjectId(), t.getRelation())))
+		return objectSubtree.values().stream()
+			.flatMap(s -> s.stream())
 			.collect(Collectors.toSet());
 	}
 
-	private Set<UserSet> getIndirectRelations(UserSet target)
+	/**
+	 * Answer the set of tuples that have indirect relations from the actor.
+	 * 
+	 * @param actor The UserSet acting on the objectId.
+	 * @return The set of tuples that have indirect relations from the actor.
+	 */
+	private Set<Tuple> getIndirectTuples(ObjectId target, String relation)
 	{
-		Map<String, Set<Tuple>> targetSubtree = groupToGroup.get(target);
+		Map<String, Set<Tuple>> targetSubtree = groupToGroup.get(new UserSet(target));
 		if (targetSubtree == null) return Collections.emptySet();
-	
+
+		// Ensure at least on relation exists to the object.
+		Set<Tuple> relationTuples = targetSubtree.get(relation);
+		if (relationTuples == null || relationTuples.isEmpty()) return Collections.emptySet();
+
 		return targetSubtree.values().stream()
-			.flatMap(s -> s.stream().map(Tuple::getUserset))
+			.flatMap(s -> s.stream())
 			.collect(Collectors.toSet());
 	}
 
@@ -175,14 +191,14 @@ implements TupleSet
 	public LocalTupleSet2 add(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
-		return add(newDynamicTuple(userset, relation, resource));
+		return add(newLocalTuple(userset, relation, resource));
 	}
 
 	public LocalTupleSet2 add(Tuple tuple)
 	{
 		tuples.add(tuple);
-		writeMemberToGroup(tuple);
-		writeGroupToGroup(tuple);
+		addMemberToGroup(tuple);
+		addGroupToGroup(tuple);
 		return this;
 	}
 
@@ -199,7 +215,7 @@ implements TupleSet
 		return remove(new Tuple(userset, relation, resource));
 	}
 
-	private void writeMemberToGroup(Tuple tuple)
+	private void addMemberToGroup(Tuple tuple)
 	{
 		if (!tuple.isDirectRelation()) return;
 
@@ -208,7 +224,7 @@ implements TupleSet
 		resources.add(tuple);
 	}
 
-	private void writeGroupToGroup(Tuple tuple)
+	private void addGroupToGroup(Tuple tuple)
 	{
 		if (tuple.isDirectRelation()) return;
 
@@ -255,7 +271,7 @@ implements TupleSet
 		}
 	}
 
-	private Tuple newDynamicTuple(UserSet userset, String relation, ObjectId resource)
+	private Tuple newLocalTuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		if (resource.isWildcard()) throw new InvalidTupleException("Tuple resources cannot contain wildcards: " + resource.toString());
@@ -263,7 +279,8 @@ implements TupleSet
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public boolean isEmpty()
+	{
 		return memberToGroup.isEmpty() && groupToGroup.isEmpty();
 	}
 }
