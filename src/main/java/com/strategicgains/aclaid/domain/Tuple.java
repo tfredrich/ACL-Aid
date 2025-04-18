@@ -47,7 +47,7 @@ public class Tuple
 
 	/**
 	 * The resource (or object) on which the UserSet has a relation.
-	 * Examples are: 'documents:document/1', 'videos:video/456', 'bat:foobar/8'
+	 * Examples are: 'documents:document/1', 'groups:group/B', 'bat:foobar/345'
 	 */
 	private ObjectId objectId;
 
@@ -125,11 +125,6 @@ public class Tuple
 
 	public void setObjectId(ObjectId objectId)
 	{
-//		if (resource.isWildcard())
-//		{
-//			throw new InvalidTupleException("Wildcard resources not permitted in tuples: " + resource.toString());
-//		}
-
 		this.objectId = objectId;
 	}
 
@@ -145,11 +140,6 @@ public class Tuple
 
 	public void setUserset(UserSet userset)
 	{
-//		if (userset.getUserId().isWildcard())
-//		{
-//			throw new InvalidTupleException("Wildcard usersets not permitted in tuples: " + userset.toString());
-//		}
-
 		this.userset = userset;
 	}
 
@@ -299,7 +289,8 @@ public class Tuple
 		return (hasUserset() ? getUserset().getObjectId() : null);
 	}
 
-	public boolean isDirectRelation() {
+	public boolean isDirectRelation()
+	{
 		return userset.isObject();
 	}
 }
