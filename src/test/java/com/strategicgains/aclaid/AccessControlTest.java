@@ -13,7 +13,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class AccessControlTest
 {
-	private static final String NAMESPACE = "AccessControlTest:";
+	private static final String NAMESPACE = "T:";
 	private static final String DOCUMENT_OBJECT = "doc";
 	private static final String FOLDER_OBJECT = "folder";
 	private static final String GROUP_OBJECT = "group";
