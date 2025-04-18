@@ -1,7 +1,5 @@
 package com.strategicgains.aclaid.domain.rewrite.predicate;
 
-import java.util.Set;
-
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
 import com.strategicgains.aclaid.domain.TupleSet;
