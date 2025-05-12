@@ -7,9 +7,9 @@ public abstract class Rewrites
 		// prevents instantiation.
 	}
 
-	public static UnionBuilder union()
+	public static UnionBuilder union(RewriteRuleBuilder... ruleBuilders)
 	{
-		return new UnionBuilder();
+		return new UnionBuilder(ruleBuilders);
 	}
 
 	public static ComputedUserSetBuilder computedUserSet()

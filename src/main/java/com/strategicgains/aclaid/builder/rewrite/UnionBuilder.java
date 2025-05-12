@@ -1,6 +1,7 @@
 package com.strategicgains.aclaid.builder.rewrite;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.strategicgains.aclaid.domain.RelationDefinition;
@@ -12,9 +13,15 @@ implements SetOperationBuilder
 {
 	private List<RewriteRuleBuilder> children = new ArrayList<>();
 
-	protected UnionBuilder()
+	protected UnionBuilder(RewriteRuleBuilder... ruleBuilders)
 	{
 		super();
+		children = Arrays.(ruleBuilders);
+
+		for (RewriteRuleBuilder ruleBuilder : ruleBuilders)
+		{
+			children.add(ruleBuilder);
+		}
 	}
 
 	@Override
@@ -22,35 +29,5 @@ implements SetOperationBuilder
 	{
 		List<RewriteRule> rules = children.stream().map(c -> c.build(relation)).toList();
 		return new Union(rules);
-	}
-
-	@Override
-	public ThisBuilder _this()
-	{
-		ThisBuilder builder = new ThisBuilder(this);
-		children.add(builder);
-		return builder;
-	}
-
-	@Override
-	public ComputedUserSetBuilder computedUserSet()
-	{
-		ComputedUserSetBuilder builder = new ComputedUserSetBuilder(this);
-		children.add(builder);
-		return builder;
-	}
-
-	@Override
-	public TupleToUserSetBuilder tupleToUserSet(String relation, ComputedUserSetBuilder computedUserSetBuilder)
-	{
-		TupleToUserSetBuilder builder = new TupleToUserSetBuilder(this, relation, computedUserSetBuilder);
-		children.add(builder);
-		return builder;
-	}
-
-	@Override
-	public SetOperationBuilder end()
-	{
-		return this;
 	}
 }
