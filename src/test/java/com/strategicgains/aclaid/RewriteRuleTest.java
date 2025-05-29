@@ -11,7 +11,7 @@ import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet;
+import com.strategicgains.aclaid.domain.LocalTupleStore;
 import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.RelationDefinition;
@@ -22,7 +22,7 @@ import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.This;
 import com.strategicgains.aclaid.domain.rewrite.TupleToUserSet;
 import com.strategicgains.aclaid.domain.rewrite.Union;
-import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class RewriteRuleTest
@@ -55,13 +55,13 @@ public class RewriteRuleTest
 	private static final String FOLDER_PLANNING = NAMESPACE + FOLDER_OBJECT + "/planning";
 	private static final String FOLDER_ENGINEERING = NAMESPACE + FOLDER_OBJECT + "/engineering";
 
-	private LocalTupleSet tuples;
+	private LocalTupleStore tuples;
 
 	@Before
 	public void initialize()
 	throws ParseException, InvalidTupleException
 	{
-		tuples = new LocalTupleSet();		
+		tuples = new LocalTupleStore();		
 		tuples
 			.add(KIM, OWNER, DOC_ROADMAP)
 			.add(BEN, EDITOR, DOC_ROADMAP)
@@ -80,29 +80,29 @@ public class RewriteRuleTest
 	throws ParseException
 	{
 		RewriteRule rule = new This(new RelationDefinition(VIEWER));
-		UsersetPredicate rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		assertFalse(rewrite.test(tuples, UserSet.parse(KIM)));
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		assertFalse(rewrite.evaluate(tuples, UserSet.parse(KIM)));
 	}
 
 	@Test
 	public void testThis()
 	throws ParseException, InvalidTupleException
     {
-        LocalTupleSet local = new LocalTupleSet(tuples);
+        LocalTupleStore local = new LocalTupleStore(tuples);
         local.add(KIM, VIEWER, DOC_ROADMAP);
         RewriteRule rule = new This(new RelationDefinition(VIEWER));
-        UsersetPredicate rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-        assertTrue(rewrite.test(local, UserSet.parse(KIM)));
-        assertFalse(rewrite.test(local, UserSet.parse(BEN)));    }
+        UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+        assertTrue(rewrite.evaluate(local, UserSet.parse(KIM)));
+        assertFalse(rewrite.evaluate(local, UserSet.parse(BEN)));    }
 
 	@Test
 	public void testComputedUserSet()
 	throws ParseException
 	{
 		RewriteRule rule = new ComputedUserSet(EDITOR);
-		UsersetPredicate rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.test(tuples, UserSet.parse(BEN)));
-		assertFalse(rewrite.test(tuples, UserSet.parse(KIM)));
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(BEN)));
+		assertFalse(rewrite.evaluate(tuples, UserSet.parse(KIM)));
 	}
 
 	@Test
@@ -112,9 +112,9 @@ public class RewriteRuleTest
 		RewriteRule rule = new TupleToUserSet(PARENT,
 			new ComputedUserSet(VIEWER)
 				.withToken(Tuple.USERSET_OBJECT));
-		UsersetPredicate rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.test(tuples, UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
-		assertTrue(rewrite.test(tuples, UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(FOLDER_ENGINEERING + "#" + VIEWER)));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(FOLDER_PLANNING + "#" + VIEWER)));
 	}
 
 	@Test
@@ -131,8 +131,8 @@ public class RewriteRuleTest
 				new ComputedUserSet(EDITOR)
 			)
 		);
-		UsersetPredicate rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
-		assertTrue(rewrite.test(tuples, UserSet.parse(KIM)));
-		assertTrue(rewrite.test(tuples, UserSet.parse(BEN)));
+		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(KIM)));
+		assertTrue(rewrite.evaluate(tuples, UserSet.parse(BEN)));
 	}
 }

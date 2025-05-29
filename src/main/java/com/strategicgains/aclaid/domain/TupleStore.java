@@ -3,12 +3,12 @@ package com.strategicgains.aclaid.domain;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
- * A TupleSet is a collection of Tuples. It is the primary data structure used to store and query access control data.
+ * A TupleStore is a collection of Tuples. It is the primary data structure used to store and query access control data.
  * 
  * @author Todd Fredrich
- * @see Tuple, LocalTupleSet
+ * @see Tuple, LocalTupleStore
  */
-public interface TupleSet
+public interface TupleStore
 {
 	boolean isEmpty();
 
@@ -32,7 +32,7 @@ public interface TupleSet
 	 * @param tuple
 	 * @return
 	 */
-	TupleSet add(Tuple tuple);
+	TupleStore add(Tuple tuple);
 
 	/**
 	 * Create a new tuple using the given object ID, relation and userset then add it to the tuple set.
@@ -43,7 +43,7 @@ public interface TupleSet
 	 * @return
 	 * @throws InvalidTupleException 
 	 */
-	TupleSet add(UserSet userset, String relation, ObjectId objectId)
+	TupleStore add(UserSet userset, String relation, ObjectId objectId)
 	throws InvalidTupleException;
 
 	/**
@@ -52,7 +52,7 @@ public interface TupleSet
 	 * @param tuple
 	 * @return
 	 */
-	TupleSet remove(Tuple tuple);
+	TupleStore remove(Tuple tuple);
 
 	/**
 	 * Remove a tuple from this tuple set using the given object ID, relation and userset.
@@ -62,5 +62,5 @@ public interface TupleSet
 	 * @param objectId
 	 * @return
 	 */
-	TupleSet remove(UserSet userset, String relation, ObjectId objectId);
+	TupleStore remove(UserSet userset, String relation, ObjectId objectId);
 }

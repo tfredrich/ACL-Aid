@@ -1,8 +1,8 @@
-package com.strategicgains.aclaid.domain.rewrite.predicate;
+package com.strategicgains.aclaid.domain.rewrite.expression;
 
 import com.strategicgains.aclaid.domain.ObjectId;
 import com.strategicgains.aclaid.domain.Tuple;
-import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.TupleStore;
 import com.strategicgains.aclaid.domain.UserSet;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 
@@ -14,14 +14,14 @@ import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
  * @author Todd Fredrich
  * @see RewriteRule
  */
-public class ComputedUserSetPredicate
-implements UsersetPredicate
+public class ComputedUserSetExpression
+implements UsersetLeafExpression
 {
 	private ObjectId objectId;
 	private String relation;
 	private String objectToken;
 
-	public ComputedUserSetPredicate(ObjectId objectId, String relation, String objectToken)
+	public ComputedUserSetExpression(ObjectId objectId, String relation, String objectToken)
 	{
 		super();
 		setObjectId(objectId);
@@ -60,15 +60,15 @@ implements UsersetPredicate
 	}
 
 	@Override
-	public boolean test(TupleSet tuples, UserSet userset)
+	public boolean evaluate(TupleStore tuples, UserSet userset)
 	{
-//		TupleSet filtered = tuples.readAll(relation, objectId);
+//		TupleStore filtered = tuples.readAll(relation, objectId);
 //		UserSet computed = compute(filtered, objectId, relation);
 //		return tuples.expandUserSets(userset.getRelation(), userset.getObjectId());
 		return false;
 	}
 
-	private UserSet compute(TupleSet tuples, ObjectId objectId, String relation)
+	private UserSet compute(TupleStore tuples, ObjectId objectId, String relation)
 	{
 		UserSet userset = new UserSet(objectId, relation);
 		

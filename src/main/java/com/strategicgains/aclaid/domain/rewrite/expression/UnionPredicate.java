@@ -1,12 +1,11 @@
-package com.strategicgains.aclaid.domain.rewrite;
+package com.strategicgains.aclaid.domain.rewrite.expression;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.expression.UnionPredicate;
-import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
+import com.strategicgains.aclaid.domain.TupleStore;
+import com.strategicgains.aclaid.domain.UserSet;
 
 /**
  * It takes two sets as input and returns a new set as output.
@@ -23,34 +22,34 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
  * A.union(B) would return:
  * {1, 2, 3, 4, 5, 6}
  */
-public class Union
-implements RewriteRule
+public class UnionPredicate
+implements UsersetExpression
 {
-	private List<RewriteRule> children = new ArrayList<>();
+	private List<UsersetExpression> children = new ArrayList<>();
 
-	public Union()
+	public UnionPredicate()
 	{
 		super();
 	}
 
-	public Union(List<RewriteRule> children)
+	public UnionPredicate(List<UsersetExpression> children)
 	{
 		this();
 		setChildren(children);
 	}
 
-	public Union addChild(RewriteRule child)
+	public UnionPredicate addChild(UsersetExpression child)
 	{
 		this.children.add(child);
 		return this;
 	}
 
-	public Stream<RewriteRule> children()
+	public Stream<UsersetExpression> children()
 	{
 		return children.stream();
 	}
 
-	public void setChildren(List<RewriteRule> children)
+	public void setChildren(List<UsersetExpression> children)
 	{
 		if (children == null && !this.children.isEmpty())
 		{
@@ -62,8 +61,7 @@ implements RewriteRule
 	}
 
 	@Override
-	public UsersetExpression rewrite(ObjectId objectId)
-	{
-		return new UnionPredicate(children().map(child -> child.rewrite(objectId)).toList());
+	public boolean evaluate(TupleStore tuples, UserSet userSet) {
+		return children().anyMatch(child -> child.evaluate(tuples, userSet));
 	}
 }

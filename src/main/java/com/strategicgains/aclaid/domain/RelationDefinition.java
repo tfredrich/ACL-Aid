@@ -2,7 +2,7 @@ package com.strategicgains.aclaid.domain;
 
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 import com.strategicgains.aclaid.domain.rewrite.This;
-import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 public class RelationDefinition
 {
@@ -51,13 +51,13 @@ public class RelationDefinition
 		return (rewriteRules != null);
 	}
 
-	public boolean check(TupleSet tuples, UserSet userset, ObjectId objectId)
+	public boolean check(TupleStore tuples, UserSet userset, ObjectId objectId)
 	{
-		UsersetPredicate rewrites = rewrite(objectId);
-		return rewrites.test(tuples, userset);
+		UsersetExpression rewrites = rewrite(objectId);
+		return rewrites.evaluate(tuples, userset);
 	}
 
-	private UsersetPredicate rewrite(ObjectId objectId)
+	private UsersetExpression rewrite(ObjectId objectId)
 	{
 		if (hasRewriteRules())
 		{
@@ -67,7 +67,7 @@ public class RelationDefinition
 		return new This(this).rewrite(objectId);
 	}
 
-	public UsersetPredicate rewrite(ObjectId objectId, String relation)
+	public UsersetExpression rewrite(ObjectId objectId, String relation)
 	{
 		if (parent != null && parent.containsRelation(relation))
 		{

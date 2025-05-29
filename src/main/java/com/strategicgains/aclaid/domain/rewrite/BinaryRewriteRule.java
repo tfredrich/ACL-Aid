@@ -1,6 +1,6 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
-import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.TupleStore;
 
 public abstract class BinaryRewriteRule
 implements RewriteRule
@@ -41,5 +41,5 @@ implements RewriteRule
 		return this;
 	}
 
-	protected abstract TupleSet evaluate(TupleSet left, TupleSet right);
+	protected abstract TupleStore evaluate(TupleStore left, TupleStore right);
 }

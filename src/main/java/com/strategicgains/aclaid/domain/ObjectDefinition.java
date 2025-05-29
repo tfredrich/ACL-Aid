@@ -40,7 +40,7 @@ public class ObjectDefinition
 		return (String.format("Object: %s", getName()));
 	}
 
-	public boolean check(TupleSet tuples, UserSet userset, String relation, ObjectId objectId)
+	public boolean check(TupleStore tuples, UserSet userset, String relation, ObjectId objectId)
 	{
 		RelationDefinition r = relations.get(relation);
 

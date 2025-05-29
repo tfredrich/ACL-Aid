@@ -1,7 +1,7 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * In Zanzibar, Userset rewrite rules are defined per relation in a namespace.
@@ -66,5 +66,5 @@ import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
  */
 public interface RewriteRule
 {
-	UsersetPredicate rewrite(ObjectId objectId);
+	UsersetExpression rewrite(ObjectId objectId);
 }

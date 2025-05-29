@@ -1,12 +1,12 @@
-package com.strategicgains.aclaid.domain.rewrite.predicate;
+package com.strategicgains.aclaid.domain.rewrite.expression;
 
-import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.TupleStore;
 import com.strategicgains.aclaid.domain.UserSet;
 
 /**
  * Userset rewrite rules are also translated to boolean expressions as part of check evaluation.
  */
-public interface UsersetPredicate
+public interface UsersetExpression
 {
 	/**
 	 * Evaluates the expression against the given tuple set for the given user.
@@ -16,5 +16,5 @@ public interface UsersetPredicate
 	 * @return true if the expression evaluates to true for the given tuple set,
 	 *         false otherwise.
 	 */
-	boolean test(TupleSet tuples, UserSet userset);
+	boolean evaluate(TupleStore tuples, UserSet userset);
 }

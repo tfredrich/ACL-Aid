@@ -1,8 +1,8 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.TupleSet;
-import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
+import com.strategicgains.aclaid.domain.TupleStore;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * The returned set contains only elements that are members of both input sets.
@@ -31,19 +31,19 @@ extends BinaryRewriteRule
 	}
 
 	@Override
-	public TupleSet evaluate(TupleSet left, TupleSet right)
+	public TupleStore evaluate(TupleStore left, TupleStore right)
 	{
 		return intersection(left, right);
 	}
 
-	private TupleSet intersection(TupleSet left, TupleSet right)
+	private TupleStore intersection(TupleStore left, TupleStore right)
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public UsersetPredicate rewrite(ObjectId objectId)
+	public UsersetExpression rewrite(ObjectId objectId)
 	{
 		// TODO Auto-generated method stub
 		return null;

@@ -11,12 +11,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
- * This is a TupleSet implementation that uses a local in-memory data structure
+ * This is a TupleStore implementation that uses a local in-memory data structure
  * and is not persistent.
  * 
  * This implementation contains two indexes and follows the style implemented in
@@ -25,8 +24,8 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * 
  * @author Todd Fredrich
  */
-public class LocalTupleSet2
-implements TupleSet
+public class LocalTupleStore2
+implements TupleStore
 {
 	/**
 	 * Index: MEMBER2GROUP containing direct relations.
@@ -48,11 +47,11 @@ implements TupleSet
 	 */
 	private List<Tuple> tuples = new ArrayList<>();
 
-	public LocalTupleSet2()
+	public LocalTupleStore2()
 	{
 	}
 
-	public LocalTupleSet2(ObjectId objectId, String relation, Set<UserSet> usersets)
+	public LocalTupleStore2(ObjectId objectId, String relation, Set<UserSet> usersets)
 	throws InvalidTupleException
 	{
 		this();
@@ -64,7 +63,7 @@ implements TupleSet
 		}
 	}
 
-	public LocalTupleSet2(UserSet userset, String relation, Set<ObjectId> objectIds)
+	public LocalTupleStore2(UserSet userset, String relation, Set<ObjectId> objectIds)
 	throws InvalidTupleException
 	{
 		this();
@@ -76,12 +75,12 @@ implements TupleSet
 		}
 	}
 
-	public LocalTupleSet2(LocalTupleSet2 that)
+	public LocalTupleStore2(LocalTupleStore2 that)
 	{
 		this(that.tuples);
 	}
 
-	public LocalTupleSet2(Collection<Tuple> tuples)
+	public LocalTupleStore2(Collection<Tuple> tuples)
 	{
 		this();
 		tuples.stream().forEach(this::add);
@@ -198,19 +197,19 @@ implements TupleSet
 			.collect(Collectors.toSet());
 	}
 
-	public LocalTupleSet2 add(String userset, String relation, String resource)
+	public LocalTupleStore2 add(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
 		return add(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
-	public LocalTupleSet2 add(UserSet userset, String relation, ObjectId resource)
+	public LocalTupleStore2 add(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		return add(newLocalTuple(userset, relation, resource));
 	}
 
-	public LocalTupleSet2 add(Tuple tuple)
+	public LocalTupleStore2 add(Tuple tuple)
 	{
 		tuples.add(tuple);
 		addMemberToGroup(tuple);
@@ -218,7 +217,7 @@ implements TupleSet
 		return this;
 	}
 
-	public LocalTupleSet2 remove(Tuple tuple)
+	public LocalTupleStore2 remove(Tuple tuple)
 	{
 		tuples.remove(tuple);
 		removeMemberToGroup(tuple);
@@ -226,7 +225,7 @@ implements TupleSet
 		return this;
 	}
 
-	public LocalTupleSet2 remove(UserSet userset, String relation, ObjectId resource)
+	public LocalTupleStore2 remove(UserSet userset, String relation, ObjectId resource)
 	{
 		return remove(new Tuple(userset, relation, resource));
 	}

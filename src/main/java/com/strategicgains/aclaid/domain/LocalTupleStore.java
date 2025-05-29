@@ -13,10 +13,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 /**
- * A LocalTupleSet is a graph of of tuples that can be read and written to. It is a simple in-memory
- * implementation of a TupleSet and is not thread-safe and is not durable.
+ * A LocalTupleStore is a graph of of tuples that can be read and written to. It is a simple in-memory
+ * implementation of a TupleStore and is not thread-safe and is not durable.
  * 
- * There are two indexes maintained by LocalTupleSet, both being essentially adjacency lists:
+ * There are two indexes maintained by LocalTupleStore, both being essentially adjacency lists:
  * 1) From a UserSet to Relations to ObjectIds and
  * 2) From an ObjectID to Relations to UserSets
  * 
@@ -24,8 +24,8 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * 
  * @author Todd Fredrich
  */
-public class LocalTupleSet
-implements TupleSet
+public class LocalTupleStore
+implements TupleStore
 {
 	/**
 	 * The directional index of ObjectIds by user set and relation:
@@ -39,12 +39,12 @@ implements TupleSet
 	 */
 	private Map<ObjectId, Map<String, Set<UserSet>>> objectTree; 
 
-	public LocalTupleSet()
+	public LocalTupleStore()
 	{
 		this(null, null);
 	}
 
-	public LocalTupleSet(ObjectId objectId, String relation, Set<UserSet> usersets)
+	public LocalTupleStore(ObjectId objectId, String relation, Set<UserSet> usersets)
 	throws InvalidTupleException
 	{
 		this();
@@ -56,7 +56,7 @@ implements TupleSet
 		}
 	}
 
-	public LocalTupleSet(UserSet userset, String relation, Set<ObjectId> objectIds)
+	public LocalTupleStore(UserSet userset, String relation, Set<ObjectId> objectIds)
 	throws InvalidTupleException
 	{
 		this();
@@ -68,18 +68,18 @@ implements TupleSet
 		}
 	}
 
-	public LocalTupleSet(LocalTupleSet that)
+	public LocalTupleStore(LocalTupleStore that)
 	{
 		this(that.usersetTree, that.objectTree);
 	}
 
-	public LocalTupleSet(Collection<Tuple> tuples)
+	public LocalTupleStore(Collection<Tuple> tuples)
 	{
 		this();
 		tuples.stream().forEach(this::add);
 	}
 
-	protected LocalTupleSet(Map<UserSet, Map<String, Set<ObjectId>>> usersetTree,
+	protected LocalTupleStore(Map<UserSet, Map<String, Set<ObjectId>>> usersetTree,
 		Map<ObjectId, Map<String, Set<UserSet>>> objectTree)
 	{
 		this.usersetTree = usersetTree != null ? new ConcurrentHashMap<>(usersetTree) : new ConcurrentHashMap<>();
@@ -110,12 +110,12 @@ implements TupleSet
 	 * 
 	 * @param relation
 	 * @param objectId
-	 * @return a TupleSet of all the relation tuples having a direct relation on an object ID.
+	 * @return a TupleStore of all the relation tuples having a direct relation on an object ID.
 	 */
-	public TupleSet readAll(String relation, ObjectId objectId)
+	public TupleStore readAll(String relation, ObjectId objectId)
 	{
 		Set<UserSet> usersets = readUserSets(relation, objectId);
-		LocalTupleSet results = new LocalTupleSet();
+		LocalTupleStore results = new LocalTupleStore();
 		usersets.stream().forEach(u -> {
 			try {
 				results.add(u, relation, objectId);
@@ -204,21 +204,21 @@ implements TupleSet
 		return null;
 	}
 
-	public LocalTupleSet add(String userset, String relation, String resource)
+	public LocalTupleStore add(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
 		return add(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
 	@Override
-	public LocalTupleSet add(UserSet userset, String relation, ObjectId resource)
+	public LocalTupleStore add(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		return add(newDynamicTuple(userset, relation, resource));
 	}
 
 	@Override
-	public LocalTupleSet add(Tuple tuple)
+	public LocalTupleStore add(Tuple tuple)
 	{
 		writeUsersetTree(tuple);
 		writeResourceTree(tuple);
@@ -226,7 +226,7 @@ implements TupleSet
 	}
 
 	@Override
-	public LocalTupleSet remove(Tuple tuple)
+	public LocalTupleStore remove(Tuple tuple)
 	{
 		removeUsersetTree(tuple);
 		removeResourceTree(tuple);
@@ -234,7 +234,7 @@ implements TupleSet
 	}
 
 	@Override
-	public LocalTupleSet remove(UserSet userset, String relation, ObjectId resource)
+	public LocalTupleStore remove(UserSet userset, String relation, ObjectId resource)
 	{
 		return remove(new Tuple(userset, relation, resource));
 	}
@@ -298,7 +298,7 @@ implements TupleSet
 		return new Tuple(userset, relation, resource);
 	}
 
-	public LocalTupleSet addAll(LocalTupleSet tupleset)
+	public LocalTupleStore addAll(LocalTupleStore tupleset)
 	{
 		if (tupleset != null)
 		{

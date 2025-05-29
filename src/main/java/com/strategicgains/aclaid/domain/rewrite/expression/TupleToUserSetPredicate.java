@@ -1,7 +1,7 @@
-package com.strategicgains.aclaid.domain.rewrite.predicate;
+package com.strategicgains.aclaid.domain.rewrite.expression;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.TupleSet;
+import com.strategicgains.aclaid.domain.TupleStore;
 import com.strategicgains.aclaid.domain.UserSet;
 
 /**
@@ -12,13 +12,13 @@ import com.strategicgains.aclaid.domain.UserSet;
  * and inherit its viewers”.
  */
 public class TupleToUserSetPredicate
-implements UsersetPredicate
+implements UsersetLeafExpression
 {
 	private ObjectId objectId;
 	private String relation;
-	private UsersetPredicate userSet;
+	private UsersetExpression userSet;
 
-	public TupleToUserSetPredicate(ObjectId objectId, String relation, UsersetPredicate computedUserSet)
+	public TupleToUserSetPredicate(ObjectId objectId, String relation, UsersetExpression computedUserSet)
 	{
 		super();
 		this.objectId = objectId;
@@ -27,9 +27,9 @@ implements UsersetPredicate
 	}
 
 	@Override
-	public boolean test(TupleSet tuples, UserSet userset)
+	public boolean evaluate(TupleStore tuples, UserSet userset)
     {
-//		TupleSet relations = tuples.readAll(relation, objectId);
+//		TupleStore relations = tuples.readAll(relation, objectId);
 //        return userSet.evaluate(relations, userSet, relation, objectId);
 		return false;
 	}

@@ -1,9 +1,9 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
-import com.strategicgains.aclaid.domain.rewrite.predicate.ComputedUserSetPredicate;
-import com.strategicgains.aclaid.domain.rewrite.predicate.ThisPredicate;
-import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
+import com.strategicgains.aclaid.domain.rewrite.expression.ComputedUserSetExpression;
+import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
+import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
  * From the Zanzibar document:
@@ -15,7 +15,7 @@ import com.strategicgains.aclaid.domain.rewrite.predicate.UsersetPredicate;
  * @see RewriteRule
  */
 public class ComputedUserSet
-implements RewriteRule
+implements RewriteRuleLeaf
 {
 	private String relation;
 	private String objectToken;
@@ -70,13 +70,13 @@ implements RewriteRule
 	}
 
 	@Override
-	public UsersetPredicate rewrite(ObjectId objectId)
+	public UsersetExpression rewrite(ObjectId objectId)
 	{
 		if (hasObjectToken() && getObjectToken().startsWith("$"))
 		{
-			return new ComputedUserSetPredicate(objectId, relation, getObjectToken());
+			return new ComputedUserSetExpression(objectId, relation, getObjectToken());
 		}
 		
-		return new ThisPredicate(objectId, relation);
+		return new ThisExpression(objectId, relation);
 	}
 }

@@ -7,7 +7,7 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-import com.strategicgains.aclaid.domain.LocalTupleSet2;
+import com.strategicgains.aclaid.domain.LocalTupleStore2;
 import com.strategicgains.aclaid.exception.InvalidTupleException;
 
 public class CartaExampleTest {
@@ -55,7 +55,7 @@ public class CartaExampleTest {
 	 */
 	@Test
 	public void test() throws ParseException, InvalidTupleException {
-		LocalTupleSet2 tuples = new LocalTupleSet2()
+		LocalTupleStore2 tuples = new LocalTupleStore2()
 			.add(EMP_1, TEACHER_RELATION, CLASS_A)
 			.add(EMP_2, TEACHER_RELATION, CLASS_B)
 			.add(CLASS_A + "#" + TEACHER_RELATION, EDIT_RELATION, GRADE_X)
