@@ -17,6 +17,11 @@ public abstract class Rewrites
 		return new ComputedUserSetBuilder(null);
 	}
 
+	public static TupleToUserSetBuilder tupleToUserSet()
+	{
+		return new TupleToUserSetBuilder();
+	}
+
 	public static ThisBuilder _this()
 	{
 		return new ThisBuilder(null);

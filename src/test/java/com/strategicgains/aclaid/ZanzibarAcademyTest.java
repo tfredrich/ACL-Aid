@@ -1,8 +1,8 @@
 package com.strategicgains.aclaid;
 
+import static com.strategicgains.aclaid.builder.rewrite.Rewrites._this;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.computedUserSet;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.union;
-import static com.strategicgains.aclaid.builder.rewrite.Rewrites._this;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -140,11 +140,11 @@ public class ZanzibarAcademyTest
 					)
 				.relation(VIEWER)
 					.rewrite(
-						union()
-							._this()
-							.computedUserSet()
+						union(
+							_this(),
+							computedUserSet()
 								.relation(EDITOR)
-						.end()
+						)
 					)
 
 			.tuple(KIM, OWNER, DOC_ROADMAP)
@@ -201,19 +201,19 @@ public class ZanzibarAcademyTest
 				.relation(OWNER)
 				.relation(EDITOR)
 					.rewrite(
-						union()
-							._this()
-							.computedUserSet()
+						union(
+							_this(),
+							computedUserSet()
 								.relation(OWNER)
-						.end()
+						)
 					)
 				.relation(VIEWER)
 					.rewrite(
-						union()
-							._this()
-							.computedUserSet()
+						union(
+							_this(),
+							computedUserSet()
 								.relation(EDITOR)
-						.end()
+						)
 					)
 			.object(DOC_README)
 			.tuple(CARL, MEMBER, CONTOSO)
@@ -297,50 +297,50 @@ public class ZanzibarAcademyTest
 				.relation(OWNER)
 				.relation(EDITOR)
 				.rewrite(
-					union()
-						._this()
-						.computedUserSet()
+					union(
+						_this(),
+						computedUserSet()
 							.relation(OWNER)
-					.end()
+					)
 				)
 				.relation(VIEWER)
 				.rewrite(
-					union()
-						._this()
-						.computedUserSet()
+					union(
+						_this(),
+						computedUserSet()
 							.relation(EDITOR)
-					.end()
+					)
 				)
 			.object(DOCUMENT_OBJECT)
 				.relation(PARENT)
 				.relation(OWNER)
 				.relation(EDITOR)
 					.rewrite(
-						union()
-							._this()
-							.computedUserSet()
-								.relation(OWNER)
-							.tupleToUserSet(
+						union(
+							_this(),
+							computedUserSet()
+								.relation(OWNER),
+							tupleToUserSet(
 								PARENT,
 								computedUserSet()
 									.relation(EDITOR)
 									.resource(Tuple.USERSET_OBJECT)
 							)
-						.end()
+						)
 					)
 				.relation(VIEWER)
 					.rewrite(
-						union()
-							._this()
-							.computedUserSet()
-								.relation(VIEWER)
-							.tupleToUserSet(
+						union(
+							_this(),
+							computedUserSet()
+								.relation(VIEWER),
+							tupleToUserSet(
 								PARENT,
 								computedUserSet()
 									.relation(VIEWER)
 									.resource(Tuple.USERSET_OBJECT)
 							)
-						.end()
+						)
 					)
 
 					// +viewer on parent [folder] provides viewer on document
