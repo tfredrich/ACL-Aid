@@ -6,7 +6,7 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 public class RelationDefinition
 {
-	private ObjectDefinition parent;
+	private ObjectDefinition object;
 	private String name;
 	private RewriteRule rewriteRules;
 
@@ -26,14 +26,14 @@ public class RelationDefinition
 		this.name = name;
 	}
 
-	public ObjectDefinition getParent()
+	public ObjectDefinition getObject()
 	{
-		return parent;
+		return object;
 	}
 
-	public void setParent(ObjectDefinition parent)
+	public void setObject(ObjectDefinition parent)
 	{
-		this.parent = parent;
+		this.object = parent;
 	}
 
 	public String toString()
@@ -69,9 +69,9 @@ public class RelationDefinition
 
 	public UsersetExpression rewrite(ObjectId objectId, String relation)
 	{
-		if (parent != null && parent.containsRelation(relation))
+		if (object != null && object.containsRelation(relation))
 		{
-			return parent.getRelation(relation).rewrite(objectId);
+			return object.getRelation(relation).rewrite(objectId);
 		}
 		else
 		{
