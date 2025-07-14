@@ -71,7 +71,7 @@ public class RelationDefinition
 	{
 		if (parent != null && parent.containsRelation(relation))
 		{
-			return parent.getRelation(relation).rewrite(objectId, relation);
+			return parent.getRelation(relation).rewrite(objectId);
 		}
 		else
 		{

@@ -1,8 +1,10 @@
 package com.strategicgains.aclaid.domain.rewrite;
 
 import com.strategicgains.aclaid.domain.ObjectId;
+import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.expression.ComputedUserSetExpression;
 import com.strategicgains.aclaid.domain.rewrite.expression.ThisExpression;
+import com.strategicgains.aclaid.domain.rewrite.expression.UnionPredicate;
 import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
@@ -17,6 +19,7 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 public class ComputedUserSet
 implements RewriteRuleLeaf
 {
+	private RelationDefinition parent;
 	private String relation;
 	private String objectToken;
 
@@ -45,6 +48,16 @@ implements RewriteRuleLeaf
 	protected void setObjectToken(String objectToken)
 	{
 		this.objectToken = objectToken;
+	}
+
+	public RelationDefinition getParent()
+	{
+		return parent;
+	}
+
+	public void setParent(RelationDefinition parent)
+	{
+		this.parent = parent;
 	}
 
 	public boolean hasRelation()
@@ -77,6 +90,8 @@ implements RewriteRuleLeaf
 			return new ComputedUserSetExpression(objectId, relation, getObjectToken());
 		}
 		
-		return new ThisExpression(objectId, relation);
+		return new UnionPredicate()
+			.addChild(new ThisExpression(objectId, relation))
+			.addChild(parent.rewrite(objectId, relation));
 	}
 }

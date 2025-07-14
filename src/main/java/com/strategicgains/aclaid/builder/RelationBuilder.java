@@ -51,8 +51,7 @@ extends AbstractChildBuildable<ObjectDefinitionBuilder>
 	{
 		RewriteRuleBuilder union = Rewrites.union(
 			_this(),
-			computedUserSet()
-				.relation(relation)
+			computedUserSet(relation)
 		);
 		rewrite(union);
 		return this;

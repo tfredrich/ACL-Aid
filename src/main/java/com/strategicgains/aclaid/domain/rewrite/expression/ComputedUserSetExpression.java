@@ -72,7 +72,7 @@ implements UsersetLeafExpression
 	{
 		UserSet userset = new UserSet(objectId, relation);
 		
-		if (hasObjectToken() && getObjectToken().startsWith("$"))
+		if (hasObjectToken())
 		{
 			switch(getObjectToken())
 			{

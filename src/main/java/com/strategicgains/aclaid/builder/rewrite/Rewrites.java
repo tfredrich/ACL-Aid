@@ -12,14 +12,14 @@ public abstract class Rewrites
 		return new UnionBuilder(ruleBuilders);
 	}
 
-	public static ComputedUserSetBuilder computedUserSet()
+	public static ComputedUserSetBuilder computedUserSet(String relation)
 	{
-		return new ComputedUserSetBuilder(null);
+		return new ComputedUserSetBuilder().relation(relation);
 	}
 
-	public static TupleToUserSetBuilder tupleToUserSet()
+	public static TupleToUserSetBuilder tupleToUserSet(String relation, ComputedUserSetBuilder computedUserSetBuilder)
 	{
-		return new TupleToUserSetBuilder();
+		return new TupleToUserSetBuilder(null, relation, computedUserSetBuilder);
 	}
 
 	public static ThisBuilder _this()

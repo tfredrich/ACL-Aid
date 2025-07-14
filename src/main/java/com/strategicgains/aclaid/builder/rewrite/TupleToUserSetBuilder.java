@@ -24,11 +24,6 @@ implements RewriteRuleBuilder
 		return new TupleToUserSet(relation, computedUserSetBuilder.build(parent));
 	}
 
-	public RewriteRuleBuilder end()
-	{
-		return parent.end();
-	}
-
 	public ComputedUserSetBuilder computedUserSet()
 	{
 		this.computedUserSetBuilder = new ComputedUserSetBuilder(parent);

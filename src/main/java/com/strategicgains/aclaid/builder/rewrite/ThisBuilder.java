@@ -30,9 +30,4 @@ implements RewriteRuleBuilder
 	{
 		return parent.tupleToUserSet(relation, computedUserSetBuilder);
 	}
-
-	public SetOperationBuilder end()
-	{
-		return parent.end();
-	}
 }

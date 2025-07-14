@@ -1,12 +1,10 @@
 package com.strategicgains.aclaid;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.text.ParseException;
 import java.util.Arrays;
-import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +48,7 @@ public class RewriteRuleTest
 
 	// Resources
 	private static final String DOC_ROADMAP = NAMESPACE + DOCUMENT_OBJECT + "/roadmap";
-	private static final String DOC_README = NAMESPACE + DOCUMENT_OBJECT + "/readme";
+//	private static final String DOC_README = NAMESPACE + DOCUMENT_OBJECT + "/readme";
 	private static final String DOC_SLIDES = NAMESPACE + DOCUMENT_OBJECT + "/slides";
 	private static final String FOLDER_PLANNING = NAMESPACE + FOLDER_OBJECT + "/planning";
 	private static final String FOLDER_ENGINEERING = NAMESPACE + FOLDER_OBJECT + "/engineering";
@@ -109,6 +107,11 @@ public class RewriteRuleTest
 	public void testTupleToUserSet()
 	throws ParseException
 	{
+		ObjectDefinition obj = new ObjectDefinition(DOCUMENT_OBJECT);
+		obj.addRelation(new RelationDefinition(VIEWER));
+		obj.addRelation(new RelationDefinition(OWNER));
+		obj.addRelation(new RelationDefinition(EDITOR));
+	
 		RewriteRule rule = new TupleToUserSet(PARENT,
 			new ComputedUserSet(VIEWER)
 				.withToken(Tuple.USERSET_OBJECT));
@@ -123,7 +126,6 @@ public class RewriteRuleTest
 	{
 		ObjectDefinition docs = new ObjectDefinition(DOCUMENT_OBJECT);
 		RelationDefinition viewer = new RelationDefinition(VIEWER);
-		docs.addRelation(viewer);
 		RewriteRule rule = new Union(
 			Arrays.asList(
 				new This(viewer),
@@ -131,6 +133,8 @@ public class RewriteRuleTest
 				new ComputedUserSet(EDITOR)
 			)
 		);
+		viewer.setRewriteRules(rule);
+		docs.addRelation(viewer);
 		UsersetExpression rewrite = rule.rewrite(new ObjectId(DOC_ROADMAP));
 		assertTrue(rewrite.evaluate(tuples, UserSet.parse(KIM)));
 		assertTrue(rewrite.evaluate(tuples, UserSet.parse(BEN)));

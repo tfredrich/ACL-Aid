@@ -3,6 +3,7 @@ package com.strategicgains.aclaid;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites._this;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.computedUserSet;
 import static com.strategicgains.aclaid.builder.rewrite.Rewrites.union;
+import static com.strategicgains.aclaid.builder.rewrite.Rewrites.tupleToUserSet;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -134,16 +135,14 @@ public class ZanzibarAcademyTest
 					.rewrite(
 						union(
 							_this(),
-							computedUserSet()
-								.relation(OWNER)
+							computedUserSet(OWNER)
 						)
 					)
 				.relation(VIEWER)
 					.rewrite(
 						union(
 							_this(),
-							computedUserSet()
-								.relation(EDITOR)
+							computedUserSet(EDITOR)
 						)
 					)
 
@@ -203,16 +202,14 @@ public class ZanzibarAcademyTest
 					.rewrite(
 						union(
 							_this(),
-							computedUserSet()
-								.relation(OWNER)
+							computedUserSet(OWNER)
 						)
 					)
 				.relation(VIEWER)
 					.rewrite(
 						union(
 							_this(),
-							computedUserSet()
-								.relation(EDITOR)
+							computedUserSet(EDITOR)
 						)
 					)
 			.object(DOC_README)
@@ -299,16 +296,14 @@ public class ZanzibarAcademyTest
 				.rewrite(
 					union(
 						_this(),
-						computedUserSet()
-							.relation(OWNER)
+						computedUserSet(OWNER)
 					)
 				)
 				.relation(VIEWER)
 				.rewrite(
 					union(
 						_this(),
-						computedUserSet()
-							.relation(EDITOR)
+						computedUserSet(EDITOR)
 					)
 				)
 			.object(DOCUMENT_OBJECT)
@@ -318,12 +313,10 @@ public class ZanzibarAcademyTest
 					.rewrite(
 						union(
 							_this(),
-							computedUserSet()
-								.relation(OWNER),
+							computedUserSet(OWNER),
 							tupleToUserSet(
 								PARENT,
-								computedUserSet()
-									.relation(EDITOR)
+								computedUserSet(EDITOR)
 									.resource(Tuple.USERSET_OBJECT)
 							)
 						)
@@ -332,12 +325,10 @@ public class ZanzibarAcademyTest
 					.rewrite(
 						union(
 							_this(),
-							computedUserSet()
-								.relation(VIEWER),
+							computedUserSet(VIEWER),
 							tupleToUserSet(
 								PARENT,
-								computedUserSet()
-									.relation(VIEWER)
+								computedUserSet(VIEWER)
 									.resource(Tuple.USERSET_OBJECT)
 							)
 						)
