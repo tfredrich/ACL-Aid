@@ -6,7 +6,7 @@ import java.util.Map;
 public class ObjectDefinition
 {
 	private String name;
-	private Map<String, RelationDefinition> relations = new HashMap<>();
+	private Map<String, RelationDefinition> relationsByName = new HashMap<>();
 
 	public ObjectDefinition(String name)
 	{
@@ -16,18 +16,18 @@ public class ObjectDefinition
 
 	public void addRelation(RelationDefinition relation)
 	{
-		relation.setParent(this);
-		relations.put(relation.getName(), relation);
+		relation.setObject(this);
+		relationsByName.put(relation.getName(), relation);
 	}
 
 	public boolean containsRelation(String relation)
 	{
-		return relations.containsKey(relation);
+		return relationsByName.containsKey(relation);
 	}
 
 	public RelationDefinition getRelation(String relation)
 	{
-		return relations.get(relation);
+		return relationsByName.get(relation);
 	}
 
 	public String getName()
@@ -42,7 +42,7 @@ public class ObjectDefinition
 
 	public boolean check(TupleStore tuples, UserSet userset, String relation, ObjectId objectId)
 	{
-		RelationDefinition r = relations.get(relation);
+		RelationDefinition r = relationsByName.get(relation);
 
 		if (r != null)
 		{
