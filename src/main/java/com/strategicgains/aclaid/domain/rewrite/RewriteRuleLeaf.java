@@ -9,4 +9,13 @@ package com.strategicgains.aclaid.domain.rewrite;
 public interface RewriteRuleLeaf
 extends RewriteRule
 {
+	/**
+	 * Checks if this node is a leaf node.
+	 *
+	 * @return true if this node is a leaf node, false otherwise.
+	 */
+	default boolean isLeaf()
+	{
+		return true;
+	}
 }
