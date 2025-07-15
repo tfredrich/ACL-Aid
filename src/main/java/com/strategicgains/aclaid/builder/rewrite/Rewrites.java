@@ -24,6 +24,6 @@ public abstract class Rewrites
 
 	public static ThisBuilder _this()
 	{
-		return new ThisBuilder(null);
+		return new ThisBuilder();
 	}
 }

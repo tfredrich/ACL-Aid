@@ -5,33 +5,36 @@ import static com.strategicgains.aclaid.builder.rewrite.Rewrites.computedUserSet
 
 import com.strategicgains.aclaid.builder.rewrite.RewriteRuleBuilder;
 import com.strategicgains.aclaid.builder.rewrite.Rewrites;
+import com.strategicgains.aclaid.domain.ObjectDefinition;
 import com.strategicgains.aclaid.domain.RelationDefinition;
 import com.strategicgains.aclaid.domain.rewrite.RewriteRule;
 
 public class RelationBuilder
 extends AbstractChildBuildable<ObjectDefinitionBuilder>
 {
-	private RelationDefinition relationDefinition;
+	private String name;
 	private RewriteRuleBuilder rewriteRuleBuilder;
 
-	public RelationBuilder(String relation, ObjectDefinitionBuilder parent)
+	public RelationBuilder(String relation, ObjectDefinitionBuilder objectBuilder)
 	{
-		super(parent);
-		this.relationDefinition = new RelationDefinition(relation);
+		super(objectBuilder);
+		this.name = relation;
 	}
 
 	public String getName()
 	{
-		return relationDefinition.getName();
+		return name;
 	}
 
 	public String toString()
 	{
-		return (String.format("Relation: %s", relationDefinition.getName()));
+		return (String.format("Relation: %s", getName()));
 	}
 
-	RelationDefinition build()
+	RelationDefinition build(ObjectDefinition objectDefinition)
 	{
+		RelationDefinition relationDefinition = new RelationDefinition(objectDefinition, name);
+	
 		if (rewriteRuleBuilder != null)
 		{
 			RewriteRule rewrites = rewriteRuleBuilder.build(relationDefinition);

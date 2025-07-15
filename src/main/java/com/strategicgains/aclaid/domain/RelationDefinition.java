@@ -6,14 +6,15 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 public class RelationDefinition
 {
-	private ObjectDefinition object;
+	private ObjectDefinition objectDefinition;
 	private String name;
 	private RewriteRule rewriteRules;
 
-	public RelationDefinition(String name)
+	public RelationDefinition(ObjectDefinition objectDefinition, String name)
 	{
 		super();
 		this.name = name;
+		setObjectDefinition(objectDefinition);
 	}
 
 	public String getName()
@@ -26,14 +27,26 @@ public class RelationDefinition
 		this.name = name;
 	}
 
-	public ObjectDefinition getObject()
+	public ObjectDefinition getObjectDefinition()
 	{
-		return object;
+		return objectDefinition;
 	}
 
-	public void setObject(ObjectDefinition parent)
+	private void setObjectDefinition(ObjectDefinition objectDefinition)
 	{
-		this.object = parent;
+		this.objectDefinition = objectDefinition;
+	}
+
+	public RelationDefinition getSibling(String relation)
+	{
+		RelationDefinition sibling = objectDefinition.getRelation(relation);
+
+		if (sibling == null)
+		{
+			throw new IllegalArgumentException(String.format("Relation '%s' not found in object '%s'.", relation, objectDefinition.getName()));
+		}
+
+		return sibling;
 	}
 
 	public String toString()
@@ -57,7 +70,7 @@ public class RelationDefinition
 		return rewrites.evaluate(tuples, userset);
 	}
 
-	private UsersetExpression rewrite(ObjectId objectId)
+	public UsersetExpression rewrite(ObjectId objectId)
 	{
 		if (hasRewriteRules())
 		{
@@ -65,17 +78,5 @@ public class RelationDefinition
 		}
 
 		return new This(this).rewrite(objectId);
-	}
-
-	public UsersetExpression rewrite(ObjectId objectId, String relation)
-	{
-		if (object != null && object.containsRelation(relation))
-		{
-			return object.getRelation(relation).rewrite(objectId);
-		}
-		else
-		{
-			throw new IllegalArgumentException("Relation not found: " + relation); 
-		}
 	}
 }

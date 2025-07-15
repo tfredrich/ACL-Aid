@@ -16,7 +16,6 @@ public class ObjectDefinition
 
 	public void addRelation(RelationDefinition relation)
 	{
-		relation.setObject(this);
 		relationsByName.put(relation.getName(), relation);
 	}
 

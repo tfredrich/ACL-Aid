@@ -1,0 +1,53 @@
+@startuml
+class ObjectDefinition {
+  -name : String
+  +check(userset:String, relation:String, objectId:String) : boolean
+}
+class RelationDefinition {
+  -name : String
+  -parent : ObjectDefinition
+  +rewrite(objectId:ObjectId) : UserSetExpression
+}
+interface RewriteRule {
+  +rewrite(ObjectId) : UserSetExpression
+  +isLeaf() : boolean
+}
+interface RewriteRuleLeaf
+abstract BinaryRewriteRule {
+  -lRule : RewriteRuleLeaf
+  -rRule : RewriteRuleLeaf
+}
+class This
+class ComputedUserSet {
+  -relation : RelationDefinition
+}
+class TupleToUserSet {
+  -userset : ComputedUserSet
+  -selector : Tuple
+}
+enum Tuple {
+  $TUPLE_USERSET_OBJECT
+  $TUPLE_USERSET_RELATION
+  $TUPLE_RELATION
+}
+
+RewriteRule <|.. BinaryRewriteRule
+RewriteRule <|.. Union
+BinaryRewriteRule <|-- Intersection
+BinaryRewriteRule <|-- Exclusion
+
+RewriteRuleLeaf <|.. This
+RewriteRuleLeaf <|.. ComputedUserSet
+RewriteRuleLeaf <|.. TupleToUserSet
+
+ObjectDefinition "1" *-- "*" RelationDefinition : contains
+RelationDefinition "0" --> "1" RewriteRule : has
+Union "1" --> "*" RewriteRuleLeaf
+Intersection --> RewriteRuleLeaf : lRule
+Intersection --> RewriteRuleLeaf : rRule
+Exclusion --> RewriteRuleLeaf : lRule
+Exclusion --> RewriteRuleLeaf : rRule
+TupleToUserSet --> ComputedUserSet
+TupleToUserSet --> Tuple
+ComputedUserSet --> RelationDefinition
+@enduml

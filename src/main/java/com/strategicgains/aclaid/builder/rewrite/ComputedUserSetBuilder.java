@@ -29,8 +29,13 @@ implements RewriteRuleBuilder
 	@Override
 	public ComputedUserSet build(RelationDefinition parent)
 	{
-		ComputedUserSet s = new ComputedUserSet(relation, resourceName);
-		s.setParent(parent);
-		return s;
+		RelationDefinition relationDefinition = parent;
+	
+		if (!parent.getName().equals(relation))
+		{
+			relationDefinition = parent.getSibling(relation);
+		}
+
+		return new ComputedUserSet(relationDefinition, resourceName);
 	}
 }

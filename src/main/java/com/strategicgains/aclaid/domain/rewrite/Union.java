@@ -9,11 +9,10 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UnionPredicate;
 import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 
 /**
- * It takes two sets as input and returns a new set as output.
- * The returned set contains all elements that are members of either the first or second input set.
+ * It takes two (or more) sets as input and returns a new set as output.
+ * The returned set contains all elements that are members of all input sets.
  * Duplicate elements that are in both sets will only appear once in the union.
  * The union of A and B is equal to the union of B and A. So union is commutative.
- * UnionPredicate is associative - (A.union(B)).union(C) equals A.union(B.union(C))
  * The union of a set with an empty set returns the original set.
  * 
  * For example:

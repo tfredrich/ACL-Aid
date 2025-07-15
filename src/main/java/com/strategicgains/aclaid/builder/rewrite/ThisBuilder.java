@@ -7,27 +7,14 @@ import com.strategicgains.aclaid.domain.rewrite.This;
 public class ThisBuilder
 implements RewriteRuleBuilder
 {
-	private SetOperationBuilder parent;
-
-	protected ThisBuilder(SetOperationBuilder parent)
+	protected ThisBuilder()
 	{
 		super();
-		this.parent = parent;
 	}
 
 	@Override
 	public RewriteRule build(RelationDefinition relation)
 	{
 		return new This(relation);
-	}
-
-	public ComputedUserSetBuilder computedUserSet()
-	{
-		return parent.computedUserSet();
-	}
-
-	public TupleToUserSetBuilder tupleToUserSet(String relation, ComputedUserSetBuilder computedUserSetBuilder)
-	{
-		return parent.tupleToUserSet(relation, computedUserSetBuilder);
 	}
 }

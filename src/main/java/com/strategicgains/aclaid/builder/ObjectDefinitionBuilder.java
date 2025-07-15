@@ -3,7 +3,7 @@ package com.strategicgains.aclaid.builder;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,45 +18,22 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
 public class ObjectDefinitionBuilder
 implements Buildable
 {
-	private AccessControlBuilder parent;
+	private AccessControlBuilder aclBuilder;
 	private String name;
-	private Set<RelationBuilder> relationBuilders = new HashSet<>();
+	private Set<RelationBuilder> relationBuilders = new LinkedHashSet<>();
 	private List<TupleBuilder> tupleBuilders = new ArrayList<>();
 	private List<Tuple> tuples = new ArrayList<>();
 
-	public ObjectDefinitionBuilder(AccessControlBuilder parent, String objectName)
+	public ObjectDefinitionBuilder(AccessControlBuilder aclBuilder, String objectName)
 	{
 		super();
 		this.name = objectName;
-		this.parent = parent;
-	}
-
-	public ObjectDefinition buildRelations(AccessControl parent)
-	{
-		ObjectDefinition namespaceConfiguration = parent.object(name);
-		relationBuilders.stream().forEach(r -> namespaceConfiguration.addRelation(r.build()));
-		return namespaceConfiguration;
-	}
-
-	public AccessControl buildTuples(AccessControl parent)
-	{
-		tupleBuilders.stream().forEach(b -> tuples.addAll(b.build()));
-		tuples.stream().forEach(t -> {
-			try
-			{
-				parent.addTuple(t);
-			}
-			catch (InvalidTupleException e)
-			{
-				e.printStackTrace();
-			}
-		});
-		return parent;
+		this.aclBuilder = aclBuilder;
 	}
 
 	public ObjectDefinitionBuilder object(String objectName)
 	{
-		return parent.object(objectName);
+		return aclBuilder.object(objectName);
 	}
 
 	public Collection<String> getRelationNames()
@@ -80,15 +57,25 @@ implements Buildable
 	public ObjectDefinitionBuilder tuple(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
-		if (!containsRelation(relation)) throw new InvalidTupleException("Relation not registered: " + relation);
+		if (!containsRelation(relation, resource)) throw new InvalidTupleException(String.format("Relation '%s' not registered in object '%s': ", relation, name));
 
 		tuples.add(new Tuple(userset, relation, resource));
 		return this;
 	}
 
-	private boolean containsRelation(String relation)
+	public boolean containsRelation(String relation)
 	{
-		return parent.containsRelation(relation);
+		return relationBuilders.stream().anyMatch(r -> r.getName().equals(relation));
+	}
+
+	private boolean containsRelation(String relation, ObjectId resource)
+	{
+		if (name.equals(resource.getType()))
+		{
+			return containsRelation(relation);
+		}
+
+		return aclBuilder.containsRelation(relation, resource.getType());
 	}
 
 	public ObjectDefinitionBuilder tuple(String tuple)
@@ -103,5 +90,34 @@ implements Buildable
 		TupleBuilder tb = new TupleBuilder(this);
 		tupleBuilders.add(tb);
 		return tb;
+	}
+
+	public void build(AccessControl acl)
+	{
+		buildRelations(acl);
+		buildTuples(acl);
+	}
+
+	private ObjectDefinition buildRelations(AccessControl acl)
+	{
+		ObjectDefinition objectDefinition = acl.object(name);
+		relationBuilders.stream().forEach(r -> objectDefinition.addRelation(r.build(objectDefinition)));
+		return objectDefinition;
+	}
+
+	private AccessControl buildTuples(AccessControl acl)
+	{
+		tupleBuilders.stream().forEach(b -> tuples.addAll(b.build()));
+		tuples.stream().forEach(t -> {
+			try
+			{
+				acl.addTuple(t);
+			}
+			catch (InvalidTupleException e)
+			{
+				e.printStackTrace();
+			}
+		});
+		return acl;
 	}
 }

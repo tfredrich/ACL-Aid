@@ -325,7 +325,7 @@ public class ZanzibarAcademyTest
 					.rewrite(
 						union(
 							_this(),
-							computedUserSet(VIEWER),
+							computedUserSet(EDITOR),
 							tupleToUserSet(
 								PARENT,
 								computedUserSet(VIEWER)

@@ -14,6 +14,7 @@ extends RewriteRule
 	 *
 	 * @return true if this node is a leaf node, false otherwise.
 	 */
+	@Override
 	default boolean isLeaf()
 	{
 		return true;

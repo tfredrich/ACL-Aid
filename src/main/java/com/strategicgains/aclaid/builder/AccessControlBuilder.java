@@ -1,9 +1,7 @@
 package com.strategicgains.aclaid.builder;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.strategicgains.aclaid.AccessControl;
 
@@ -11,42 +9,29 @@ public class AccessControlBuilder
 {
 	private Map<String, ObjectDefinitionBuilder> objectBuilders = new HashMap<>();
 
-	/*
-	 * A set of relation names within the entire context of the ACL.
-	 * This is used to determine if a relation name has been defined and
-	 * can, therefore, be used in a tuple or rewrite rule.
-	 * 
-	 * The set is cleared after each object definition is built.
-	 */
-	private Set<String> relations = new HashSet<>();
-
 	public ObjectDefinitionBuilder object(String objectName)
 	{
 		ObjectDefinitionBuilder current = new ObjectDefinitionBuilder(this, objectName);
 		objectBuilders.put(objectName, current);
-		relations.clear();
 		return current;
 	}
 
-	public boolean containsRelation(String relation)
+	public boolean containsRelation(String relation, String objectName)
 	{
-		if (relations.isEmpty())
+		ObjectDefinitionBuilder builder = objectBuilders.get(objectName);
+
+		if (builder == null)
 		{
-			objectBuilders.values().stream().forEach(b -> relations.addAll(b.getRelationNames()));
+			return false;
 		}
 
-		return relations.contains(relation);
+		return builder.containsRelation(relation);
 	}
 
 	public AccessControl build()
 	{
 		AccessControl acl = new AccessControl();
-
-		objectBuilders.values().stream().forEach(b -> {
-			b.buildRelations(acl);
-			b.buildTuples(acl);
-		});
-
+		objectBuilders.values().stream().forEach(b -> b.build(acl));
 		return acl;
 	}
 }

@@ -66,5 +66,15 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
  */
 public interface RewriteRule
 {
+	/**
+	 * Checks if this node is a leaf node.
+	 *
+	 * @return true if this node is a leaf node, false otherwise.
+	 */
+	default boolean isLeaf()
+	{
+		return false;
+	}
+
 	UsersetExpression rewrite(ObjectId objectId);
 }

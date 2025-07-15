@@ -66,12 +66,12 @@ public class AccessControl
 	 * Get an existing ObjectDefinition by name or create a new, empty one.
 	 * Changes to the instance make changes to this AccessControl.
 	 * 
-	 * @param resourceName the name of the resource being defined.
+	 * @param objectName the name of the resource being defined.
 	 * @return an existing or new, empty ObjectDefinition instance.
 	 */
-	public ObjectDefinition object(String resourceName)
+	public ObjectDefinition object(String objectName)
 	{
-		return objectsByName.computeIfAbsent(resourceName, ObjectDefinition::new);
+		return objectsByName.computeIfAbsent(objectName, ObjectDefinition::new);
 	}
 
 	/**

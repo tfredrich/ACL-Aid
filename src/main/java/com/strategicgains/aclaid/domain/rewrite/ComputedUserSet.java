@@ -19,17 +19,16 @@ import com.strategicgains.aclaid.domain.rewrite.expression.UsersetExpression;
 public class ComputedUserSet
 implements RewriteRuleLeaf
 {
-	private RelationDefinition parent;
-	private String relation;
+	private RelationDefinition relation;
 	private String objectToken;
 
-	public ComputedUserSet(String relation)
+	public ComputedUserSet(RelationDefinition relation)
 	{
 		super();
 		setRelation(relation);
 	}
 
-	public ComputedUserSet(String relation, String objectToken)
+	public ComputedUserSet(RelationDefinition relation, String objectToken)
 	{
 		this(relation);
 		setObjectToken(objectToken);
@@ -50,27 +49,17 @@ implements RewriteRuleLeaf
 		this.objectToken = objectToken;
 	}
 
-	public RelationDefinition getParent()
-	{
-		return parent;
-	}
-
-	public void setParent(RelationDefinition parent)
-	{
-		this.parent = parent;
-	}
-
 	public boolean hasRelation()
 	{
 		return (relation != null);
 	}
 
-	protected void setRelation(String relation)
+	protected void setRelation(RelationDefinition relation)
 	{
 		this.relation = relation;
 	}
 
-	public ComputedUserSet withRelation(String relation)
+	public ComputedUserSet withRelation(RelationDefinition relation)
 	{
 		setRelation(relation);
 		return this;
@@ -87,11 +76,12 @@ implements RewriteRuleLeaf
 	{
 		if (hasObjectToken() && getObjectToken().startsWith("$"))
 		{
-			return new ComputedUserSetExpression(objectId, relation, getObjectToken());
+			System.out.println(hasObjectToken() + " " + getObjectToken() + " " + relation.getName());
+			return new ComputedUserSetExpression(objectId, relation.getName(), getObjectToken());
 		}
 		
 		return new UnionPredicate()
-			.addChild(new ThisExpression(objectId, relation))
-			.addChild(parent.rewrite(objectId, relation));
+			.addChild(new ThisExpression(objectId, relation.getName()))
+			.addChild(relation.rewrite(objectId));
 	}
 }
