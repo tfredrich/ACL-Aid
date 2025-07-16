@@ -24,7 +24,7 @@ import com.strategicgains.aclaid.exception.InvalidTupleException;
  * 
  * @author Todd Fredrich
  */
-public class LocalTupleStore2
+public class SimpleTupleStore
 implements TupleStore
 {
 	/**
@@ -47,11 +47,11 @@ implements TupleStore
 	 */
 	private List<Tuple> tuples = new ArrayList<>();
 
-	public LocalTupleStore2()
+	public SimpleTupleStore()
 	{
 	}
 
-	public LocalTupleStore2(ObjectId objectId, String relation, Set<UserSet> usersets)
+	public SimpleTupleStore(ObjectId objectId, String relation, Set<UserSet> usersets)
 	throws InvalidTupleException
 	{
 		this();
@@ -63,7 +63,7 @@ implements TupleStore
 		}
 	}
 
-	public LocalTupleStore2(UserSet userset, String relation, Set<ObjectId> objectIds)
+	public SimpleTupleStore(UserSet userset, String relation, Set<ObjectId> objectIds)
 	throws InvalidTupleException
 	{
 		this();
@@ -75,12 +75,12 @@ implements TupleStore
 		}
 	}
 
-	public LocalTupleStore2(LocalTupleStore2 that)
+	public SimpleTupleStore(SimpleTupleStore that)
 	{
 		this(that.tuples);
 	}
 
-	public LocalTupleStore2(Collection<Tuple> tuples)
+	public SimpleTupleStore(Collection<Tuple> tuples)
 	{
 		this();
 		tuples.stream().forEach(this::add);
@@ -128,6 +128,43 @@ implements TupleStore
 		return intersects(direct, indirect);
 	}
 
+	@Override
+	public TupleStore read(TupleSet tupleSet)
+	{
+		if (tupleSet.isEmpty() || !tupleSet.isValid()) throw new IllegalArgumentException("Invalid TupleSet");
+
+		Set<Tuple> result = new HashSet<>();
+		
+		if (tupleSet.isSingleTupleKey())
+		{
+			result.addAll(getDirectTuples(tupleSet.getUserset(), tupleSet.getRelation(), tupleSet.getObject()));
+		}
+		else if (tupleSet.hasObject())
+		{
+			if (tupleSet.hasRelation())
+			{
+				result.addAll(getDirectTuples(tupleSet.getObject(), tupleSet.getRelation()));
+			}
+			else
+			{
+				result.addAll(getDirectTuples(tupleSet.getObject()));
+			}
+		}
+		else if (tupleSet.hasUserset())
+		{
+			if (tupleSet.hasRelation())
+			{
+				result.addAll(getDirectTuples(tupleSet.getUserset(), tupleSet.getRelation()));
+			}
+			else
+			{
+				result.addAll(getDirectTuples(tupleSet.getUserset()));
+			}
+		}
+
+		return new SimpleTupleStore(result);
+	}
+
 	/**
 	 * Answer whether the direct relations contain a relation to the given objectId.
 	 * 
@@ -153,18 +190,65 @@ implements TupleStore
 		return direct.stream().anyMatch(d -> indirect.stream().anyMatch(i -> i.getUserset().matches(d.getObjectId(), d.getRelation())));
 	}
 
+	private Set<Tuple> getDirectTuples(UserSet userset, String relation, ObjectId objectId)
+	{
+		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(userset.getObjectId());
+		if (relationSubtree == null) return Collections.emptySet();
+
+		Set<Tuple> relationTuples = relationSubtree.get(relation);
+		if (relationTuples == null || relationTuples.isEmpty()) return Collections.emptySet();
+
+		Set<Tuple> results = relationTuples.stream()
+			.filter(t -> t.appliesTo(objectId))
+			.collect(Collectors.toSet());
+
+		Map<String, Set<Tuple>> wildcardSubtree = wildcardToGroup.get(userset.getObjectId());
+		if (wildcardSubtree == null) return results;
+
+		Set<Tuple> wildcardTuples = wildcardSubtree.get(relation);
+		if (wildcardTuples == null || wildcardTuples.isEmpty()) return results;
+	
+		results.addAll(wildcardTuples.stream()
+			.filter(t -> t.appliesTo(objectId))
+			.collect(Collectors.toSet()));
+
+		return results;
+	}
+
+	private Set<Tuple> getDirectTuples(UserSet userset, String relation)
+	{
+		return getDirectTuples(userset.getObjectId(), relation);
+	}
+
 	/**
 	 * Answer the set of tuples that have direct relations from the actor.
 	 * 
-	 * @param actor The UserSet acting on the objectId.
+	 * @param userset The UserSet acting on the objectId.
 	 * @return The set of tuples that have direct relations from the actor.
 	 */
-	private Set<Tuple> getDirectTuples(UserSet actor)
+	private Set<Tuple> getDirectTuples(UserSet userset)
 	{
-		Map<String, Set<Tuple>> objectSubtree = memberToGroup.get(actor.getObjectId());
-		if (objectSubtree == null) return Collections.emptySet();
+		return getDirectTuples(userset.getObjectId());
+	}
 
-		return objectSubtree.values().stream().flatMap(s -> s.stream())
+	private Set<Tuple> getDirectTuples(ObjectId objectId, String relation)
+	{
+		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(objectId);
+		if (relationSubtree == null) return Collections.emptySet();
+
+		Set<Tuple> relationTuples = relationSubtree.get(relation);
+		if (relationTuples == null || relationTuples.isEmpty()) return Collections.emptySet();
+
+		return relationTuples;
+	}
+
+	private Set<Tuple> getDirectTuples(ObjectId objectId)
+	{
+		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(objectId);
+		if (relationSubtree == null) return Collections.emptySet();
+
+		return relationSubtree.values().stream()
+			.flatMap(s -> s.stream())
 			.collect(Collectors.toSet());
 	}
 
@@ -197,19 +281,19 @@ implements TupleStore
 			.collect(Collectors.toSet());
 	}
 
-	public LocalTupleStore2 add(String userset, String relation, String resource)
+	public SimpleTupleStore add(String userset, String relation, String resource)
 	throws ParseException, InvalidTupleException
 	{
 		return add(UserSet.parse(userset), relation, new ObjectId(resource));
 	}
 
-	public LocalTupleStore2 add(UserSet userset, String relation, ObjectId resource)
+	public SimpleTupleStore add(UserSet userset, String relation, ObjectId resource)
 	throws InvalidTupleException
 	{
 		return add(newLocalTuple(userset, relation, resource));
 	}
 
-	public LocalTupleStore2 add(Tuple tuple)
+	public SimpleTupleStore add(Tuple tuple)
 	{
 		tuples.add(tuple);
 		addMemberToGroup(tuple);
@@ -217,7 +301,7 @@ implements TupleStore
 		return this;
 	}
 
-	public LocalTupleStore2 remove(Tuple tuple)
+	public SimpleTupleStore remove(Tuple tuple)
 	{
 		tuples.remove(tuple);
 		removeMemberToGroup(tuple);
@@ -225,7 +309,7 @@ implements TupleStore
 		return this;
 	}
 
-	public LocalTupleStore2 remove(UserSet userset, String relation, ObjectId resource)
+	public SimpleTupleStore remove(UserSet userset, String relation, ObjectId resource)
 	{
 		return remove(new Tuple(userset, relation, resource));
 	}
@@ -304,6 +388,6 @@ implements TupleStore
 	@Override
 	public boolean isEmpty()
 	{
-		return memberToGroup.isEmpty() && groupToGroup.isEmpty();
+		return tuples.isEmpty();
 	}
 }

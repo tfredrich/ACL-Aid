@@ -27,6 +27,15 @@ public interface TupleStore
 	boolean check(UserSet userset, String relation, ObjectId objectId);
 
 	/**
+	 * Perform a read operation against the tuple store using the provided tuple set.
+	 * This is used to retrieve tuples that match the criteria specified in the tuple set.
+	 * 
+	 * @param tupleSet A tuple set that defines the criteria for the read operation.
+	 * @return a collection of tuples that match the criteria defined in the tuple set.
+	 */
+	TupleStore read(TupleSet tupleSet);
+
+	/**
 	 * Add a tuple to this tuple set.
 	 * 
 	 * @param tuple

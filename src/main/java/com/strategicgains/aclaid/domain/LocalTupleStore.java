@@ -320,4 +320,10 @@ implements TupleStore
 	public boolean check(UserSet userset, String relation, ObjectId objectId) {
 		return read(userset, relation, objectId) != null;
 	}
+
+	@Override
+	public TupleStore read(TupleSet tupleSet) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
