@@ -33,11 +33,6 @@ implements TupleStore
 	private Map<ObjectId, Map<String, Set<Tuple>>> memberToGroup = new ConcurrentHashMap<>();
 
 	/**
-	 * Index: WILDCARD2GROUP containing direct wildcard relations.
-	 */
-	private Map<ObjectId, Map<String, Set<Tuple>>> wildcardToGroup = new ConcurrentHashMap<>();
-
-	/**
 	 * Index: GROUP2GROUP containing indirect relations.
 	 */
 	private Map<UserSet, Map<String, Set<Tuple>>> groupToGroup = new ConcurrentHashMap<>();
@@ -120,11 +115,7 @@ implements TupleStore
 		Set<Tuple> direct = getDirectTuples(actor);
 		if (hasDirectRelation(direct, relation, objectId)) return true;
 
-		Set<Tuple> wildcardTuples = getWildcardTuples(actor);
-		if (hasDirectRelation(wildcardTuples, relation, objectId)) return true;
-
 		Set<Tuple> indirect = getIndirectTuples(objectId, relation);
-
 		return intersects(direct, indirect);
 	}
 
@@ -198,21 +189,9 @@ implements TupleStore
 		Set<Tuple> relationTuples = relationSubtree.get(relation);
 		if (relationTuples == null || relationTuples.isEmpty()) return Collections.emptySet();
 
-		Set<Tuple> results = relationTuples.stream()
+		return relationTuples.stream()
 			.filter(t -> t.appliesTo(objectId))
 			.collect(Collectors.toSet());
-
-		Map<String, Set<Tuple>> wildcardSubtree = wildcardToGroup.get(userset.getObjectId());
-		if (wildcardSubtree == null) return results;
-
-		Set<Tuple> wildcardTuples = wildcardSubtree.get(relation);
-		if (wildcardTuples == null || wildcardTuples.isEmpty()) return results;
-	
-		results.addAll(wildcardTuples.stream()
-			.filter(t -> t.appliesTo(objectId))
-			.collect(Collectors.toSet()));
-
-		return results;
 	}
 
 	private Set<Tuple> getDirectTuples(UserSet userset, String relation)
@@ -249,15 +228,6 @@ implements TupleStore
 
 		return relationSubtree.values().stream()
 			.flatMap(s -> s.stream())
-			.collect(Collectors.toSet());
-	}
-
-	private Set<Tuple> getWildcardTuples(UserSet actor)
-	{
-		return wildcardToGroup.keySet().stream().filter(t -> t.matches(actor.getObjectId()))
-			.map(t -> wildcardToGroup.get(t))
-			.flatMap(m -> m.values().stream())
-			.flatMap(s -> s.stream().map(u -> new Tuple(actor, u.getRelation(), u.getObjectId())))
 			.collect(Collectors.toSet());
 	}
 
@@ -317,14 +287,6 @@ implements TupleStore
 	private void addMemberToGroup(Tuple tuple)
 	{
 		if (!tuple.isDirectRelation()) return;
-
-		if (tuple.getUsersetResource().isWildcard())
-		{
-			Map<String, Set<Tuple>> relationSubtree = wildcardToGroup.computeIfAbsent(tuple.getUsersetResource(), t -> new ConcurrentHashMap<>());
-			Set<Tuple> resources = relationSubtree.computeIfAbsent(tuple.getRelation(), s -> new HashSet<>());
-			resources.add(tuple);
-			return;
-		}
 
 		Map<String, Set<Tuple>> relationSubtree = memberToGroup.computeIfAbsent(tuple.getUsersetResource(), t -> new ConcurrentHashMap<>());
 		Set<Tuple> resources = relationSubtree.computeIfAbsent(tuple.getRelation(), s -> new HashSet<>());
