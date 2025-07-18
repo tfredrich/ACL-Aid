@@ -1,7 +1,13 @@
 @startuml
+class AccessControl {
+  -objects : Map<String, ObjectDefinition>
+  -tuples : TupleStore
+  +check(userset:String, relation:String, objectId:String) : boolean
+}
 class ObjectDefinition {
   -name : String
-  +check(userset:String, relation:String, objectId:String) : boolean
+  -relations : Map<String, RelationDefinition>
+  +rewrite(objectId : String) : UserSetExpression
 }
 class RelationDefinition {
   -name : String
@@ -9,17 +15,27 @@ class RelationDefinition {
   +rewrite(objectId:ObjectId) : UserSetExpression
 }
 interface RewriteRule {
-  +rewrite(ObjectId) : UserSetExpression
-  +isLeaf() : boolean
+  +rewrite(objectId : ObjectId) : UserSetExpression
+  +isLeaf() : false
 }
-interface RewriteRuleLeaf
+interface RewriteRuleLeaf {
+  +isLeaf() : true
+}
 abstract BinaryRewriteRule {
-  -lRule : RewriteRuleLeaf
-  -rRule : RewriteRuleLeaf
+  -lRule : RewriteRule
+  -rRule : RewriteRule
 }
 class This
 class ComputedUserSet {
   -relation : RelationDefinition
+}
+class SimpleTupleStore {
+ -tuples : Collection<Tuple>
+}
+interface TupleStore {
+  +add(tuple : Tuple): TupleStore
+  +read(filter : TupleSet): TupleStore
+  +remove(tuple : Tuple): TupleStore
 }
 class TupleToUserSet {
   -userset : ComputedUserSet
@@ -31,10 +47,17 @@ enum Tuple {
   $TUPLE_RELATION
 }
 
+AccessControl --> TupleStore
+AccessControl "1" *-->  "*" ObjectDefinition
+
 RewriteRule <|.. BinaryRewriteRule
+RewriteRule <|.. RewriteRuleLeaf
 RewriteRule <|.. Union
+
 BinaryRewriteRule <|-- Intersection
 BinaryRewriteRule <|-- Exclusion
+BinaryRewriteRule --> RewriteRule : lRule
+BinaryRewriteRule --> RewriteRule : rRule
 
 RewriteRuleLeaf <|.. This
 RewriteRuleLeaf <|.. ComputedUserSet
@@ -43,10 +66,9 @@ RewriteRuleLeaf <|.. TupleToUserSet
 ObjectDefinition "1" *-- "*" RelationDefinition : contains
 RelationDefinition "0" --> "1" RewriteRule : has
 Union "1" --> "*" RewriteRuleLeaf
-Intersection --> RewriteRuleLeaf : lRule
-Intersection --> RewriteRuleLeaf : rRule
-Exclusion --> RewriteRuleLeaf : lRule
-Exclusion --> RewriteRuleLeaf : rRule
+
+TupleStore <|.. SimpleTupleStore
+
 TupleToUserSet --> ComputedUserSet
 TupleToUserSet --> Tuple
 ComputedUserSet --> RelationDefinition
