@@ -124,61 +124,74 @@ implements TupleStore
 	{
 		if (tupleSet.isEmpty() || !tupleSet.isValid()) throw new IllegalArgumentException("Invalid TupleSet: " + tupleSet);
 
+		Set<Tuple> tuples = new HashSet<>();
+
 		if (tupleSet.isSingleTupleKey())
 		{
-			return readOne(tupleSet.getUserset(), tupleSet.getRelation(), tupleSet.getObject());
+			Tuple tuple = readOne(tupleSet.getUserset(), tupleSet.getRelation(), tupleSet.getObject());
+
+			if (tuple != null)
+			{
+				tuples.add(tuple);
+			}
 		}
 		else if (tupleSet.hasObject())
 		{
 			if (tupleSet.hasRelation())
 			{
-				return readAll(tupleSet.getObject(), tupleSet.getRelation());
+				tuples.addAll(readAll(tupleSet.getObject(), tupleSet.getRelation()));
 			}
 			else
 			{
-				return readAll(tupleSet.getObject());
+				tuples.addAll(readAll(tupleSet.getObject()));
 			}
 		}
 		else if (tupleSet.hasUserset())
 		{
 			if (tupleSet.hasRelation())
 			{
-				return readAll(tupleSet.getUserset(), tupleSet.getRelation());
+				tuples.addAll(readAll(tupleSet.getUserset(), tupleSet.getRelation()));
 			}
 			else
 			{
-				return readAll(tupleSet.getUserset());
+				tuples.addAll(readAll(tupleSet.getUserset()));
 			}
 		}
 
 		return new SimpleTupleStore();
 	}
 
-	public TupleStore readOne(UserSet userset, String relation, ObjectId objectId)
+	public Tuple readOne(String userset, String relation, String objectId)
+	throws ParseException
 	{
-		if (userset == null || relation == null || objectId == null) return new SimpleTupleStore();
-
-		return new SimpleTupleStore(getDirectTuples(userset, relation, objectId));
+		return readOne(UserSet.parse(userset), relation, new ObjectId(objectId));
 	}
 
-	public TupleStore readAll(ObjectId objectId, String relation)
+	public Tuple readOne(UserSet userset, String relation, ObjectId objectId)
 	{
-		return new SimpleTupleStore(getDirectTuples(objectId, relation));
+		if (userset == null || relation == null || objectId == null) return null;
+
+		return getDirectTuples(userset, relation, objectId).stream().findFirst().orElse(null);
 	}
 
-	public TupleStore readAll(ObjectId objectId)
+	public Set<Tuple> readAll(ObjectId objectId, String relation)
 	{
-		return new SimpleTupleStore(getDirectTuples(objectId));
+		return getDirectTuples(objectId, relation);
 	}
 
-	public TupleStore readAll(UserSet userset, String relation)
+	public Set<Tuple> readAll(ObjectId objectId)
 	{
-		return new SimpleTupleStore(getDirectTuples(userset, relation));
+		return getDirectTuples(objectId);
 	}
 
-	public TupleStore readAll(UserSet userset)
+	public Set<Tuple> readAll(UserSet userset, String relation)
 	{
-		return new SimpleTupleStore(getDirectTuples(userset));
+		return getDirectTuples(userset, relation);
+	}
+
+	public Set<Tuple> readAll(UserSet userset)
+	{
+		return getDirectTuples(userset);
 	}
 
 	/**
