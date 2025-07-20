@@ -28,14 +28,26 @@ public class SimpleTupleStore
 implements TupleStore
 {
 	/**
-	 * Index: MEMBER2GROUP containing direct relations.
+	 * Index: MEMBER2GROUP containing direct relations from a User.
 	 */
 	private Map<ObjectId, Map<String, Set<Tuple>>> memberToGroup = new ConcurrentHashMap<>();
 
 	/**
-	 * Index: GROUP2GROUP containing indirect relations.
+	 * Index: GROUP2GROUP containing indirect relations from a UserSet.
 	 */
 	private Map<UserSet, Map<String, Set<Tuple>>> groupToGroup = new ConcurrentHashMap<>();
+
+	/**
+	 * Reverse Index: OBJECT2GROUP containing direct relations by objectId.
+	 * This is used to quickly find all direct tuples related to a specific objectId.
+	 */
+	private Map<ObjectId, Map<String, Set<Tuple>>> objectToGroup = new ConcurrentHashMap<>();
+
+	/**
+	 * Reverse Index: OBJECT2OBJECT containing indirect relations by objectId.
+	 * This is used to quickly find all indirect tuples related to a specific objectId.
+	 */
+	private Map<ObjectId, Map<String, Set<Tuple>>> objectToObject = new ConcurrentHashMap<>();
 
 	/**
 	 * The collection of tuples in this set.
@@ -158,7 +170,7 @@ implements TupleStore
 			}
 		}
 
-		return new SimpleTupleStore();
+		return new SimpleTupleStore(tuples);
 	}
 
 	public Tuple readOne(String userset, String relation, String objectId)
@@ -256,7 +268,7 @@ implements TupleStore
 
 	private Set<Tuple> getDirectTuples(ObjectId objectId, String relation)
 	{
-		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(objectId);
+		Map<String, Set<Tuple>> relationSubtree = objectToGroup.get(objectId);
 		if (relationSubtree == null) return Collections.emptySet();
 
 		Set<Tuple> relationTuples = relationSubtree.get(relation);
@@ -267,7 +279,7 @@ implements TupleStore
 
 	private Set<Tuple> getDirectTuples(ObjectId objectId)
 	{
-		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(objectId);
+		Map<String, Set<Tuple>> relationSubtree = objectToGroup.get(objectId);
 		if (relationSubtree == null) return Collections.emptySet();
 
 		return relationSubtree.values().stream()
@@ -312,6 +324,8 @@ implements TupleStore
 		tuples.add(tuple);
 		addMemberToGroup(tuple);
 		addGroupToGroup(tuple);
+		addObjectToGroup(tuple);
+		addObjectToObject(tuple);
 		return this;
 	}
 
@@ -320,6 +334,8 @@ implements TupleStore
 		tuples.remove(tuple);
 		removeMemberToGroup(tuple);
 		removeGroupToGroup(tuple);
+		removeObjectToGroup(tuple);
+		removeObjectToObject(tuple);
 		return this;
 	}
 
@@ -346,6 +362,24 @@ implements TupleStore
 		usersets.add(tuple);
 	}
 
+	private void addObjectToGroup(Tuple tuple)
+	{
+		if (!tuple.isDirectRelation()) return;
+
+		Map<String, Set<Tuple>> relationSubtree = objectToGroup.computeIfAbsent(tuple.getObjectId(), t -> new ConcurrentHashMap<>());
+		Set<Tuple> resources = relationSubtree.computeIfAbsent(tuple.getRelation(), s -> new HashSet<>());
+		resources.add(tuple);
+	}
+
+	private void addObjectToObject(Tuple tuple)
+	{
+		if (tuple.isDirectRelation()) return;
+
+		Map<String, Set<Tuple>> relationSubtree = objectToObject.computeIfAbsent(tuple.getObjectId(), t -> new HashMap<>());
+		Set<Tuple> usersets = relationSubtree.computeIfAbsent(tuple.getRelation(), s -> new HashSet<>());
+		usersets.add(tuple);
+	}
+
 	private void removeMemberToGroup(Tuple tuple)
 	{
 		Map<String, Set<Tuple>> relationSubtree = memberToGroup.get(tuple.getUsersetResource());
@@ -368,6 +402,44 @@ implements TupleStore
 	private void removeGroupToGroup(Tuple tuple)
 	{
 		Map<String, Set<Tuple>> relationSubtree = groupToGroup.get(new UserSet(tuple.getObjectId()));
+
+		if (relationSubtree == null) return;
+
+		Set<Tuple> usersets = relationSubtree.get(tuple.getRelation());
+
+		if (usersets == null) return;
+
+		usersets.remove(tuple);
+
+		// If we just removed the last UserSet in the set, prune the branch.
+		if (usersets.isEmpty())
+		{
+			relationSubtree.remove(tuple.getRelation());
+		}
+	}
+
+	private void removeObjectToGroup(Tuple tuple)
+	{
+		Map<String, Set<Tuple>> relationSubtree = objectToGroup.get(tuple.getObjectId());
+
+		if (relationSubtree == null) return;
+
+		Set<Tuple> resources = relationSubtree.get(tuple.getRelation());
+
+		if (resources == null) return;
+
+		resources.remove(tuple);
+
+		// If we just removed the last ObjectId in the set, prune the branch.
+		if (resources.isEmpty())
+		{
+			relationSubtree.remove(tuple.getRelation());
+		}
+	}
+
+	private void removeObjectToObject(Tuple tuple)
+	{
+		Map<String, Set<Tuple>> relationSubtree = objectToObject.get(tuple.getObjectId());
 
 		if (relationSubtree == null) return;
 
